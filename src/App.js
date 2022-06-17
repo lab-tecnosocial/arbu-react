@@ -1,7 +1,15 @@
 import './App.css';
 import { Link, Outlet } from "react-router-dom";
-
+import { startLoadingArboles, startLoadingUsuarios } from './actions/mapaActions';
+import { useEffect } from 'react';
+import { useDispatch } from "react-redux";
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(startLoadingArboles());
+    dispatch(startLoadingUsuarios());
+  }, [dispatch]);
+
   return (
     <>
  

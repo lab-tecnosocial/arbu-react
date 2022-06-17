@@ -9,8 +9,12 @@ import RankingComponent from './components/ranking/RankingComponent';
 import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import APIComponent from './components/api/APIComponent';
 import HomeComponent from './components/home/HomeComponent';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <Provider store={store}>
   <BrowserRouter>
     <App />
     <Routes>
@@ -22,5 +26,6 @@ root.render(
       <Route path="*" element={ <main style={{ padding: "1rem" }}><h2>Ho hay nada aquí!</h2></main>}/>
     </Routes>
   </BrowserRouter>
+  </Provider>
 );
 
