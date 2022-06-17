@@ -1,8 +1,3 @@
-// export default function Manuales(){
-//     <div>
-//         <h1>Manuales</h1>
-//     </div>
-// }
 const style = {
     alignItems: 'center',
     placeItems: 'center'

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import App from './App';
 
-import MapaComponent from './components/mapa/MapaComponent';
+
 import RankingComponent from './components/ranking/RankingComponent';
 import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import APIComponent from './components/api/APIComponent';
@@ -15,7 +15,6 @@ root.render(
     <App />
     <Routes>
       <Route path="/" element={<HomeComponent />} />
-      <Route path="mapa" element={<MapaComponent />} />
       <Route path="ranking" element={<RankingComponent />} />
       <Route path="catalogo" element={<CatalogoComponent />} />
       <Route path="api" element={<APIComponent />} />
