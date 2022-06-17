@@ -3,3 +3,9 @@
     height: 70vh;
     margin: 0 auto;
   }
+.hover:hover{
+  cursor: pointer;
+}
+.leaflet-control-attribution{
+  display: none;
+}
