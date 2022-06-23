@@ -14,7 +14,7 @@ const ImageDetail = ({src}) => {
     setIsViewerOpen(false);
   };
   return (
-    <div>
+    <>
     <img className='image-monitoring'
               src={src}
               onClick={() => openImageViewer(0)}
@@ -35,7 +35,7 @@ const ImageDetail = ({src}) => {
           closeOnClickOutside={true}
         />
       )}
-    </div>
+    </>
   )
 }
 
