@@ -5,6 +5,7 @@ import { useMapEvents } from 'react-leaflet/hooks'
 import L, { MarkerCluster } from "leaflet";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+
 import "./MarkerCluster.Default.css";
 import "./MapaComponent.css";
 // import { arboles } from "./arbolesPlantados";
@@ -82,11 +83,14 @@ const MapaComponent = () => {
       
       
       <DetailArbol />
+      
+
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
         scrollWheelZoom={true}
       >
+         
         <MyComponent />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -115,6 +119,7 @@ const MapaComponent = () => {
             </Marker>
           ))}
         </MarkerClusterGroup>
+        
       </MapContainer>
      
     </main>

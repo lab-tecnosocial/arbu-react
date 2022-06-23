@@ -3,7 +3,8 @@ const initialState = {
   arboles:[],
   active:null,
   usuarios:[],
-  monitoreo:null
+  monitoreo:null,
+  usuariosMap:null
 }
 export const mapaReducer = (state=initialState,action) => {
   switch (action.type) {
@@ -24,9 +25,14 @@ export const mapaReducer = (state=initialState,action) => {
         monitoreo:null
       }
     case types.mapaLoadUsuarios:
+      let result = [...action.payload].reduce(function(map, obj) {
+        map[obj.id] = obj;
+        return map;
+    }, {});
       return {
         ...state,
-        usuarios:[...action.payload]
+        usuarios:[...action.payload],
+        usuariosMap:result
       }
     case types.mapaSetActiveMonitoreo:
       return {
