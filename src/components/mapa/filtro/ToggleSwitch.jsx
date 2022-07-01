@@ -40,7 +40,7 @@ const ToggleSwitch = ({
       />
       {id ? (
         <label
-          className="toggle-switch-label titles"
+          className="toggle-switch-label"
           tabIndex={disabled ? -1 : 1}
           onKeyDown={(e) => handleKeyPress(e)}
           htmlFor={id}

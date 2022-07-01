@@ -3,11 +3,14 @@ import { Link, Outlet } from "react-router-dom";
 import { startLoadingArboles, startLoadingUsuarios } from './actions/mapaActions';
 import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
+import { startLoadEspeciesCatalogo } from './actions/catalogoActions';
+
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(startLoadingArboles());
     dispatch(startLoadingUsuarios());
+    dispatch(startLoadEspeciesCatalogo());
   }, [dispatch]);
 
   return (

@@ -5,5 +5,6 @@ export const types = {
   mapaLoadUsuarios:'[MAPA] Load usuarios',
   mapaSetActiveMonitoreo:'[MAPA] Set active monitoreo',
   mapaFilterArboles:'[MAPA] Filter arboles',
-  mapaIsFiltered:'[MAPA] Se aplico filtro'
+  mapaIsFiltered:'[MAPA] Se aplico filtro',
+  catalogoLoadEspecies:'[CATALOGO] Load catalogo'
 }
