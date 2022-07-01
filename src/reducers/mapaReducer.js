@@ -4,7 +4,9 @@ const initialState = {
   active:null,
   usuarios:[],
   monitoreo:null,
-  usuariosMap:null
+  usuariosMap:null,
+  filtro:[],
+  filtroAplied:false
 }
 export const mapaReducer = (state=initialState,action) => {
   switch (action.type) {
@@ -39,6 +41,16 @@ export const mapaReducer = (state=initialState,action) => {
         ...state,
         monitoreo:action.payload
       }
+    case types.mapaFilterArboles:
+    return {
+      ...state,
+      filtro:[...action.payload]
+    }
+    case types.mapaIsFiltered:
+    return {
+      ...state,
+      filtroAplied: action.payload
+    }
     default:
       return state;
   }

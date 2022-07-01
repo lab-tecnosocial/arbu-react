@@ -1,0 +1,22 @@
+.filtro-layout{
+  width: 100%;
+  border-radius: 1rem;
+  /* background-color: #E7EFD6 ; */
+  background-color: rgba(255, 255, 255, 0.8) ;
+  border: #174C44 solid 1px;
+  padding: 10px;
+  
+  z-index: 10001;
+  position: fixed;
+  top: 210px;
+  left: 0px;
+  width: 300px;
+  
+}
+.btn-filter-round{
+
+  z-index: 10001;
+  position: fixed;
+  top: 210px;
+  left: 10px;
+}

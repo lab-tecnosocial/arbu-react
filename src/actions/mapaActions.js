@@ -43,3 +43,15 @@ export const setActiveMonitoreo=(monitoreo)=>{
     payload: monitoreo
   }
 }
+export const filterArboles=(arboles)=>{
+  return {
+    type: types.mapaFilterArboles,
+    payload: arboles
+  }
+}
+export const setFilter=(value)=>{
+  return {
+    type: types.mapaIsFiltered,
+    payload: value
+  }
+}
