@@ -14,7 +14,6 @@ import {usuarios as users} from './usuarios';
 // import PopupMarker from "./PopupMarker";
 import DetailArbol from "./DetailArbol";
 import FiltroComponent from "./filtro/FiltroComponent";
-
 const customIcon = new L.Icon({
   iconUrl: require("./location.svg").default,
   iconSize: new L.Point(40, 47),
@@ -81,7 +80,6 @@ const MapaComponent = () => {
 
  <main style={{ padding: "1rem 0" }}>
       <h2>MapaComponent</h2>
-      
       
       <DetailArbol />
       
