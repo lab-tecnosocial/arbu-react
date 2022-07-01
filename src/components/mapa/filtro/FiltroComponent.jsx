@@ -154,7 +154,7 @@ const FiltroComponent = () => {
       </div>
       :
       <div className='filtro-layout' >
-      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style={{fontFamily: 'Poppins, sans-serif',fontSize:'1rem'}}> Filtro</span> </div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span className='titles' style={{fontSize:'1.1rem'}}> Filtro</span> </div>
       <ToggleSwitch
           id="nativas"
           checked={nativas}
@@ -186,20 +186,27 @@ const FiltroComponent = () => {
         /> */}
         <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)',marginTop:'10px',border:'transparent solid 1px', borderRadius:'10px',boxShadow:'none'}}>
         <AccordionSummary
+          
           expandIcon={<ExpandMoreIcon sx={{color:'#03B25E',borderRadius:'50%',backgroundColor:'white'}} />}
           aria-controls="panel1a-content"
           id="panel1a-header"
           sx={{backgroundColor:'#03B25E',border:'#174C44 solid 1px', borderRadius:'10px'}}
         >
-          <Typography sx={{color:'white'}}>Especies específicas</Typography>
+          <Typography sx={{color:'white',fontFamily:`'Poppins',sans-serif`}}>Especies específicas</Typography>
         </AccordionSummary>
         <AccordionDetails >
            <div style={{display:'flex',height:'150px',overflowY:'scroll',flexDirection:'column'}}>
               {
                 especies.map(item=>(
-                  <FormControlLabel key={item?.id}  control={<Checkbox onChange={handleCheckBox} style={{
-                    color: "#03B25E"
-                  }} value={item.nombreCientifico} checked={especiesEspecificas.includes(item.nombreCientifico)} />} label={item.nombreCientifico} />
+                  <FormControlLabel key={item?.id}  control={
+                    <Checkbox  onChange={handleCheckBox} style={{
+                      color: "#03B25E"
+                      }} 
+                      value={item.nombreCientifico} 
+                      checked={especiesEspecificas.includes(item.nombreCientifico)} 
+                    />} 
+                    label={item.nombreCientifico} 
+                  />
                 ))
               }
           </div>

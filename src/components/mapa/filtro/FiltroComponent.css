@@ -1,3 +1,16 @@
+:root{
+  --color-oscuro:#174C44 ;
+}
+.titles{
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-oscuro);
+  font-size: 1rem;
+}
+.text-normal{
+  font-family: 'Open Sans' , sans-serif;
+  color: var(--color-oscuro);
+  font-size: 1rem;
+}
 .filtro-layout{
   width: 100%;
   border-radius: 1rem;
@@ -6,7 +19,7 @@
   border: #174C44 solid 1px;
   padding: 10px;
   
-  z-index: 10001;
+  z-index: 999;
   position: fixed;
   top: 210px;
   left: 0px;
