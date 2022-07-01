@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hideDetailArbol, setActiveMonitoreo } from "../../actions/mapaActions";
 
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import IconButton from '@mui/material/IconButton';
 import ImageDetail from "./ImageDetail";
 import "./DetailArbol.css";
 import gotaIcon from './gota_contorno.svg'
@@ -78,7 +80,11 @@ const DetailArbol = () => {
   }
   return (
     <div className={`detail-arbol ${arbol !== null && "active"}`} id="detail">
-      <button onClick={handleCloseDetail}>X</button>
+      {/* <button >X</button> */}
+      
+      <IconButton aria-label="back" onClick={handleCloseDetail}>
+      <ArrowBackIosNewIcon  sx={{color:'#000'}}/>
+      </IconButton>
       {/* {monitoreos.length > 0 
         && (
           <ImageDetail src={monitoreos[0]?.fotografia} />
@@ -97,13 +103,13 @@ const DetailArbol = () => {
           )}
         </div>
         <div>
-          <h2>
+          <h2 className="titles">
             &nbsp;
             {arbol?.nombrePropio}
           </h2>
-          <div>
+          <div className="text-normal">
             <div>
-              Nombre comun:&nbsp;
+              Nombre común:&nbsp;
               {arbol?.nombreComun}
             </div>
             <div>
@@ -111,7 +117,7 @@ const DetailArbol = () => {
               {arbol?.nombreCientifico}
             </div>
             <div>
-              Lugar de plantacion:&nbsp;
+              Lugar de plantación:&nbsp;
               {arbol?.lugarDePlantacion}
             </div>
             <div>
@@ -155,7 +161,7 @@ const DetailArbol = () => {
         <div></div>
       </div>
       
-        <div className="card container">
+        <div className="card container text-normal">
          
           
             <div style={{display:'table'}}>
@@ -190,8 +196,8 @@ const DetailArbol = () => {
             </div>
           
         </div>
-        <div style={{ fontWeight: "bold",marginLeft:'20px' }}>Monitoreos Pasados</div>
-        <div className="monitores-list">
+        <div className="titles" style={{ fontWeight: "bold",marginLeft:'20px' }}>Monitoreos Pasados</div>
+        <div className="monitores-list text-normal">
  {
           monitoreos.length>0
           &&
