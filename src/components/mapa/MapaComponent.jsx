@@ -13,6 +13,7 @@ import "./MapaComponent.css";
 import {usuarios as users} from './usuarios';
 // import PopupMarker from "./PopupMarker";
 import DetailArbol from "./DetailArbol";
+import FiltroComponent from "./filtro/FiltroComponent";
 
 const customIcon = new L.Icon({
   iconUrl: require("./location.svg").default,
@@ -29,7 +30,7 @@ const createClusterCustomIcon = function (cluster: MarkerCluster) {
 
 const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
-  const {arboles:arbolesPlantados,active} = useSelector(state=>state.mapa);
+  const {arboles:arbolesPlantados,active,filtro,filtroAplied} = useSelector(state=>state.mapa);
   const dispatch = useDispatch();
   // const [arbolesPlantados, setArbolesPlantados] = useState(arboles);
 
@@ -84,7 +85,7 @@ const MapaComponent = () => {
       
       <DetailArbol />
       
-
+      <FiltroComponent />
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
@@ -98,26 +99,52 @@ const MapaComponent = () => {
           
         />
         <MarkerClusterGroup chunkedLoading>
-          {arbolesPlantados.map((item) => (
-            <Marker
-              key={item.id}
-              position={[item.latitud, item.longitud]}
-              title={item.nombrePropio}
-              icon={customIcon}
-              eventHandlers={{
-                click: () => {
-                  if(active?.id!==item?.id){
-                    dispatch(activeArbol(item.id,{...item}))
-                    document.querySelector('.leaflet-control-zoom-in').style.display='none';
-                    document.querySelector('.leaflet-control-zoom-out').style.display='none';
-                  }
-                },
-              }}
-            >
-            {/* <PopupMarker arbol={item} usuarios={item.usuariosQueAdoptaron} arrayUsers={asArray} setArbolDetail={setArbolDetail} /> */}
-              
-            </Marker>
-          ))}
+          {
+            filtroAplied
+            ?
+            filtro.map((item) => (
+              <Marker
+                key={item.id}
+                position={[item.latitud, item.longitud]}
+                title={item.nombrePropio}
+                icon={customIcon}
+                eventHandlers={{
+                  click: () => {
+                    if(active?.id!==item?.id){
+                      dispatch(activeArbol(item.id,{...item}))
+                      document.querySelector('.leaflet-control-zoom-in').style.display='none';
+                      document.querySelector('.leaflet-control-zoom-out').style.display='none';
+                    }
+                  },
+                }}
+              >
+              {/* <PopupMarker arbol={item} usuarios={item.usuariosQueAdoptaron} arrayUsers={asArray} setArbolDetail={setArbolDetail} /> */}
+                
+              </Marker>
+            ))
+            :
+            arbolesPlantados.map((item) => (
+              <Marker
+                key={item.id}
+                position={[item.latitud, item.longitud]}
+                title={item.nombrePropio}
+                icon={customIcon}
+                eventHandlers={{
+                  click: () => {
+                    if(active?.id!==item?.id){
+                      dispatch(activeArbol(item.id,{...item}))
+                      document.querySelector('.leaflet-control-zoom-in').style.display='none';
+                      document.querySelector('.leaflet-control-zoom-out').style.display='none';
+                    }
+                  },
+                }}
+              >
+              {/* <PopupMarker arbol={item} usuarios={item.usuariosQueAdoptaron} arrayUsers={asArray} setArbolDetail={setArbolDetail} /> */}
+                
+              </Marker>
+            ))
+
+          }
         </MarkerClusterGroup>
         
       </MapContainer>
