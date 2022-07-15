@@ -1,34 +1,75 @@
+import {useEffect, useState} from 'react';
+import {especies} from "./especies"
+import './Especies.css'
 
-const style = {
-  alignItems: 'center',
-  placeItems: 'center'
-}
-const bottom = {
-  display: 'grid',
-  gridTemplateColumns: 'auto 1fr auto auto',
-  gap: '20px',
-  alignItems: 'center',
-  marginBottom: '24px',
-}
-const img = {
-  width: '70px',
-  height: '70px',
-  borderRadius: '10px'
-}
+
 const Especies = () => {
 
-    return (
-      <main style={style}>
-        <div className = "bottom" style={bottom}>
-            <p>especies</p>
-            <figure >
-                <img  style ={img} 
-                src="https://us.123rf.com/450wm/alazur/alazur1907/alazur190700001/127906637-silueta-de-un-%C3%A1rbol-con-ra%C3%ADces-y-hojas-en-c%C3%ADrculo-color-blanco-sobre-fondo-verde-logotipo-de-ilustra.jpg?ver=6" alt="" />
-            </figure>
-        </div>
- 
-      </main>
-    )
+  const [usuarios, setUsuarios] = useState(especies);
+  const [tablaUsuarios, setTablaUsuarios] = useState(especies);
+  const [busqueda, setBusqueda] = useState([""]);
+
+  const handleChange=e=>{
+    setBusqueda(e.target.value);
+    filtrar(e.target.value);
   }
+
+  const filtrar=(terminoBusqueda)=>{
+    console.log(tablaUsuarios);
+    var resultadosBusqueda=tablaUsuarios.filter(elemento=>{
+      if(elemento.nombreComun.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+    
+    ){
+      return elemento;
+    }
+  });
+  setUsuarios(resultadosBusqueda);
+  }
+  return (
+    <div className="App">
+    <div className="containerInput">
+          <input
+            className="form-control inputBuscar"
+            value={busqueda}
+            placeholder="Búsqueda por Nombre"
+            onChange={handleChange}
+          />
+          <button className="btn btn-success">
+            
+          </button>
+    </div>
+    <div className='container-primary'>
+
+    {usuarios &&
+      usuarios.map((usuario)=>(   
+       <>
+        <a key={usuario.id} href="">     
+        
+        <div className='container-catalogo'>
+        <figure>
+        <img 
+        src={usuario.imagenesUri} 
+        alt={usuario.nombreComun} referrerPolicy="no-referrer"/>  
+        </figure>
+        
+        <div className='text-arbol'>
+        <p>
+          {usuario.nombreComun} 
+        </p>
+        <p>
+        {usuario.descripcion2}
+        </p>
+        </div>
+        </div> 
+        </a>
+      </>
+))
+
+}
+
+    </div>
+    </div>
+  );
+}
   
   export default Especies
