@@ -15,7 +15,7 @@ const Especies = () => {
   }
 
   const filtrar=(terminoBusqueda)=>{
-    console.log(tablaUsuarios);
+    console.log(tablaUsuarios); 
     var resultadosBusqueda=tablaUsuarios.filter(elemento=>{
       if(elemento.nombreComun.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
     
@@ -28,15 +28,18 @@ const Especies = () => {
   return (
     <div className="App">
     <div className="containerInput">
-          <input
-            className="form-control inputBuscar"
-            value={busqueda}
-            placeholder="Búsqueda por Nombre"
-            onChange={handleChange}
-          />
-          <button className="btn btn-success">
-            
-          </button>
+      <div className='search'>
+        
+        <input
+          className="form-control inputBuscar"
+          value={busqueda}
+          placeholder="Búsqueda por Nombre"
+          onChange={handleChange}
+        />
+        <button className="btn btn-success">
+          
+        </button>
+      </div>
     </div>
     <div className='container-primary'>
 
