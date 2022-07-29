@@ -4,13 +4,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import App from './App';
 
-import MapaComponent from './components/mapa/MapaComponent';
+
 import RankingComponent from './components/ranking/RankingComponent';
 import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import APIComponent from './components/api/APIComponent';
 import HomeComponent from './components/home/HomeComponent';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import MapaComponent from './components/mapa/MapaComponent';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
