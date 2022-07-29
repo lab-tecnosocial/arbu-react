@@ -15,7 +15,7 @@ const ImageDetail = ({src}) => {
   };
   return (
     <>
-    <img className='image-monitoring'
+    <img className='image-monitoring' style={{top:'60px'}}
               src={src}
               onClick={() => openImageViewer(0)}
              
@@ -29,8 +29,9 @@ const ImageDetail = ({src}) => {
           currentIndex={currentImage}
           onClose={closeImageViewer}
           disableScroll={false}
+          closeComponent={<span style={{color:'#fff'}}>x</span>}
           backgroundStyle={{
-            backgroundColor: "rgba(0,0,0,0.9)"
+            backgroundColor: "rgba(0,0,0,0.85)"
           }}
           closeOnClickOutside={true}
         />

@@ -218,7 +218,7 @@ const FiltroComponent = () => {
       <Button variant="contained" color='success' sx={{border:'##174C44 solid 1px',backgroundColor:'#268576',color:'white'}}
         onClick={handleAplicar}
       >Aplicar</Button>
-      <Button variant="outlined" sx={{border:'##174C44 solid 1px',color:'#268576'}}
+      <Button className='btn-cancelar' variant="outlined" sx={{border:'1px solid #174C44',color:'#268576'}}
         onClick={()=>setShowFilterWindow(false)}
       >Cancelar</Button>
       </Stack>
