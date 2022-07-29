@@ -1,0 +1,38 @@
+:root{
+  --color-oscuro:#174C44 ;
+}
+/* .titles{
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-oscuro);
+  font-size: 1rem;
+}
+.text-normal{
+  font-family: 'Open Sans' , sans-serif;
+  color: var(--color-oscuro);
+  font-size: 0.4rem;
+} */
+.filtro-layout{
+  width: 100%;
+  border-radius: 1rem;
+  /* background-color: #E7EFD6 ; */
+  background-color: rgba(255, 255, 255, 0.8) ;
+  border: #174C44 solid 1px;
+  padding: 10px;
+  
+  z-index: 999;
+  position: fixed;
+  top: 150px;
+  left: 5px;
+  width: 300px;
+  
+}
+.btn-cancelar:hover{
+  border: 1px solid #174C44 !important;
+}
+.btn-filter-round{
+
+  z-index: 999;
+  position: fixed;
+  top: 160px;
+  left: 5px;
+}

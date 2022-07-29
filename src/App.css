@@ -1,0 +1,23 @@
+
+/* .leaflet-left{
+left: 0;
+}
+.leaflet-top{
+top: 450px !important;
+} */
+.css-hyum1k-MuiToolbar-root {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+.buttons-appbar{
+  margin-left: 3px !important;
+  margin-right: 3px !important;
+}
+@media (min-width: 600px){
+.css-hyum1k-MuiToolbar-root {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+
+}
