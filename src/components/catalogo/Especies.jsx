@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react';
-import {especies} from "./especies"
+import {useSelector} from 'react-redux';
+// import {especies} from "./especiesData.js"
 import './Especies.css'
 
 
 const Especies = () => {
-
-  const [usuarios, setUsuarios] = useState(especies);
-  const [tablaUsuarios, setTablaUsuarios] = useState(especies);
+  const {especies} = useSelector(state=>state.catalogo);
+  const [usuarios, setUsuarios] = useState([]);
+  const [tablaUsuarios, setTablaUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState([""]);
 
   const handleChange=e=>{
@@ -15,16 +16,20 @@ const Especies = () => {
   }
 
   const filtrar=(terminoBusqueda)=>{
-    console.log(tablaUsuarios); 
+    // console.log(tablaUsuarios); 
     var resultadosBusqueda=tablaUsuarios.filter(elemento=>{
       if(elemento.nombreComun.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-    
+        || elemento.nombreCientifico.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
     ){
       return elemento;
     }
   });
   setUsuarios(resultadosBusqueda);
   }
+  useEffect(() => {
+    setUsuarios(especies);
+    setTablaUsuarios(especies);
+  }, [especies]);
   return (
     <div className="App">
     <div className="containerInput">
@@ -45,14 +50,16 @@ const Especies = () => {
 
     {usuarios &&
       usuarios.map((usuario)=>(   
-       <>
-        <a key={usuario.id} href="">     
+       <div key={usuario.id}>
+        <a  href="">     
         
         <div className='container-catalogo'>
         <figure>
         <img 
-        src={usuario.imagenesUri} 
-        alt={usuario.nombreComun} referrerPolicy="no-referrer"/>  
+        src={usuario.imagenesUri[0]} 
+        alt={usuario.nombreComun} 
+        referrerPolicy="no-referrer"
+        />  
         </figure>
         
         <div className='text-arbol'>
@@ -65,7 +72,7 @@ const Especies = () => {
         </div>
         </div> 
         </a>
-      </>
+      </div>
 ))
 
 }

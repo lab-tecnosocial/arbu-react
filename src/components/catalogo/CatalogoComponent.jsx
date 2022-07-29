@@ -1,13 +1,14 @@
 import React from 'react'
 import Manuales from './manual/Manuales'
-import Especies from './Especies'
+
 import './CatalogoComponent.css'
+import Especies from './Especies'
 
 const CatalogoComponent = () => {
   return (
         <main style={{ padding: "1rem 0" }}>
-          <Manuales/>
-          <Especies/>
+          <Manuales />
+          <Especies />
           
         </main>
   )

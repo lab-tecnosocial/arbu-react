@@ -21,24 +21,24 @@
 
 	/* IE 6-8 fallback colors */
 .leaflet-oldie .marker-cluster-small {
-	background-color: rgb(181, 226, 140);
+	background-color: #268576;
 	}
 .leaflet-oldie .marker-cluster-small div {
-	background-color: rgb(110, 204, 57);
+	background-color: #268576;
 	}
 
 .leaflet-oldie .marker-cluster-medium {
-	background-color: rgb(241, 211, 87);
+	background-color: #268576;
 	}
 .leaflet-oldie .marker-cluster-medium div {
-	background-color: rgb(240, 194, 12);
+	background-color: #268576;
 	}
 
 .leaflet-oldie .marker-cluster-large {
-	background-color: rgb(253, 156, 115);
+	background-color: #268576;
 	}
 .leaflet-oldie .marker-cluster-large div {
-	background-color: rgb(241, 128, 23);
+	background-color: #268576;
 }
 
 .marker-cluster {
