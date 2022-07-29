@@ -1,7 +1,8 @@
 .leaflet-container {
     width: 100%;
-    height: 80vh;
+    height: 90vh;
     margin: 0 auto;
+    
   }
 .hover:hover{
   cursor: pointer;

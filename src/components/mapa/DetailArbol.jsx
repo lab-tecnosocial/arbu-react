@@ -107,16 +107,16 @@ const DetailArbol = () => {
             &nbsp;
             {arbol?.nombrePropio}
           </h2>
-          <div className="text-normal">
-            <div>
-              Nombre común:&nbsp;
+          <div >
+            <div className="text-normal" >
+              
               {arbol?.nombreComun}
             </div>
-            <div>
-              Nombre científico:&nbsp;
+            <div className="text-normal" style={{fontStyle:'italic'}}>
+              
               {arbol?.nombreCientifico}
             </div>
-            <div>
+            <div className="text-normal">
               Lugar de plantación:&nbsp;
               {arbol?.lugarDePlantacion}
             </div>
@@ -127,15 +127,15 @@ const DetailArbol = () => {
                   {
                     getUserPhoto(stringIdUser) !== 'default'?
                     (
-                      <img src={getUserPhoto(stringIdUser)} alt="" width="30px" height="30px" style={{borderRadius:'50%'}} referrerPolicy="no-referrer"/>
+                      <img className="img-usuarios" src={getUserPhoto(stringIdUser)} alt="" width="30px" height="30px" style={{borderRadius:'50%'}} referrerPolicy="no-referrer"/>
                     ):
                     (
                       <SvgComponent />
                     )
                   }
                  
-                  <span style={{display:'table-cell',verticalAlign:'middle'}}>
-                    &nbsp;{getFullNameUser(stringIdUser)}
+                  <span className="span-nombre-usuarios" style={{display:'table-cell',verticalAlign:'middle'}}>
+                    {getFullNameUser(stringIdUser)}
                     {/* {i < arbol?.usuariosQueAdoptaron.length - 1 && `, `} */}
                   </span>
                 </div>
@@ -144,13 +144,13 @@ const DetailArbol = () => {
 
             <div style={{display:'grid',gridTemplateColumns:'50% 50%'}}>
               <div style={{display:'flex'}}>
-                <span>Riegos:</span>&nbsp;
+                <span className="text-normal">Riegos:</span>&nbsp;
                 <span >
                   <img src={gotaIcon} alt="" width="20px" height="20px" style={{verticalAlign:'middle'}} />
                 </span>
                 <span>{arbol !== null && Object.entries(arbol?.riegos).length}</span>
               </div>
-              <div>
+              <div className="text-normal">
                 Estado:&nbsp;
                 {arbol?.estado}
               </div>
@@ -205,17 +205,17 @@ const DetailArbol = () => {
             <div key={item.timestamp._seconds} className="card hover" onClick={()=>handleClickMonitoreo(item)} >
               
               <div className="monitoreos-container">
-                <div>
-                  <img src={item.fotografia} alt={item.timestamp._seconds} width="80px" height="80px" />
+                <div >
+                  <img src={item.fotografia} alt={item.timestamp._seconds} width="70px" height="70px" />
                 </div>
-                <div style={{display:'block',marginTop:'auto',marginBottom:'auto'}}>
+                <div style={{display:'block',marginTop:'auto',marginBottom:'auto',marginLeft:'8px'}}>
                   <div style={{display:'table'}}>
-                  <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={relogIcon} alt="" width="30px" height="30px"/></span>&nbsp;<span style={{display:'table-cell',verticalAlign:'middle'}}>Fecha: {(new Date(item.timestamp._seconds * 1000)).toDateString()}</span>
+                  <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={relogIcon} alt="" width="25px" height="25px"/></span>&nbsp;<span style={{display:'table-cell',verticalAlign:'middle'}}>Fecha: {(new Date(item.timestamp._seconds * 1000)).toDateString()}</span>
                   </div>
                   <div style={{display:'table'}}>
                    {getUserPhoto(item.monitoreoRealizadoPor) !== 'default'?
                     (
-                      <img src={getUserPhoto(item.monitoreoRealizadoPor)} alt="" width="30px" height="30px" style={{borderRadius:'50%'}} referrerPolicy="no-referrer"/>
+                      <img src={getUserPhoto(item.monitoreoRealizadoPor)} alt="" width="25px" height="25px" style={{borderRadius:'50%'}} referrerPolicy="no-referrer"/>
                     ):
                     (
                       <SvgComponent />

@@ -7,6 +7,7 @@ const SvgComponent = (props) => (
     viewBox="0 0 720 720"
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
+    className="img-usuarios"
     style={{
       fillRule: "evenodd",
       clipRule: "evenodd",
