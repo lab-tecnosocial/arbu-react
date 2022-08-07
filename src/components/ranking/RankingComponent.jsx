@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {  useState } from 'react'
 
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -9,6 +9,7 @@ import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import './RankingComponent.css'
+import { useSelector } from 'react-redux';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,16 +45,45 @@ function a11yProps(index) {
 }
 
 const RankingComponent = () => {
-
   const [value, setValue] = useState(0);
+  const {usuariosMap} = useSelector(state=>state.mapa);
+  const {scores} = useSelector(state=>state.leaderboard);
 
+
+
+
+
+
+
+
+
+
+
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const getUserPhoto = (id)=>{
+      if(usuariosMap !==null){
+         if(usuariosMap.hasOwnProperty(id)){
+            return usuariosMap[id]?.imageProfile;
+          }
+      }
+    return "default";
+  }
 
+  const getFullNameUser = (id) => {
+      if(usuariosMap !==null){
+        if(usuariosMap.hasOwnProperty(id)){
+           return usuariosMap[id]?.nombre;
+         }
+     }
+    return "";
+  };
   return (
     <main style={{ padding: "1rem 0" }}>
     <h2>RankingComponent</h2>
+    
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
@@ -63,6 +93,11 @@ const RankingComponent = () => {
       </Box>
       <TabPanel value={value} index={0}>
         MES
+        {
+          scores.map(item=>(
+            <div key={`${item.id}-mes`}>{getFullNameUser(item.id)}</div>
+          ))
+        }
       </TabPanel>
       <TabPanel value={value} index={1}>
         GLOBAL

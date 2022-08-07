@@ -1,7 +1,8 @@
 import { types } from "../types/types";
 
 const initialState = {
-  especies:[]
+  especies:[],
+  activeEspecie:null
 }
 export const catalogoReducer = (state=initialState,action)=>{
 
@@ -11,6 +12,16 @@ export const catalogoReducer = (state=initialState,action)=>{
         ...state,
         especies: [...action.payload]
       }; 
+    case types.catalogoSetActiveEspecie:
+      return {
+        ...state,
+        activeEspecie:{...action.payload}
+      }
+    case types.catalogoHideDetailEspecie:
+    return {
+      ...state,
+      activeEspecie:null,
+    }
     default:
       return state;
   }

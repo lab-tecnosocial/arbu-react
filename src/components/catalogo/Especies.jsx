@@ -1,10 +1,13 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
+import { setActiveEspecie } from '../../actions/catalogoActions';
+import DetailEspecie from './DetailEspecie';
 // import {especies} from "./especiesData.js"
 import './Especies.css'
 
 
 const Especies = () => {
+  const dispatch = useDispatch();
   const {especies} = useSelector(state=>state.catalogo);
   const [usuarios, setUsuarios] = useState([]);
   const [tablaUsuarios, setTablaUsuarios] = useState([]);
@@ -26,12 +29,21 @@ const Especies = () => {
   });
   setUsuarios(resultadosBusqueda);
   }
+
+  const handleClickEspecie = (usuario) => {
+  
+    console.log(usuario);
+    dispatch(setActiveEspecie(usuario));
+  }
+  
   useEffect(() => {
     setUsuarios(especies);
     setTablaUsuarios(especies);
   }, [especies]);
   return (
     <div className="App">
+      
+      
     <div className="containerInput">
       <div className='search'>
         
@@ -50,8 +62,8 @@ const Especies = () => {
 
     {usuarios &&
       usuarios.map((usuario)=>(   
-       <div key={usuario.id}>
-        <a  href="">     
+       <div key={usuario.id} onClick={()=>handleClickEspecie(usuario)} >
+        {/* <a  href="">      */}
         
         <div className='container-catalogo'>
         <figure>
@@ -59,6 +71,7 @@ const Especies = () => {
         src={usuario.imagenesUri[0]} 
         alt={usuario.nombreComun} 
         referrerPolicy="no-referrer"
+        
         />  
         </figure>
         
@@ -71,7 +84,7 @@ const Especies = () => {
         </p>
         </div>
         </div> 
-        </a>
+        {/* </a> */}
       </div>
 ))
 
