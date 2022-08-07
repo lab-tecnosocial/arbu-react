@@ -1,0 +1,71 @@
+:root{
+  --color-oscuro:#174C44 ;
+}
+.titles{
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-oscuro);
+  font-size: 1rem;
+}
+.text-normal{
+  font-family: 'Open Sans' , sans-serif;
+  color: var(--color-oscuro);
+  font-size: 0.9rem;
+}
+
+.detail-arbol{
+  z-index: 1000;
+  position: fixed;
+  width: 100%;
+  height: 90%;
+  overflow-y: scroll;
+  background-color: white;
+  top: 60px;
+  right: -100%;
+  transition: all 0.2s ease-in-out;
+}
+.active {
+  right: 0;
+}
+
+.preview__description__container {
+  padding: 1rem;
+}
+/* .no-active{
+  display: none;
+} */
+/* .active{
+  display: block;
+} */
+
+.detail-container{
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: -20px;
+}
+
+.hover:hover{
+  cursor: pointer;
+}
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  grid-template-rows: repeat(2,1fr);
+  gap: 5px;
+  align-items: center;
+}
+
+@media only screen and (min-width: 768px) {
+  .detail-arbol {
+    top: auto;
+    width: 50%;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .detail-arbol {
+    top: auto;
+    width: 40%;
+  }
+}
