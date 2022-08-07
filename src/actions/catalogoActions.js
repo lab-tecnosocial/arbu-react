@@ -15,3 +15,15 @@ export const setEspecies = (especies) => {
   }
 }
 
+export const setActiveEspecie= (especie) => {
+  return {
+    type: types.catalogoSetActiveEspecie,
+    payload: especie
+  }
+}
+export const setHideDetailEspecie= () => {
+  return {
+    type: types.catalogoHideDetailEspecie,
+  }
+}
+
