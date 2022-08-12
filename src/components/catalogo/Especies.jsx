@@ -1,5 +1,11 @@
 import {useEffect, useState} from 'react';
+import { IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import InfoIcon from '@mui/icons-material/Info';
 import {useSelector,useDispatch} from 'react-redux';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { setActiveEspecie } from '../../actions/catalogoActions';
 import DetailEspecie from './DetailEspecie';
 // import {especies} from "./especiesData.js"
@@ -54,7 +60,9 @@ const Especies = () => {
           onChange={handleChange}
         />
         <button className="btn btn-success">
-          
+        <IconButton aria-label="back" >
+        <SearchIcon  sx={{color:'#fff'}}/>
+        </IconButton>
         </button>
       </div>
     </div>
@@ -64,8 +72,10 @@ const Especies = () => {
       usuarios.map((usuario)=>(   
        <div key={usuario.id} onClick={()=>handleClickEspecie(usuario)} >
         {/* <a  href="">      */}
-        
+
         <div className='container-catalogo'>
+        <Box component="span" sx={{ p:0  }}>
+          <Button>
         <figure>
         <img 
         src={usuario.imagenesUri[0]} 
@@ -74,15 +84,28 @@ const Especies = () => {
         
         />  
         </figure>
-        
-        <div className='text-arbol'>
-        <p>
-          {usuario.nombreComun} 
-        </p>
-        <p>
-        {usuario.descripcion2}
-        </p>
+        <div className='container-text-icon'>
+          <div className='text-arbol'>
+          <h2 className='titles'>
+              {usuario.nombreComun} 
+          </h2>
+            <p className='text-normal'>
+            {usuario.descripcion2}
+            </p>
+          </div>
+
+        <div className='container-icon-info'> 
+          <span>
+          </span>
+            <figure className="icon-info">
+              <IconButton aria-label="back" >
+              <InfoIcon  sx={{color:'#fff'}}/>
+              </IconButton>
+        </figure>
         </div>
+        </div>
+        </Button>
+        </Box>
         </div> 
         {/* </a> */}
       </div>
