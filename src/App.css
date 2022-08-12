@@ -5,6 +5,21 @@ left: 0;
 .leaflet-top{
 top: 450px !important;
 } */
+.home-typography{
+/* cursor: pointer; */
+  width: 100px;
+}
+.home-typography:hover{
+  cursor: pointer;
+}
+.home{
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.home:hover{
+  cursor: pointer;
+}
 .css-hyum1k-MuiToolbar-root {
   padding-left: 24px !important;
   padding-right: 24px !important;

@@ -10,6 +10,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import './RankingComponent.css'
 import { useSelector } from 'react-redux';
+import ChildComponent from './ChildComponent';
+import ThreePositions from './ThreePositions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -24,7 +26,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -71,6 +73,14 @@ const RankingComponent = () => {
       }
     return "default";
   }
+  const getUserInstitucion = (id)=>{
+    if(usuariosMap !==null){
+       if(usuariosMap.hasOwnProperty(id)){
+          return usuariosMap[id]?.institucion;
+        }
+    }
+  return "default";
+}
 
   const getFullNameUser = (id) => {
       if(usuariosMap !==null){
@@ -80,30 +90,57 @@ const RankingComponent = () => {
      }
     return "";
   };
+  const getFormatedList = (scoresList) => {
+    let array = [];
+    scoresList.forEach(element => {
+      let n = getFullNameUser(element.id);
+      let institucion = getUserInstitucion(element.id);
+      let puntos = element.puntos;
+      let foto = getUserPhoto(element.id);
+      array.push({nombre:n,foto:foto,institucion:institucion, puntos:puntos});
+    });
+    return array;
+  }
   return (
-    <main style={{ padding: "1rem 0" }}>
-    <h2>RankingComponent</h2>
+    <div 
+    // style={{ padding: "1rem 0" }}
+    >
     
-    <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
-              <Tab icon={<CalendarMonthIcon />} label="MES" {...a11yProps(0)} />
+              <Tab icon={<CalendarMonthIcon />} label={`MES`} {...a11yProps(0)} />
           <Tab icon={<SportsScoreIcon />} label="GLOBAL" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        MES
+        <div>
+        <center>
+          <strong>Top 30</strong><br />
+        </center>
+          <ThreePositions list3Best={getFormatedList(scores)} />
         {
-          scores.map(item=>(
-            <div key={`${item.id}-mes`}>{getFullNameUser(item.id)}</div>
+          scores.map((item,i)=>(
+            <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+4} />
           ))
         }
+        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        GLOBAL
+      <div>
+        <center>
+          <strong>Top 100</strong><br />
+        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza semanalmente</span>
+        </center>
+          <ThreePositions list3Best={getFormatedList(scores)} />
+        {
+          scores.map((item,i)=>(
+            <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+4} />
+          ))
+        }
+        </div>
       </TabPanel>
-    </Box>
-  </main>
+    
+  </div>
   )
 }
 

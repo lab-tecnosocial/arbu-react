@@ -26,6 +26,7 @@ import arbuAppIcon from './components/mapa/logo_arbu_app.svg'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import ApiIcon from '@mui/icons-material/Api';
 import { loadScoresMes } from './actions/leaderboardActions';
+import {useNavigate} from 'react-router-dom';
 const drawerWidth = 240;
 const navItems = [
   // {
@@ -59,6 +60,7 @@ function App(props) {
   const {window} =props
   const [mobileOpen, setMobileOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(startLoadingArboles());
     dispatch(startLoadingUsuarios());
@@ -70,12 +72,16 @@ function App(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleHome=() => {
+    navigate('/');
+  }
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center',backgroundColor:'#268576' }}>
-      
       <Typography variant="h6" sx={{ my: 2 ,color:'#EBF5EE',fontFamily:`'Poppins',sans-serif`}}>
+      <div onClick={handleHome} className="home">
       <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'50%',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
         &nbsp;Arbu
+      </div>
       </Typography>
       <Divider />
       <List>
@@ -116,15 +122,21 @@ function App(props) {
           >
             <MenuIcon sx={{marginTop:'11px',marginBottom:'11px'}} />
           </IconButton>
+          {/* <div onClick={handleHome}> */}
           <Typography
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' },color:'#EBF5EE',fontFamily:`'Poppins',sans-serif` }}
+           
           >
-            <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'50%',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
+            <div onClick={handleHome} className="home-typography">
+              <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'50%',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
         &nbsp;
             Arbu
+            </div>
+            
           </Typography>
+          {/* </div> */}
           <Box sx={{ display: { xs: 'none', sm: 'block'}}}>
             {navItems.map((item) => (
               
