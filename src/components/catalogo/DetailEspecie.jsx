@@ -28,29 +28,33 @@ const DetailEspecie = () => {
         )
       } */}
       
-      <div className="detail-container">
-        <div style={{marginTop:'auto',marginBottom:'auto'}}>
+      <div className="detail-container-especie">
+        <div className="detail-container-especie-secundary">
+          <div style={{marginTop:'auto',marginBottom:'auto'}}>
+              <ImageDetail src={activeEspecie.imagenesUri[0]}/>
+          </div>
+              <div>
+              <h2 className="titles">
+                &nbsp;
+                {activeEspecie?.nombreComun}
+              </h2>
+            <div>
+                <div className="text-normal" >
+                  {activeEspecie?.nombreCientifico}
+                </div>
+                <div className="text-normal" style={{fontStyle:'italic'}}>
+                  {activeEspecie?.familia}
+                </div>
+                <div className="text-normal">
+                  {activeEspecie?.origen}
+              </div>
+            </div>
+          </div>
           
-          <ImageDetail src={activeEspecie.imagenesUri[0]}/>
-         
         </div>
-        <div>
-          <h2 className="titles">
-            &nbsp;
-            {activeEspecie?.nombreComun}
-          </h2>
-          <div >
-            <div className="text-normal" >
-              
-              {activeEspecie?.nombreCientifico}
-            </div>
-            <div className="text-normal" style={{fontStyle:'italic'}}>
-              
-              {activeEspecie?.familia}
-            </div>
-            <div className="text-normal">
-              {activeEspecie?.origen}
-            </div>
+
+       
+        <div>  
             <div className="text-normal">
               {
                 activeEspecie?.descripcion
@@ -66,9 +70,8 @@ const DetailEspecie = () => {
                 activeEspecie?.recomendablePara
               }
             </div>
-          
           </div>
-        </div>
+        
         
         <div></div>
       </div>
