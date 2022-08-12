@@ -18,7 +18,7 @@ const DetailEspecie = () => {
 
     //   <button onClick={handleBack}>Atras</button>
     // </div>
-    <div className={`detail-arbol ${activeEspecie !== null && "active"}`} id="detail">
+    <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
       <IconButton aria-label="back" onClick={handleBack}>
       <ArrowBackIosNewIcon  sx={{color:'#000'}}/>
       </IconButton>
@@ -30,10 +30,15 @@ const DetailEspecie = () => {
       
       <div className="detail-container-especie">
         <div className="detail-container-especie-secundary">
-          <div style={{marginTop:'auto',marginBottom:'auto'}}>
-              <ImageDetail src={activeEspecie.imagenesUri[0]}/>
+          <div style={{margin:'auto'}}>
+              {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
+              {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}
+              <img src={activeEspecie.imagenesUri[0]} alt="" className='img-detail-especie' />
           </div>
-              <div>
+            
+          
+        </div>
+        <div>
               <h2 className="titles">
                 &nbsp;
                 {activeEspecie?.nombreComun}
@@ -50,9 +55,6 @@ const DetailEspecie = () => {
               </div>
             </div>
           </div>
-          
-        </div>
-
        
         <div>  
             <div className="text-normal">
