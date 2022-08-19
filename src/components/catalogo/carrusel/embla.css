@@ -23,7 +23,7 @@
 
 .embla__slide {
   flex: 0 0 auto;
-  width: 80%;
+  width: 100%;
   position: relative;
   padding-left: 1rem;
   counter-increment: embla;
