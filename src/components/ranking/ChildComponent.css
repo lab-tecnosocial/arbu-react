@@ -1,38 +1,117 @@
-.child-container{
+/* .child-container{
   display: flex;
   justify-content: center;
   align-items: center;
- 
-}
+  
+} */
 .flex{
+  display: flex;
+  justify-content: space-between;
+    /* gap: 1rem; */
+    /* text-align: left; */
+    /* margin: 10px; */
+    /* width: 500px; */
+    /* width: 100%; */
+  }
+  .index-and-img{
     display: flex;
-
-    gap: 1rem;
-    text-align: left;
-    margin: 10px;
-    width: 500px;
-}
-.item{
+    margin-top: auto;
+    margin-bottom: auto;
+    /* gap: 0.5rem; */
+  }
+  .index-number{
+    text-align: center;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 30px;
+    font-family: 'Poppins', sans-serif;
+  }
+  .img-and-info{
+    display: flex;
+    flex-direction: row;
+    
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  .puntos-list{
+    margin-top: auto;
+    margin-bottom: auto;
+    font-family: 'Open Sans', sans-serif;
+  }
+  /* .item{
     display: flex;
     align-items: center;
 }
 .item > span{
-  font-size: 1.5rem;
-}
-.img-user{
+  font-size: 1.2rem;
+} */
+.img-user-list{
     border-radius: 50%;
     object-fit: cover;
     background-size: cover;
     background-position: center;
+    width: 50px;
+    height: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+
   }
 .info{
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
-  gap: 5px;
-  width: 250px;
+  
+  font-size: 0.8rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center;
+  font-family: 'Open Sans';
+  /* text-align: justify;
+  text-justify: inter-word; */
+  /* gap: 5px; */
+  /* width: 250px; */
+  /* width: 115px; */
+  width: 100%;
   /* background-color: cadetblue; */
 }
 .flex .info{
-   padding: 1em;
+   /* padding: 1rem; */
 }
+
+@media only screen and (min-width: 430px) {
+  .img-user-list{
+    width: 60px;
+    height: 60px;
+  }
+  /* .info > span{
+    font-size: 1rem;
+  } */
+}
+@media only screen and (min-width: 470px) {
+  .img-user-list{
+    width: 70px;
+    height: 70px;
+  }
+  .info > span{
+    font-size: 0.9rem;
+  }
+}
+/* @media only screen and (min-width: 768px) { */
+@media only screen and (min-width: 630px) {
+  .flex{
+      margin-right: auto;
+      margin-left: auto;
+      width: 600px;
+    }
+    .index-and-img{
+      gap: 1rem;
+    }
+    .img-user-list{
+      width: 80px;
+      height: 80px;
+    }
+    .info > span{
+      font-size: 1rem;
+    }
+}
+

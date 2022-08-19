@@ -7,7 +7,9 @@ const APIComponent = () => {
         <div style={{marginTop:'85px'}}>
           {/* <h2>API</h2> */}
           
-          <SwaggerUI url="http://localhost:4000/swagger.json" />
+          {/* <SwaggerUI url="https://api-arbu.herokuapp.com/api-docs" /> */}
+          <SwaggerUI url="https://api-arbu.herokuapp.com/swagger.json" />
+          {/* <SwaggerUI url="http://localhost:4000/swagger.json" /> */}
           {/* <SwaggerUI url="http://localhost:4000/api-docs/" /> */}
         </div>
       );
