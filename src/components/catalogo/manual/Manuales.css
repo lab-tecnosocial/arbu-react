@@ -1,16 +1,12 @@
 .container-slider {
   width: 100%;
-  height: 440px;
-  margin: 3px auto 0;
+  min-height: 620px;
+  height: 100%;
+  margin:0;
   position: relative;
   overflow: hidden;
+}
 
-}
-@media screen and (max-width: 700px){
-  .container-slider {
-    margin: 100px 10px 0;
-  }
-}
 .slide {
   width: 100%;
   height: 100%;
@@ -20,7 +16,7 @@
 }
 .slide img {
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   object-fit: cover;
   background-position: center;
   background-size: cover;
@@ -31,11 +27,12 @@
 }
 
 .btn-slide {
-  width: 40px;
-  height: 40px;
+  color: white;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: #f1f1f1;
-  border: 1px solid rgba(34, 34, 34, 0.287);
+  background: white;
+  border: 1px solid white;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -44,8 +41,8 @@
 }
 
 .btn-slide img {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   pointer-events: none;
 }
 .prev {
@@ -62,19 +59,53 @@
 
 .container-dots {
   position: absolute;
-  bottom: 10px;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
 }
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
-  border: 3px solid #f1f1f1;
+  border: 1px solid #f1f1f1;
   margin: 0 5px;
   background: #f1f1f1;
 }
 .dot.active {
   background: green;
 }
+
+/* laptops  */
+
+@media (max-width: 1536px){
+
+  .container-slider {
+
+    min-height: 493px;
+
+  }
+}
+
+/* mitad de pantalla desktop */
+
+@media (max-width: 958px){
+
+  .container-slider {
+
+    min-height: 309px;
+
+  }
+}
+/* mitad de pantalla laptop */
+
+@media (max-width: 769px){
+
+  .container-slider {
+
+    min-height: 248px;
+
+  }
+}
+
+/* mobile */

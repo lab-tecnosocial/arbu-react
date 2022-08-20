@@ -4,7 +4,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { setHideDetailEspecie } from '../../actions/catalogoActions';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ImageDetail from '../mapa/ImageDetail';
+
 import './DetailEspecie.css'
 const DetailEspecie = () => {
   const {activeEspecie} = useSelector(state=>state.catalogo);
@@ -20,7 +20,7 @@ const DetailEspecie = () => {
     // </div>
     <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
       <IconButton aria-label="back" onClick={handleBack}>
-      <ArrowBackIosNewIcon  sx={{color:'#000'}}/>
+      <ArrowBackIosNewIcon  sx={{color:'#174C44'}}/>
       </IconButton>
       {/* {monitoreos.length > 0 
         && (
@@ -39,43 +39,43 @@ const DetailEspecie = () => {
           
         </div>
         <div>
-              <h2 className="titles">
+              <h2 className="titleEspecie">
                 &nbsp;
                 {activeEspecie?.nombreComun}
               </h2>
             <div>
-                <div className="text-normal" >
+                <div className="nombreCientifico" >
                   {activeEspecie?.nombreCientifico}
                 </div>
-                <div className="text-normal" style={{fontStyle:'italic'}}>
-                  {activeEspecie?.familia}
+                <div className='text-container'>
+                <div className="text-normal " style={{fontStyle:'italic'}}>
+                 Familia: {activeEspecie?.familia}
                 </div>
-                <div className="text-normal">
+                <div className="text-origen">
                   {activeEspecie?.origen}
-              </div>
+                </div>
+                </div>
+
             </div>
           </div>
        
         <div>  
-            <div className="text-normal">
+            <div className="text-descripcion">
               {
                 activeEspecie?.descripcion
               }
             </div>
-            <div className="text-normal">
+            <div className="text-descripcion">
               {
                 activeEspecie?.descripcion2
               }
             </div>
-            <div className="text-normal">
+            <div className="text-recomendable">
               {
                 activeEspecie?.recomendablePara
               }
             </div>
           </div>
-        
-        
-        <div></div>
       </div>
       
        
