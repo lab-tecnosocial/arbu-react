@@ -2,6 +2,8 @@ import React from "react";
 import './Manuales.css'
 import leftArrow from "./icons/left-arrow.svg";
 import rightArrow from "./icons/right-arrow.svg";
+import { IconButton } from "@mui/material";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 export default function BtnSlider({ direction, moveSlide }) {
   console.log(direction, moveSlide);
@@ -14,3 +16,6 @@ export default function BtnSlider({ direction, moveSlide }) {
     </button>
   );
 }
+      <IconButton aria-label="back"> 
+      <ArrowBackIosNewIcon  sx={{color:'#000'}}/>
+      </IconButton>
