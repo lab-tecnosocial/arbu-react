@@ -25,7 +25,7 @@ import catalogoIcon from './components/mapa/catalogo_icon_navigation.svg'
 import arbuAppIcon from './components/mapa/logo_arbu_app.svg'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import ApiIcon from '@mui/icons-material/Api';
-import { loadScoresMes } from './actions/leaderboardActions';
+import { loadScoresGlobal, loadScoresMes } from './actions/leaderboardActions';
 import {useNavigate} from 'react-router-dom';
 const drawerWidth = 240;
 const navItems = [
@@ -66,6 +66,7 @@ function App(props) {
     dispatch(startLoadingUsuarios());
     dispatch(startLoadEspeciesCatalogo());
     dispatch(loadScoresMes());
+    dispatch(loadScoresGlobal());
   }, [dispatch]);
 
   const handleDrawerToggle = () => {
