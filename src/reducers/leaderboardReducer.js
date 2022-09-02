@@ -1,15 +1,21 @@
 import { types } from "../types/types";
 
 const initialState = {
-  scores: [],
+  scoresMes: [],
+  scoresGlobal: [],
 };
 export const leaderboardReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.leaderboardLoadScoresMes:
       return {
         ...state,
-        scores: [...action.payload]
-      }
+        scoresMes: [...action.payload]
+    }
+    case types.leaderboardLoadScoresGlobal:
+    return {
+      ...state,
+      scoresGlobal: [...action.payload]
+    }
     default:
       return state;
   }

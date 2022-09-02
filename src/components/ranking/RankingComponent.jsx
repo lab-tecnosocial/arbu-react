@@ -11,7 +11,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import './RankingComponent.css'
 import { useSelector } from 'react-redux';
 import ChildComponent from './ChildComponent';
-import ThreePositions from './ThreePositions';
+import ThreePositionsMes from './ThreePositionsMes';
+import ThreePositionsGlobal from './ThreePositionsGlobal';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,7 +50,7 @@ function a11yProps(index) {
 const RankingComponent = () => {
   const [value, setValue] = useState(0);
   const {usuariosMap} = useSelector(state=>state.mapa);
-  const {scores} = useSelector(state=>state.leaderboard);
+  const {scoresGlobal,scoresMes} = useSelector(state=>state.leaderboard);
 
 
 
@@ -117,11 +118,21 @@ const RankingComponent = () => {
         <center>
           <strong>Top 30</strong><br />
         </center>
-          <ThreePositions list3Best={getFormatedList(scores)} />
+          <ThreePositionsMes list3Best={getFormatedList(scoresMes)} />
         {
-          scores.map((item,i)=>(
-            <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+4} />
+          scoresMes.map((item,i)=>(
+
+            i>2 && i<30 && <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+1} />
+
           ))
+        }
+        {
+          scoresMes.length===0 && (
+            <center>
+              <br />
+              No hay usuarios compitiendo aún...
+            </center>
+          )
         }
         </div>
       </TabPanel>
@@ -129,13 +140,23 @@ const RankingComponent = () => {
       <div>
         <center>
           <strong>Top 100</strong><br />
-        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza semanalmente</span>
+        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
         </center>
-          <ThreePositions list3Best={getFormatedList(scores)} />
+          <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} />
         {
-          scores.map((item,i)=>(
-            <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+4} />
+          scoresGlobal.map((item,i)=>(
+            
+            i>2 && i<100 && <ChildComponent key={`${item.id}-Global`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+1} />
+            
           ))
+        }
+        {
+          scoresGlobal.length===0 && (
+            <center>
+              <br />
+              No hay usuarios compitiendo aún...
+            </center>
+          )
         }
         </div>
       </TabPanel>
