@@ -1,44 +1,55 @@
-import { IconButton } from '@mui/material';
-import React from 'react'
-import { useDispatch,useSelector } from 'react-redux';
-import { setHideDetailEspecie } from '../../actions/catalogoActions';
+import { IconButton } from "@mui/material";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setHideDetailEspecie } from "../../actions/catalogoActions";
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-
-import './DetailEspecie.css'
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ImageDetail from "../mapa/ImageDetail";
+import "./DetailEspecie.css";
+import EmblaCarouselComponent from "./carrusel/EmblaCarousel";
 const DetailEspecie = () => {
-  const {activeEspecie} = useSelector(state=>state.catalogo);
+  const { activeEspecie } = useSelector((state) => state.catalogo);
   const dispatch = useDispatch();
 
-  const handleBack=() => {
+  const handleBack = () => {
     dispatch(setHideDetailEspecie());
-  }
+  };
   return (
-    // <div>DetailEspecie
 
-    //   <button onClick={handleBack}>Atras</button>
-    // </div>
     <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
+      
       <IconButton aria-label="back" onClick={handleBack}>
       <ArrowBackIosNewIcon  sx={{color:'#174C44'}}/>
       </IconButton>
-      {/* {monitoreos.length > 0 
-        && (
-          <ImageDetail src={monitoreos[0]?.fotografia} />
-        )
-      } */}
-      
+
       <div className="detail-container-especie">
         <div className="detail-container-especie-secundary">
-          <div style={{margin:'auto'}}>
-              {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
-              {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}
-              <img src={activeEspecie.imagenesUri[0]} alt="" className='img-detail-especie' />
-          </div>
+          <div style={{ margin: "auto" }}>
+            {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
+            {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}
+            {/* <img src={activeEspecie.imagenesUri[0]} alt="" className='img-detail-especie' /> */}
+            <EmblaCarouselComponent autoplay delayLength={7000}>
+              {activeEspecie.imagenesUri.map((item) => (
             
-          
+                <img
+                  key={item}
+                  src={item}
+                  alt=""
+                  style={{
+                    borderRadius: "0.5rem",
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+               
+              ))}
+            </EmblaCarouselComponent>
+          </div>
         </div>
-        <div>
+
+        <div className="scroll">
+      <div className="container-info">
               <h2 className="titleEspecie">
                 &nbsp;
                 {activeEspecie?.nombreComun}
@@ -57,7 +68,7 @@ const DetailEspecie = () => {
                 </div>
 
             </div>
-          </div>
+        </div>
        
         <div>  
             <div className="text-descripcion">
@@ -77,12 +88,11 @@ const DetailEspecie = () => {
             </div>
           </div>
       </div>
-      
-       
-       
-       
-    </div>
-  )
-}
 
-export default DetailEspecie
+      </div>
+      <span></span>
+    </div>
+  );
+};
+
+export default DetailEspecie;
