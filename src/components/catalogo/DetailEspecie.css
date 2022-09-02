@@ -6,6 +6,7 @@
   font-family: 'Poppins', sans-serif;
   color: var(--color-oscuro);
   font-size: 1.1rem;
+  margin: 0;
 }
 .text-normal{
   font-family: 'Open Sans' , sans-serif;
@@ -29,7 +30,7 @@
   background-color: var(--color-oscuro);
   border-radius: 10px;
   padding: 2px 5px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 .text-descripcion{
   font-family: 'Open Sans' , sans-serif;
@@ -54,14 +55,22 @@
   /* Este es el width 100% por defecto para dispositivos pequeños para que ocupe todo su ancho*/
   width: 100%;
   /* height:100%; es para todo el alto del dispositivo y height:auto; es para solo el alto del contenido del panel  */
-  height: 100%;
+  height: 90%;
   overflow-y: scroll;
   background-color: #EBF5EE;
   top: 60px;
+  padding-bottom: 100px;
   right: -100%;
   transition: all 0.2s ease-in-out;
 }
 
+.scroll{
+  margin: 0 20px;
+  
+} 
+.container-info{
+  position:relative;
+}
 .image-epecie{
   border-radius: 50%;
   width: 150px;
@@ -82,16 +91,11 @@
 .detail-container-especie{
   display: flex;
   flex-direction: column;
-  margin: 0 40px;
+  margin: 0;
 }
 
-.detail-container-especie img{
-width: 240px;
-height: 240px;
-}
-.img-detail-especie{
 
-}
+
 .detail-container-especie-secundary{
   display: flex;
   flex-direction: row;
@@ -102,12 +106,12 @@ height: 240px;
 /* Aqui se cambia el width del panel para dispositivos medianos y grandes */
 @media only screen and (min-width: 768px) {
   .detail-especie {
-    width: 45%;
+    width: 40%;
   }
 }
 
 @media only screen and (min-width: 1440px) {
   .detail-especie {
-    width: 35%;
+    width: 30%;
   }
 }

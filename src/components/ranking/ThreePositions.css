@@ -5,15 +5,15 @@
 }
 .top-position-container{
   display: flex;
-  width: 500px;
+  width: 100%;
   justify-content: center;
-  gap: 10px;
+  gap: 1rem;
 }
 .first-place, .second-place, .third-place{
   display: flex;
   flex-direction: column;
   width: 30%;
-  height: 250px;
+  height: 100%;
   /* background-color: red; */
   align-items: center;
   text-align: center;
@@ -38,12 +38,13 @@
   margin-top: 30px;
 } */
 .third-place > .puntos{
- margin-top: 20px;
+ margin-top: 0px;
  /* background-color: brown; */
  width: 100%;
 }
 .puntos{
-  font-size: 2.5rem;
+  font-size: 1.5rem;
+  font-family: 'Open Sans';
 }
 .label-position-first,.label-position-second,.label-position-third{
   padding: 5px;
@@ -51,14 +52,75 @@
   color: white; */
 }
 .label-position-second{
-  margin-top: 20px;
+  margin-top: 10px;
+  font-family: 'Poppins';
 }
 .label-position-first{
+  font-family: 'Poppins';
 
 }
 .label-position-third{
-  margin-top: 20px;
+  margin-top: 10px;
+  font-family: 'Poppins';
+
 }
-.name-institucion{
-  width: 150px;
+.info-user{
+  /* width: 150px; */
+  font-size: 0.8rem;
+  font-family: 'Open Sans';
+}
+.name-user{
+  font-size: 0.8rem;
+}
+.img-user{
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  width: 60px;
+  height: 60px;
+}
+.img-user-first{
+  width: 80px;
+  height: 80px;
+}
+@media only screen and (min-width: 430px) {
+  .img-user{
+    width: 70px;
+    height: 70px;
+  }
+  .img-user-first{
+    width: 90px;
+    height: 90px;
+  }
+}
+@media only screen and (min-width: 470px) {
+  .img-user{
+    width: 80px;
+    height: 80px;
+  }
+  .img-user-first{
+    width: 100px;
+    height: 100px;
+  }
+  .name-user{
+    font-size: 0.9rem;
+  }
+}
+
+@media only screen and (min-width: 630px) {
+  .img-user{
+    width: 90px;
+    height: 90px;
+  }
+  .img-user-first{
+    width: 110px;
+    height: 110px;
+  }
+ .top-position-container{
+    width: 600px;
+  }
+  .name-user{
+    font-size: 1rem;
+  }
 }

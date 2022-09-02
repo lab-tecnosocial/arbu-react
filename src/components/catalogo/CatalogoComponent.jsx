@@ -9,10 +9,9 @@ import DetailEspecie from './DetailEspecie';
 const CatalogoComponent = () => {
   const {activeEspecie} = useSelector(state=>state.catalogo);
   return (
-        <main style={{ }}>
+        <main>
           {
         activeEspecie ?
-
         (
           <DetailEspecie />
         )
@@ -20,7 +19,7 @@ const CatalogoComponent = () => {
         (
           <span></span>
         )
-      }
+        }
           <Manuales />
           <Especies />
           

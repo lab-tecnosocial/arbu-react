@@ -74,8 +74,8 @@ const Especies = () => {
         {/* <a  href="">      */}
 
         <div className='container-catalogo'>
-        <Box component="span" sx={{ p:0  }}>
-          <Button>
+        
+          <Button className='button-primary'>
         <figure>
         <img 
         src={usuario.imagenesUri[0]} 
@@ -89,7 +89,7 @@ const Especies = () => {
           <h2 className='titles'>
               {usuario.nombreComun} 
           </h2>
-            <p className='text-normal'>
+            <p className='text-normal descripcion'>
             {usuario.descripcion2}
             </p>
           </div>
@@ -105,7 +105,7 @@ const Especies = () => {
         </div>
         </div>
         </Button>
-        </Box>
+        
         </div> 
         {/* </a> */}
       </div>
