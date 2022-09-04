@@ -155,8 +155,9 @@
     margin:  0 auto;
   }
   .container-slider {
-    background-color: white; 
+ 
     min-height: 548px;
+    margin: 0px auto;
   }
 
 }
