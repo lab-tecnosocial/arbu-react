@@ -113,6 +113,10 @@
     }
   }
   @media (max-width: 550px){
+    .search{
+      margin-top: 10px;
+      width: 90%;
+    }
 
     .button-primary{
       display: flex;

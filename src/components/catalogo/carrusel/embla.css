@@ -11,14 +11,7 @@
   overflow: hidden;
 }
 
-.embla__viewport.is-draggable {
-  cursor: move;
-  cursor: grab;
-}
 
-.embla__viewport.is-dragging {
-  cursor: grabbing;
-}
 
 .embla__container {
   display: flex;
@@ -71,6 +64,7 @@
 }
 
 .embla__button__svg {
+  display: none;
   width: 1.5rem;
   height: 1.5rem;
 }
@@ -124,4 +118,11 @@
 .autoplay {
   margin-top: 40px;
   margin-left: 20px;
+}
+.button-exit{
+  background-color: transparent;
+  margin-top: 6px;
+  position: absolute;
+  z-index:1;
+
 }
