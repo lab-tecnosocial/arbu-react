@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import ChildComponent from './ChildComponent';
 import ThreePositionsMes from './ThreePositionsMes';
 import ThreePositionsGlobal from './ThreePositionsGlobal';
+import Footer from '../footer/Footer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,8 +110,8 @@ const RankingComponent = () => {
     
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
-              <Tab icon={<CalendarMonthIcon />} label={`MES`} {...a11yProps(0)} />
-          <Tab icon={<SportsScoreIcon />} label="GLOBAL" {...a11yProps(1)} />
+              <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
+          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -160,7 +161,12 @@ const RankingComponent = () => {
         }
         </div>
       </TabPanel>
-    
+      <br />
+      <br />
+      <br />
+      <br />
+      
+        <Footer />
   </div>
   )
 }

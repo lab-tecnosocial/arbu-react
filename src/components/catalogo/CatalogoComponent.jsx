@@ -5,14 +5,14 @@ import './CatalogoComponent.css'
 import Especies from './Especies'
 import {useSelector} from 'react-redux';
 import DetailEspecie from './DetailEspecie';
+import Footer from '../footer/Footer';
 
 const CatalogoComponent = () => {
   const {activeEspecie} = useSelector(state=>state.catalogo);
   return (
-        <main style={{ padding: "1rem 0" }}>
+        <main>
           {
         activeEspecie ?
-
         (
           <DetailEspecie />
         )
@@ -20,10 +20,10 @@ const CatalogoComponent = () => {
         (
           <span></span>
         )
-      }
+        }
           <Manuales />
           <Especies />
-          
+          <Footer />
         </main>
   )
 }

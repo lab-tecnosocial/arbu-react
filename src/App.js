@@ -44,7 +44,7 @@ const navItems = [
     path: '/ranking'
   },
   {
-    section: 'Catálogo de Especies',
+    section: 'Aprende',
     icon:<img src={catalogoIcon} alt="" width="25px" height="25px" style={{verticalAlign:'middle'}} />,
     path: '/catalogo'
   },
@@ -78,9 +78,9 @@ function App(props) {
   }
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center',backgroundColor:'#268576' }}>
-      <Typography variant="h6" sx={{ my: 2 ,color:'#EBF5EE',fontFamily:`'Poppins',sans-serif`}}>
+      <Typography variant="h6" sx={{ my: 2 ,color:'#EBF5EE',fontFamily:'Poppins'}}>
       <div onClick={handleHome} className="home">
-      <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'50%',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
+      <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'5px',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
         &nbsp;Arbu
       </div>
       </Typography>
@@ -90,7 +90,8 @@ function App(props) {
             <Link key={item.section} to={item.path} style={{textDecoration:'none',color:'#EBF5EE'}}>
           <ListItem disablePadding>
               <ListItemButton sx={{ textAlign: 'center' }}>
-            {item.icon} <ListItemText primary={item.section} />
+            {item.icon}
+             <ListItemText sx={{fontFamily:'Poppins'}} primary={item.section} />
             </ListItemButton>
           </ListItem>
             </Link>
@@ -127,11 +128,11 @@ function App(props) {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' },color:'#EBF5EE',fontFamily:`'Poppins',sans-serif` }}
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' },color:'#EBF5EE',fontFamily:'Poppins' }}
            
           >
             <div onClick={handleHome} className="home-typography">
-              <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'50%',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
+              <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{verticalAlign:'middle',borderRadius:'5px',backgroundColor:'#EBF5EE',paddingTop:'2px'}} />
         &nbsp;
             Arbu
             </div>
@@ -143,7 +144,9 @@ function App(props) {
               
               <Link key={item.section} to={item.path} style={{textDecoration:'none'}}>
 
-              <Button className='buttons-appbar'  sx={{ color: '#EBF5EE',textTransform:'capitalize',borderRadius:'20px',border:'1px solid #EBF5EE', marginLeft:'4px',marginRight:'4px',fontFamily:`'Open Sans',sans-serif`}}>
+              <Button className='buttons-appbar'  sx={{ color: '#EBF5EE',textTransform:'capitalize',borderRadius:'20px',
+              // border:'1px solid #EBF5EE',
+               marginLeft:'4px',marginRight:'4px',fontFamily:'Poppins'}}>
                 {item.icon}&nbsp;{item.section}
               </Button>
               </Link>

@@ -2,83 +2,110 @@ import { IconButton } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideDetailEspecie } from "../../actions/catalogoActions";
-
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ImageDetail from "../mapa/ImageDetail";
 import "./DetailEspecie.css";
 import EmblaCarouselComponent from "./carrusel/EmblaCarousel";
+import CloseIcon from '@mui/icons-material/Close';
 const DetailEspecie = () => {
   const { activeEspecie } = useSelector((state) => state.catalogo);
   const dispatch = useDispatch();
 
-  const handleBack = () => {
-    dispatch(setHideDetailEspecie());
-  };
-  return (
-    // <div>DetailEspecie
+  // const handleBack = () => {
+  //   dispatch(setHideDetailEspecie());
+  // };
 
-    //   <button onClick={handleBack}>Atras</button>
-    // </div>
+  return (
+
     <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
-      <IconButton aria-label="back" onClick={handleBack}>
-        <ArrowBackIosNewIcon sx={{ color: "#000" }} />
-      </IconButton>
-      {/* {monitoreos.length > 0 
-        && (
-          <ImageDetail src={monitoreos[0]?.fotografia} />
-        )
-      } */}
+
+      
 
       <div className="detail-container-especie">
         <div className="detail-container-especie-secundary">
-          <div style={{ margin: "auto" }}>
+        {/* <div className="button-exit">
+          <IconButton aria-label="back" onClick={handleBack}>
+          <CloseIcon  sx={{color:'#174C44'}}/>
+          </IconButton>
+          </div> */}
+          <div style={{ margin: "auto" }} >
             {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
             {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}
             {/* <img src={activeEspecie.imagenesUri[0]} alt="" className='img-detail-especie' /> */}
-            <EmblaCarouselComponent autoplay delayLength={3000}>
+            <EmblaCarouselComponent autoplay delayLength={4000}>
               {activeEspecie.imagenesUri.map((item) => (
-              
-                <img
+            
+                <img id="image"
                   key={item}
+                  
                   src={item}
                   alt=""
-                  style={{
+                    style={{
                     borderRadius: "0.5rem",
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
+                    
                   }}
+                  
                 />
-               
               ))}
             </EmblaCarouselComponent>
           </div>
         </div>
 
-        <br />
-        <br />
-        <div>
-          <h2 className="titles">
-            &nbsp;
-            {activeEspecie?.nombreComun}
-          </h2>
-          <div>
-            <div className="text-normal">{activeEspecie?.nombreCientifico}</div>
-            <div className="text-normal" style={{ fontStyle: "italic" }}>
-              {activeEspecie?.familia}
+        <div className="scroll" >
+      <div className="container-info">
+              <h2 className="titleEspecie">
+                &nbsp;
+                {activeEspecie?.nombreComun}
+              </h2>
+            <div>
+                <div className="nombreCientifico "  >
+                  {activeEspecie?.nombreCientifico}
+                </div>
+                <div className='text-container'>
+                <div className="text-normal " style={{fontStyle:'italic'}}>
+                 Familia: {activeEspecie?.familia}
+                </div>
+                <div className="text-origen">
+
+                  {activeEspecie?.origen === 'Nativa' ? 
+            
+               <span style={{backgroundColor:'#03b25e'}}>
+                 {activeEspecie?.origen}
+                </span>
+               : 
+                <span >
+                  {activeEspecie?.origen}
+                  </span>
+               }
+                </div>
+                </div>
+
             </div>
-            <div className="text-normal">{activeEspecie?.origen}</div>
+        </div>
+       
+        <div>  
+            <div className="text-descripcion">
+              {
+                activeEspecie?.descripcion
+              }
+            </div>
+            <div className="text-descripcion">
+              {
+                activeEspecie?.descripcion2
+              }
+            </div>
+            <div className="text-recomendable">
+              {
+                activeEspecie?.recomendablePara
+              }
+            </div>
+            {/* <div className="text-normal">{activeEspecie?.origen}</div> */}
           </div>
-        </div>
-
-        <div>
-          <div className="text-normal">{activeEspecie?.descripcion}</div>
-          <div className="text-normal">{activeEspecie?.descripcion2}</div>
-          <div className="text-normal">{activeEspecie?.recomendablePara}</div>
-        </div>
-
-        <div></div>
       </div>
+
+      </div>
+      <span></span>
     </div>
   );
 };

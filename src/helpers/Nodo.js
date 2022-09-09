@@ -7,4 +7,5 @@ let Nodo = class
         this.right = null;
     }
 }
-module.exports = Nodo;
+// module.exports = Nodo;
+export default Nodo;

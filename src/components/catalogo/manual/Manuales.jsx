@@ -2,6 +2,9 @@ import React, {useState} from 'react'
 import './Manuales.css'
 import BtnSlider from './BtnSlider'
 import dataSlider from './dataSlider'
+import { IconButton } from "@mui/material";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+
 
 export default function Slider() {
 
@@ -37,13 +40,18 @@ export default function Slider() {
                     key={obj.id}
                     className={slideIndex === index + 1 ? "slide active-anim" : "slide"}
                     >
-                        <img 
-                        src={process.env.PUBLIC_URL + `/Imgs/slides${index + 1}.jpg`} 
+                    <img className='img-desktop'
+                        src={process.env.PUBLIC_URL + `/Imgs/slides${index + 1}.png`} 
+                        />
+                    <img className='img-mobile'
+                        src={process.env.PUBLIC_URL + `/Imgs/imgs mobile/slides${index + 1}.png`} 
                         />
                     </div>
                 )
             })}
+            
             <BtnSlider moveSlide={nextSlide} direction={"next"} />
+
             <BtnSlider moveSlide={prevSlide} direction={"prev"}/>
 
             <div className="container-dots">
