@@ -10,11 +10,12 @@ export const traerScoresMes = async() => {
     arbol.insert(element.data());
   });
   const listaOrdenada = await calcularTop(arbol);
-  console.log(arrayCompetidores);
-  console.log(listaOrdenada);
+  // console.log(arrayCompetidores);
+  // console.log(listaOrdenada);
   
 
   return listaOrdenada;
+  // return scoresMes;
 }
 const calcularTop = async(arbolConNodos) =>{
   let listTop = await arbolConNodos.inorder(arbolConNodos.getRootNode());

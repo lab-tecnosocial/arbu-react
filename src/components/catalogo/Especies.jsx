@@ -70,18 +70,18 @@ const Especies = () => {
 
     {usuarios &&
       usuarios.map((usuario)=>(   
-       <div key={usuario.id} onClick={()=>handleClickEspecie(usuario)} >
+       <div key={usuario.id} onClick={()=>handleClickEspecie(usuario)} style={{borderRadius:'1rem'}}>
         {/* <a  href="">      */}
 
         <div className='container-catalogo'>
-        <Box component="span" sx={{ p:0  }}>
-          <Button>
+        
+          <Button className='button-primary'>
         <figure>
         <img 
         src={usuario.imagenesUri[0]} 
         alt={usuario.nombreComun} 
         referrerPolicy="no-referrer"
-        
+        style={{borderRadius:'1rem'}}
         />  
         </figure>
         <div className='container-text-icon'>
@@ -89,7 +89,7 @@ const Especies = () => {
           <h2 className='titles'>
               {usuario.nombreComun} 
           </h2>
-            <p className='text-normal'>
+            <p className='text-normal descripcion'>
             {usuario.descripcion2}
             </p>
           </div>
@@ -98,14 +98,29 @@ const Especies = () => {
           <span>
           </span>
             <figure className="icon-info">
-              <IconButton aria-label="back" >
+              {/* <IconButton aria-label="back" >
               <InfoIcon  sx={{color:'#fff'}}/>
-              </IconButton>
+              </IconButton> */}
+              <div className="text-origen">
+              
+               {usuario?.origen === 'Nativa' ? 
+            
+               <span style={{backgroundColor:'#03b25e'}}>
+                 {usuario?.origen}
+                </span>
+               : 
+                <span >
+                  {usuario?.origen}
+                  </span>
+               }
+                  
+                 
+                </div>
         </figure>
         </div>
         </div>
         </Button>
-        </Box>
+        
         </div> 
         {/* </a> */}
       </div>

@@ -1,31 +1,78 @@
 :root{
   --color-oscuro:#174C44 ;
+
 }
-.titles{
+.titleEspecie{
   font-family: 'Poppins', sans-serif;
   color: var(--color-oscuro);
-  font-size: 1rem;
+  font-size: 1.1rem;
+  margin: 0;
 }
 .text-normal{
   font-family: 'Open Sans' , sans-serif;
   color: var(--color-oscuro);
   font-size: 0.9rem;
 }
+.nombreCientifico{
+  font-size: 1.1rem;
+}
+.text-container{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-oscuro);
+}
+.text-origen > span{
+  font-family: 'Open Sans' , sans-serif;
+  font-weight:bold;
+  color: white;
+  background-color: var(--color-oscuro);
+  border-radius: 10px;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+}
+.text-descripcion{
+  font-family: 'Open Sans' , sans-serif;
+  color: var(--color-oscuro);
+  font-size: 0.9rem;
+  
+  margin-bottom: 1.2rem;
+}
+
+.text-recomendable{
+  font-family: 'Open Sans' , sans-serif;
+  color: var(--color-oscuro);
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
 
 .detail-especie{
-  z-index: 700;
+  z-index: 1000;
   position: fixed;
   /* Este es el width 100% por defecto para dispositivos pequeños para que ocupe todo su ancho*/
   width: 100%;
   /* height:100%; es para todo el alto del dispositivo y height:auto; es para solo el alto del contenido del panel  */
-  height: 100%;
+  height: 90%;
   overflow-y: scroll;
-  background-color: white;
+  background-color: #EBF5EE;
   top: 60px;
+  padding-bottom: 100px;
   right: -100%;
   transition: all 0.2s ease-in-out;
 }
 
+
+
+.scroll{
+  margin: 0 20px;
+  
+} 
+.container-info{
+  position:relative;
+}
 .image-epecie{
   border-radius: 50%;
   width: 150px;
@@ -46,33 +93,19 @@
 .detail-container-especie{
   display: flex;
   flex-direction: column;
-  margin: 0 40px;
-}
-
-.detail-container-especie img{
-width: 200px;
-height: 200px;
-}
-.img-detail-especie{
-
-}
-.detail-container-especie-secundary{
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 
 /* Aqui se cambia el width del panel para dispositivos medianos y grandes */
 @media only screen and (min-width: 768px) {
   .detail-especie {
-    width: 50%;
+    width: 40%;
   }
 }
 
 @media only screen and (min-width: 1440px) {
   .detail-especie {
-    width: 40%;
+    width: 30%;
   }
 }

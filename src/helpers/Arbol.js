@@ -1,4 +1,5 @@
-let Nodo = require('./Nodo.js');
+// let Nodo = require('./Nodo.js');
+import Nodo from './Nodo';
 let Arbol = class{
     constructor(){
         this.root = null;
@@ -85,4 +86,5 @@ let Arbol = class{
    
     
 }
-module.exports = Arbol;
+// module.exports = Arbol;
+export default Arbol;
