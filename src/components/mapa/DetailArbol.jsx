@@ -20,8 +20,10 @@ const DetailArbol = () => {
   useEffect(() => {
     if (arbol !== null) {
       let monitoreosSorted = Object.values(arbol.monitoreos).sort((a, b) => {
-        let fechaA = Number(new Date(a.timestamp._seconds * 1000));
-        let fechaB = Number(new Date(b.timestamp._seconds * 1000));
+        // let fechaA = Number(new Date(a.timestamp._seconds * 1000));
+        // let fechaB = Number(new Date(b.timestamp._seconds * 1000));
+        let fechaA = Number(new Date(a.timestamp.seconds * 1000));
+        let fechaB = Number(new Date(b.timestamp.seconds * 1000));
         return fechaB - fechaA;
       });
       dispatch(setActiveMonitoreo(monitoreosSorted[0]));
@@ -30,6 +32,22 @@ const DetailArbol = () => {
     }
   }, [arbol, setMonitoreos,dispatch]);
  
+  const dateToDMY = (date) => {
+    var d = date.getDate();
+    var m = date.getMonth() + 1; //Month from 0 to 11
+    var y = date.getFullYear();
+    return '' + (d <= 9 ? '0' + d : d) + '/' + (m<=9 ? '0' + m : m) + '/' + y;
+}
+function formatDate(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " a las " + strTime;
+}
   const handleCloseDetail = () => {
     dispatch(hideDetailArbol());
     document.querySelector('.leaflet-control-zoom-in').style.display='block';
@@ -165,7 +183,17 @@ const DetailArbol = () => {
          
           
             <div style={{display:'table'}}>
-            <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={relogIcon} alt="" width="20px" height="20px"/></span> Fecha: { monitoreos.length>0 && (new Date(monitoreo?.timestamp._seconds * 1000)).toDateString()}
+            <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={relogIcon} alt="" width="20px" height="20px"/></span> 
+            {/* Fecha: { monitoreos.length>0 && formatDate((new Date(monitoreo?.timestamp.seconds * 1000)))} */}
+            {/* &nbsp; */}
+              <div style={{display:'inline'}}>
+                <div>
+                  Fecha:
+                </div>
+                <div>
+                { monitoreos.length>0 && formatDate((new Date(monitoreo?.timestamp.seconds * 1000)))}
+                </div>
+              </div>
             </div>
             <div style={{display:'flex',alignItems:'center'}}>
               <div>
@@ -202,15 +230,15 @@ const DetailArbol = () => {
           monitoreos.length>0
           &&
           monitoreos.map(item=>(
-            <div key={item.timestamp._seconds} className="card hover" onClick={()=>handleClickMonitoreo(item)} >
+            <div key={item.timestamp.seconds} className="card hover" onClick={()=>handleClickMonitoreo(item)} >
               
               <div className="monitoreos-container">
                 <div >
-                  <img src={item.fotografia} alt={item.timestamp._seconds} width="70px" height="70px" />
+                  <img src={item.fotografia} alt="" width="70px" height="70px" />
                 </div>
                 <div style={{display:'block',marginTop:'auto',marginBottom:'auto',marginLeft:'8px'}}>
                   <div style={{display:'table'}}>
-                  <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={relogIcon} alt="" width="25px" height="25px"/></span>&nbsp;<span style={{display:'table-cell',verticalAlign:'middle'}}>Fecha: {(new Date(item.timestamp._seconds * 1000)).toDateString()}</span>
+                  <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={relogIcon} alt="" width="25px" height="25px"/></span>&nbsp;<span style={{display:'table-cell',verticalAlign:'middle'}}>Fecha:  { monitoreos.length>0 && formatDate((new Date(monitoreo?.timestamp.seconds * 1000)))}</span>
                   </div>
                   <div style={{display:'table'}}>
                    {getUserPhoto(item.monitoreoRealizadoPor) !== 'default'?

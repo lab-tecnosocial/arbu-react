@@ -13,7 +13,11 @@
   color: var(--color-oscuro);
   font-size: 0.9rem;
 }
-
+.inputBuscar{
+  font-family: 'Poppins';
+  font-size: 1rem;
+  color: #174C44 !important;
+}
 /* buscador */
 
 .containerInput {

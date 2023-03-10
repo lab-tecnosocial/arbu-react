@@ -1,8 +1,12 @@
 import { scoresMes } from "../components/ranking/scoresMes"
 import { db } from "./../firebase/firebase-config";
-let Arbol = require('./Arbol.js');
+// let Arbol = require('./Arbol.js');
+import Arbol from './Arbol';
 export const traerScoresMes = async() => {
-  const scoresSnapshot = await db.collection("9_2022").get();
+  const date = new Date();
+  // console.log(date.getMonth()+1);
+  // console.log(date.getFullYear());
+  const scoresSnapshot = await db.collection((date.getMonth()+1)+"_"+date.getFullYear()).get();
   let arrayCompetidores = [];
   let arbol = new Arbol();
   await scoresSnapshot.forEach((element)=>{

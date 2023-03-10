@@ -12,6 +12,7 @@ import HomeComponent from './components/home/HomeComponent';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import MapaComponent from './components/mapa/MapaComponent';
+import Acerca from './components/acerca/Acerca';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,8 +23,10 @@ root.render(
       <Route path="/" element={<HomeComponent />} />
       <Route path="mapa" element={<MapaComponent />} />
       <Route path="ranking" element={<RankingComponent />} />
-      <Route path="catalogo" element={<CatalogoComponent />} />
+      <Route path="aprende" element={<CatalogoComponent />} />
       <Route path="api" element={<APIComponent />} />
+      <Route path="acerca" element={<Acerca />} />
+
       <Route path="*" element={ <main style={{ padding: "1rem" }}><h2>Ho hay nada aquí!</h2></main>}/>
     </Routes>
   </BrowserRouter>

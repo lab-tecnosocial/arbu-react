@@ -1,4 +1,7 @@
 import React from "react";
+import SvgComponentUserDefaultFirst from "./SvgComponentUserDefaultFirst";
+import SvgComponentUserDefaultSecond from "./SvgComponentUserDefaultSecond";
+import SvgComponentUserDefaultThird from "./SvgComponentUserDefaultThird";
 import "./ThreePositions.css";
 const ThreePositionsMes = ({ list3Best }) => {
   return (
@@ -14,12 +17,22 @@ const ThreePositionsMes = ({ list3Best }) => {
                 <div className="label-position-second">
                 <strong>2</strong>
               </div>
-              <img
+              {
+              list3Best[1]?.foto !== 'default'?
+              (
+                 <img
                 src={list3Best[1]?.foto}
                 alt=""
                 referrerPolicy="no-referrer"
                 className="img-user img-user-second"
               />
+              )
+              :
+              (
+                <SvgComponentUserDefaultSecond />
+              )
+              }
+             
 
               <div className="puntos">
                 <span>{list3Best[1]?.puntos}</span>
@@ -41,13 +54,20 @@ const ThreePositionsMes = ({ list3Best }) => {
               <div className="label-position-first">
                 <strong>1</strong>
               </div>
+              {
+              list3Best[0]?.foto !== 'default'?
+              (
               <img
                 src={list3Best[0]?.foto}
                 alt=""
                 referrerPolicy="no-referrer"
                 className="img-user img-user-first"
               />
-          
+              ):
+              (
+                <SvgComponentUserDefaultFirst />
+              )
+              }
               <div className="puntos">
                 <span>{list3Best[0]?.puntos}</span>
                 <span style={{ fontSize: "1.2rem" }}>pts</span>
@@ -67,13 +87,20 @@ const ThreePositionsMes = ({ list3Best }) => {
                 <div className="label-position-third">
                 <strong>3</strong>
               </div>
+              {
+              list3Best[2]?.foto !== 'default'?
+              (
               <img
                 src={list3Best[2]?.foto}
                 alt=""
                 referrerPolicy="no-referrer"
                 className="img-user img-user-third"
               />
-
+              ):
+              (
+              <SvgComponentUserDefaultThird />
+              )
+              }
               <div className="puntos">
                 <span>{list3Best[2]?.puntos}</span>
                 <span style={{ fontSize: "1.2rem" }}>pts</span>
