@@ -11,6 +11,8 @@ import adoptalogo from "./adoptalogo.png";
 import cuidalogo from "./cuidalogo.png";
 import aprendelogo from "./aprendelogo.png";
 import iconoarbu from "./iconoarbu.png";
+import arbolitos1 from "./arbolitos1.png";
+import arbolitos2 from "./arbolitos2.png";
 import Footer from "../footer/Footer";
 const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
@@ -90,6 +92,7 @@ const HomeComponent = () => {
         <br />
         <br />
         <div className="container-logos">
+          <img src={arbolitos1} alt="" className="arbolitos1"/>
           <div>
             <center>
             <img src={adoptalogo} alt="" width={200}  />
@@ -127,6 +130,7 @@ const HomeComponent = () => {
         <br />
         <br />
         <div>
+          <img src={arbolitos2} alt="" className="arbolitos2" />
           <center>
             <br />
             <img src={iconoarbu} alt="" />

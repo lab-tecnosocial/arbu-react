@@ -38,7 +38,7 @@ const Especies = () => {
 
   const handleClickEspecie = (usuario) => {
   
-    console.log(usuario);
+    // console.log(usuario);
     dispatch(setActiveEspecie(usuario));
   }
   
@@ -56,13 +56,13 @@ const Especies = () => {
         <input
           className="form-control inputBuscar"
           value={busqueda}
-          placeholder="Búsqueda por Nombre"
+          placeholder="Búsqueda por Nombre común o científico"
           onChange={handleChange}
         />
         <button className="btn btn-success">
-        <IconButton aria-label="back" >
+        {/* <IconButton aria-label="back" > */}
         <SearchIcon  sx={{color:'#fff'}}/>
-        </IconButton>
+        {/* </IconButton> */}
         </button>
       </div>
     </div>

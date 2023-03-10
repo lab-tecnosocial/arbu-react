@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./ChildComponent.css";
-
+import SvgComponentUserDefault from "./SvgComponentUserDefault";
 const ChildComponent = ({ nombre, puntos, foto, institucion,index }) => {
   return (
     <div className="child-container">
@@ -9,12 +9,22 @@ const ChildComponent = ({ nombre, puntos, foto, institucion,index }) => {
         <div className="index-and-img" >
           <strong className="index-number">{index}</strong>
           <div>
-          <img
+            {
+              foto !== 'default'?
+              (
+                <img
             src={foto}
             alt=""
             referrerPolicy="no-referrer"
             className="img-user-list"
           />
+              )
+              :
+              (
+                <SvgComponentUserDefault />
+              )
+            }
+          
           </div>
         </div>
         <div className="img-and-info">

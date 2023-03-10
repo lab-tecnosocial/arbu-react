@@ -19,7 +19,7 @@ const Footer = () => {
             className="list-unstyled"
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
-            <Link to="/proyecto" style={{ color: "#fff" }}>
+            <Link to="/acerca" style={{ color: "#fff" }}>
               Acerca de Arbu
             </Link>
             {/* <Link to="/metodologia" style={{color:'#fff'}}>Terminos de servicio</Link> */}
@@ -42,10 +42,10 @@ const Footer = () => {
             <a href="https://m.facebook.com/ArbuCb/" target="_blank" rel="noopener noreferrer">
               <img className="social-button" src={facebook} alt="" width={40} />
             </a>
-            <a href="https://twitter.com/?lang=es" target="_blank" rel="noopener noreferrer">
+            <a href="https://twitter.com/ArbuCbba" target="_blank" rel="noopener noreferrer">
               <img className="social-button" src={tweeter} alt="" width={40} />
             </a>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/arbucbba/" target="_blank" rel="noopener noreferrer">
               <img
                 className="social-button"
                 src={instagram}

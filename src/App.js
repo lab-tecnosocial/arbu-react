@@ -46,7 +46,7 @@ const navItems = [
   {
     section: 'Aprende',
     icon:<img src={catalogoIcon} alt="" width="25px" height="25px" style={{verticalAlign:'middle'}} />,
-    path: '/catalogo'
+    path: '/aprende'
   },
   {
     section:'API',
