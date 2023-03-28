@@ -15,6 +15,9 @@ import ThreePositionsMes from './ThreePositionsMes';
 import ThreePositionsGlobal from './ThreePositionsGlobal';
 import Footer from '../footer/Footer';
 
+import { ramasPuntos } from './ramasPuntos';
+import { ramasNombres } from './ramasNombres';
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -84,6 +87,7 @@ const RankingComponent = () => {
   return "default";
 }
 
+
   const getFullNameUser = (id) => {
       if(usuariosMap !==null){
         if(usuariosMap.hasOwnProperty(id)){
@@ -92,6 +96,23 @@ const RankingComponent = () => {
      }
     return "";
   };
+
+  const getNameRama = (id) => {
+    if(ramasNombres !==null){
+      if(ramasNombres.hasOwnProperty(id)){
+         return ramasNombres[id]?.nombreRama;
+       }
+   }
+  return "";
+};
+const getRamaImagen = (id)=>{
+  if(ramasNombres !==null){
+     if(ramasNombres.hasOwnProperty(id)){
+        return ramasNombres[id]?.imagen;
+      }
+  }
+return "default";
+}
   const getFormatedList = (scoresList) => {
     let array = [];
     scoresList.forEach(element => {
@@ -112,6 +133,7 @@ const RankingComponent = () => {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
               <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
           <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
+          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="SCOUTS" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -159,6 +181,36 @@ const RankingComponent = () => {
             </center>
           )
         }
+        </div>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+      <div>
+        <center>
+          <strong>Top 100 Ramas</strong><br />
+        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
+        </center>
+        {/* <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} /> */}
+        {
+          ramasPuntos.map((item,i)=>(
+            
+            i>2 && i<100 && <ChildComponent key={`${item.id}-Scouts`} 
+            nombre={getNameRama(item.id)}
+             puntos={item.puntos} 
+             foto={getRamaImagen(item.id)} 
+            //  institucion={getUserInstitucion(item.id)} 
+             index={i+1} />
+            
+          ))
+        }
+        {/* {
+          ramasPuntos.length===0 && (
+            <center>
+              <br />
+              No hay usuarios compitiendo aún...
+            </center>
+          )
+        } */}
+       
         </div>
       </TabPanel>
       <br />
