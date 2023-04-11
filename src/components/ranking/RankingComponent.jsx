@@ -7,16 +7,16 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
-import './RankingComponent.css'
+import BarChartIcon from '@mui/icons-material/BarChart';
+import './RankingComponent.css';
 import { useSelector } from 'react-redux';
 import ChildComponent from './ChildComponent';
 import ThreePositionsMes from './ThreePositionsMes';
 import ThreePositionsGlobal from './ThreePositionsGlobal';
+import ThreePositionsRamas from './ThreePositionsRamas'; 
+import {scoresRamas} from "./scoresRamas";
+import {scoresNombres} from "./scoresNombres";
 import Footer from '../footer/Footer';
-
-import { ramasPuntos } from './ramasPuntos';
-import { ramasNombres } from './ramasNombres';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,19 +54,10 @@ function a11yProps(index) {
 const RankingComponent = () => {
   const [value, setValue] = useState(0);
   const {usuariosMap} = useSelector(state=>state.mapa);
-  const {scoresGlobal,scoresMes} = useSelector(state=>state.leaderboard);
+  // Aqui estoy añadiendo la nueva opcion para ver las ramas antes({scoresGlobal,scoresMes})
+  const {scoresGlobal,scoresMes} = useSelector(state=>state.leaderboard); 
 
 
-
-
-
-
-
-
-
-
-
-  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -87,7 +78,6 @@ const RankingComponent = () => {
   return "default";
 }
 
-
   const getFullNameUser = (id) => {
       if(usuariosMap !==null){
         if(usuariosMap.hasOwnProperty(id)){
@@ -97,22 +87,6 @@ const RankingComponent = () => {
     return "";
   };
 
-  const getNameRama = (id) => {
-    if(ramasNombres !==null){
-      if(ramasNombres.hasOwnProperty(id)){
-         return ramasNombres[id]?.nombreRama;
-       }
-   }
-  return "";
-};
-const getRamaImagen = (id)=>{
-  if(ramasNombres !==null){
-     if(ramasNombres.hasOwnProperty(id)){
-        return ramasNombres[id]?.imagen;
-      }
-  }
-return "default";
-}
   const getFormatedList = (scoresList) => {
     let array = [];
     scoresList.forEach(element => {
@@ -124,6 +98,37 @@ return "default";
     });
     return array;
   }
+
+  //
+  const getNombreRamas = (id) => {
+    if(scoresNombres !==null){
+      if(scoresNombres.hasOwnProperty(id)){
+        return scoresNombres[id]?.nombre;
+      }
+    }
+    return "";
+  };
+  const getFotoRamas = (id)=>{
+    if(scoresNombres !==null){
+      if(scoresNombres.hasOwnProperty(id)){
+        return scoresNombres[id]?.foto;
+      }
+    }
+  return "default";
+  }
+  // funcion modificada para Ramas
+  const getListaRamas = (scoreListRamas) => {
+    let array = [];
+    scoreListRamas.forEach(element => {
+      let n = getNombreRamas(element.id);
+      let puntos = element.puntos;
+      let foto = getFotoRamas(element.id);
+      array.push({nombre:n,foto:foto, puntos:puntos});
+    });
+    return array;
+  }
+
+
   return (
     <div 
     // style={{ padding: "1rem 0" }}
@@ -131,9 +136,9 @@ return "default";
     
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
-              <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
-          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
-          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="SCOUTS" {...a11yProps(2)} />
+            <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
+            <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
+            <Tab icon={<BarChartIcon />} sx={{fontFamily:'Poppins'}} label="RAMAS" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -183,35 +188,34 @@ return "default";
         }
         </div>
       </TabPanel>
+      {/* Este TabPanel lo estoy ingresando para añadir el nuevo sector de ramas, realizando una copia de Tabpanel Anterior Global  */}
       <TabPanel value={value} index={2}>
       <div>
         <center>
-          <strong>Top 100 Ramas</strong><br />
-        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
+          <strong>Top Ramas ARBU</strong><br />
+        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón sobre las ramas se actualiza todos los días a las 00:00 A.M.</span>
         </center>
-        {/* <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} /> */}
+          <ThreePositionsRamas list3BestRamas={getListaRamas(scoresRamas)} /> 
         {
-          ramasPuntos.map((item,i)=>(
-            
-            i>2 && i<100 && <ChildComponent key={`${item.id}-Scouts`} 
-            nombre={getNameRama(item.id)}
-             puntos={item.puntos} 
-             foto={getRamaImagen(item.id)} 
-            //  institucion={getUserInstitucion(item.id)} 
-             index={i+1} />
-            
+          scoresRamas.map((item,i)=>(
+            i>2 && i<100 && <ChildComponent 
+              key={`${item.id}-Rama`} 
+              nombre={getNombreRamas(item.id)} 
+              puntos={item.puntos} 
+              foto={getFotoRamas(item.id)} 
+              // institucion={getUserInstitucion(item.id)} 
+              index={i+1} />
           ))
         }
-        {/* {
-          ramasPuntos.length===0 && (
+        {
+          scoresRamas.length===0 && (
             <center>
               <br />
               No hay usuarios compitiendo aún...
             </center>
           )
-        } */}
-       
-        </div>
+        } 
+      </div>
       </TabPanel>
       <br />
       <br />

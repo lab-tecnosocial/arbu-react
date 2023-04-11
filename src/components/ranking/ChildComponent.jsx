@@ -36,7 +36,7 @@ const ChildComponent = ({ nombre, puntos, foto, institucion,index }) => {
           </div>
         </div>
         <div className="puntos-list">
-          <span>{puntos}</span><span style={{fontSize:'1.2rem'}}>pts</span>
+          <span>{puntos}</span><span style={{fontSize:'1.2rem'}}> pts</span>
         </div>
       </div>
     </div>

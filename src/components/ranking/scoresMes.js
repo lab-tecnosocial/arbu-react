@@ -14,7 +14,7 @@ timestamp: { _seconds: 1639608255, _nanoseconds: 511000000 },
     id:'LbKSpPtoKCMVh35rKb9yeq1iN5r1',
 puntos:5,
 timestamp: { _seconds: 1639571416, _nanoseconds: 573000000 },
-  },
+  }//,
 //   {
 //     id:'vc0jkbBfRKdz1Xhb6yxTFLcT9Aj1',
 // puntos:5,
