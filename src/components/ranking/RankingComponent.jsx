@@ -133,7 +133,7 @@ return "default";
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
               <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
           <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
-          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="SCOUTS" {...a11yProps(2)} />
+          {/* <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="SCOUTS" {...a11yProps(2)} /> */}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -183,24 +183,24 @@ return "default";
         }
         </div>
       </TabPanel>
-      <TabPanel value={value} index={2}>
-      <div>
-        <center>
+      {/* <TabPanel value={value} index={2}>
+      <div> */}
+        {/* <center>
           <strong>Top 100 Ramas</strong><br />
         <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
-        </center>
+        </center> */}
         {/* <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} /> */}
         {
-          ramasPuntos.map((item,i)=>(
+          // ramasPuntos.map((item,i)=>(
             
-            i>2 && i<100 && <ChildComponent key={`${item.id}-Scouts`} 
-            nombre={getNameRama(item.id)}
-             puntos={item.puntos} 
-             foto={getRamaImagen(item.id)} 
-            //  institucion={getUserInstitucion(item.id)} 
-             index={i+1} />
+          //   i>2 && i<100 && <ChildComponent key={`${item.id}-Scouts`} 
+          //   nombre={getNameRama(item.id)}
+          //    puntos={item.puntos} 
+          //    foto={getRamaImagen(item.id)} 
+          //   //  institucion={getUserInstitucion(item.id)} 
+          //    index={i+1} />
             
-          ))
+          // ))
         }
         {/* {
           ramasPuntos.length===0 && (
@@ -211,8 +211,8 @@ return "default";
           )
         } */}
        
-        </div>
-      </TabPanel>
+        {/* </div>
+      </TabPanel> */}
       <br />
       <br />
       <br />

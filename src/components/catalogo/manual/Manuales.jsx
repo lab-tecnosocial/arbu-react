@@ -41,10 +41,10 @@ export default function Slider() {
                     className={slideIndex === index + 1 ? "slide active-anim" : "slide"}
                     >
                     <img className='img-desktop'
-                        src={process.env.PUBLIC_URL + `/Imgs/slides${index + 1}.png`} 
+                        src={`/Imgs/slides${index + 1}.png`} 
                         />
                     <img className='img-mobile'
-                        src={process.env.PUBLIC_URL + `/Imgs/imgs mobile/slides${index + 1}.png`} 
+                        src={`/Imgs/imgs mobile/slides${index + 1}.png`} 
                         />
                     </div>
                 )

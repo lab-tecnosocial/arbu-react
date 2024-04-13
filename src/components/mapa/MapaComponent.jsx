@@ -14,19 +14,20 @@ import { usuarios as users } from './usuarios';
 // import PopupMarker from "./PopupMarker";
 import DetailArbol from "./DetailArbol";
 import FiltroComponent from "./filtro/FiltroComponent";
+import locationIcon from "./location.svg";
 import Navbar from "./Navbar";
 const customIcon = new L.Icon({
-  iconUrl: require("./location.svg").default,
+  iconUrl: locationIcon,
   iconSize: new L.Point(40, 47),
 });
 
-const createClusterCustomIcon = function (cluster: MarkerCluster) {
-  return L.divIcon({
-    html: `<span>${cluster.getChildCount()}</span>`,
-    className: "custom-marker-cluster",
-    iconSize: L.point(33, 33, true),
-  });
-};
+// const createClusterCustomIcon = function (cluster: MarkerCluster) {
+//   return L.divIcon({
+//     html: `<span>${cluster.getChildCount()}</span>`,
+//     className: "custom-marker-cluster",
+//     iconSize: L.point(33, 33, true),
+//   });
+// };
 
 const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
@@ -35,7 +36,7 @@ const MapaComponent = () => {
   // const [arbolesPlantados, setArbolesPlantados] = useState(arboles);
 
   // const [arbolDetail, setArbolDetail] = useState(null);
-  // const asArray = Object.entries(users);
+ 
 
 
   // console.log(asArray);
@@ -66,7 +67,6 @@ const MapaComponent = () => {
   function MyComponent() {
     const map = useMapEvents({
       click: () => {
-        // console.log('map clicked');
         if (active !== null) {
           dispatch(hideDetailArbol());
           document.querySelector('.leaflet-control-zoom-in').style.display = 'block';
