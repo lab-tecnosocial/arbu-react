@@ -1,5 +1,5 @@
 import { scoresMes } from "../components/ranking/scoresMes"
-import { db } from "./../firebase/firebase-config";
+import { db } from "../firebase/firebase-config";
 // let Arbol = require('./Arbol.js');
 import Arbol from './Arbol';
 export const traerScoresMes = async() => {
