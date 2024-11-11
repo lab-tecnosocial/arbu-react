@@ -1,0 +1,58 @@
+.acerca-de {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.coordinadores, .voluntarios {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.integrante {
+  text-align: center;
+  margin: 10px;
+}
+
+.integrante img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.nombre {
+  margin: 10px;
+  font-weight:bold;
+  color:#174d44;
+  width: 195px;
+}
+
+p {
+  font-family: 'Open Sans';
+  margin-top: -10px;
+}
+
+@media (max-width: 594px) {
+  .coordinadores p{
+    font-size: 15px;
+  }
+}
+/* Estilos para hacerlo responsive */
+@media (max-width: 768px) {
+  .coordinadores, .voluntarios {
+      /* flex-direction: column; */
+      justify-content: center;
+      align-items: center;
+  }
+
+  .integrante {
+      margin: 10px;
+  }
+}

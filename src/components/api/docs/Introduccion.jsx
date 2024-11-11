@@ -6,7 +6,7 @@ const Introduccion = () => {
   return (
     <>
       <div className='image-wrapper'>
-        <div className='image-text'>Introduccion</div>
+        <div className='image-text'>Introducción</div>
         <img src={img} loading='lazy' />
       </div>
       <div className='apidocs__panel-row'>

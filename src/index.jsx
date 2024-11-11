@@ -16,6 +16,7 @@ import Acerca from './components/acerca/Acerca';
 import {
   ComoEmpezar,
   ReferenciaEndpoints,
+  ProbarApi,
   Recursos,
   ContactoSoporte,
   Licencias
@@ -34,6 +35,7 @@ root.render(
         <Route path="api" element={<APIComponent />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
           <Route path='referencia-endpoints' element={<ReferenciaEndpoints />} />
+          <Route path='probar-api' element={<ProbarApi />} />
           <Route path='recursos' element={<Recursos />} />
           <Route path='contacto-soporte' element={<ContactoSoporte />} />
           <Route path='licencias-limitaciones' element={<Licencias />} />

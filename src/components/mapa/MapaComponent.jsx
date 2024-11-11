@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { activeArbol, hideDetailArbol } from "../../actions/mapaActions";
 import { useMapEvents } from 'react-leaflet/hooks'
@@ -29,14 +29,54 @@ const customIcon = new L.Icon({
 //   });
 // };
 
+
 const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
-  const { arboles: arbolesPlantados, active, filtro, filtroAplied } = useSelector(state => state.mapa);
+  const {
+    arboles: arbolesPlantados,
+    active,
+    filtro,
+    filtroAplied,
+  } = useSelector((state) => state.mapa);
   const dispatch = useDispatch();
+
+  const markers = useMemo(() => {
+    const items = filtroAplied ? filtro : arbolesPlantados;
+    return items.map((item) => (
+      <Marker
+        key={item.id}
+        position={[item.latitud, item.longitud]}
+        title={item.nombrePropio}
+        icon={customIcon}
+        eventHandlers={{
+          click: () => {
+            if (active?.id !== item?.id) {
+              dispatch(activeArbol(item.id, { ...item }));
+              document.querySelector(".leaflet-control-zoom-in").style.display = "none";
+              document.querySelector(".leaflet-control-zoom-out").style.display = "none";
+            }
+          },
+        }}
+      />
+    ));
+  }, [filtroAplied, filtro, arbolesPlantados, active, dispatch]);
+  // const MyComponent = React.memo(() => {
+  //   const map = useMapEvents({
+  //     click: () => {
+  //       if (active !== null) {
+  //         dispatch(hideDetailArbol());
+  //         document.querySelector(".leaflet-control-zoom-in").style.display = "block";
+  //         document.querySelector(".leaflet-control-zoom-out").style.display = "block";
+  //       }
+  //     },
+  //   });
+  //   return null;
+  // });
 
   function MyComponent() {
     const map = useMapEvents({
       click: () => {
+        // console.log('map clicked');
         if (active !== null) {
           dispatch(hideDetailArbol());
           document.querySelector('.leaflet-control-zoom-in').style.display = 'block';
@@ -48,8 +88,7 @@ const MapaComponent = () => {
     return null
   }
   return (
-
-    <main >
+    <main>
       {/* <Navbar /> */}
       <DetailArbol />
 
@@ -58,21 +97,16 @@ const MapaComponent = () => {
         center={[-17.3917, -66.1448]}
         zoom={13}
         scrollWheelZoom={true}
-
       >
-
         <MyComponent />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-
+      <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
       </MapContainer>
-
     </main>
-
-
   );
-}
+};
 
 export default MapaComponent;

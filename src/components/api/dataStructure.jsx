@@ -11,6 +11,9 @@ export const dataStructure = [
     ]
   },
   {
+    path: 'probar-api', label: 'Probar API',
+  },
+  {
     path: 'recursos', label: 'Recursos',
     nav: [
       { label: 'Realizar peticiones', path: '#realizar-peticiones' },

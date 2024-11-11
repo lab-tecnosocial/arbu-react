@@ -54,7 +54,7 @@ const APIComponent = () => {
     //   {/* <TopicsComponent /> */}
     //   {/* <SwaggerUI url="https://api-arbu.herokuapp.com/api-docs" /> */}
     //   {/* <SwaggerUI url="https://api-arbu.herokuapp.com/swagger.json" /> */}
-    //   {/* <SwaggerUI url="https://serviceapiarbu.onrender.com/swagger.json" /> */}
+      // {/* <SwaggerUI url="https://serviceapiarbu.onrender.com/swagger.json" /> */}
     //   {/* <SwaggerUI url="http://localhost:4000/swagger.json" /> */}
     //   {/* <SwaggerUI url="http://localhost:4000/api-docs/" /> */}
     //   {/* <Footer /> */}
