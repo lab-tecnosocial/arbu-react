@@ -34,6 +34,7 @@ const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
   const {
     arboles: arbolesPlantados,
+    arbolesMapeados,
     active,
     filtro,
     filtroAplied,
@@ -41,7 +42,8 @@ const MapaComponent = () => {
   const dispatch = useDispatch();
 
   const markers = useMemo(() => {
-    const items = filtroAplied ? filtro : arbolesPlantados;
+    const arbolesMezclados = [...arbolesPlantados, ...arbolesMapeados];
+    const items = filtroAplied ? filtro : arbolesMezclados;
     return items.map((item) => (
       <Marker
         key={item.id}
@@ -59,7 +61,7 @@ const MapaComponent = () => {
         }}
       />
     ));
-  }, [filtroAplied, filtro, arbolesPlantados, active, dispatch]);
+  }, [filtroAplied, filtro, arbolesPlantados, arbolesMapeados, active, dispatch]);
   // const MyComponent = React.memo(() => {
   //   const map = useMapEvents({
   //     click: () => {

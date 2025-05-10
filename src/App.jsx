@@ -1,6 +1,6 @@
 import './App.css';
 import { Link, Outlet } from "react-router-dom";
-import { startLoadingArboles, startLoadingUsuarios } from './actions/mapaActions';
+import { startLoadingArboles, startLoadingArbolesMapeados, startLoadingUsuarios } from './actions/mapaActions';
 import { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { startLoadEspeciesCatalogo } from './actions/catalogoActions';
@@ -63,6 +63,7 @@ function App(props) {
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(startLoadingArboles());
+    dispatch(startLoadingArbolesMapeados());
     dispatch(startLoadingUsuarios());
     dispatch(startLoadEspeciesCatalogo());
     dispatch(loadScoresMes());

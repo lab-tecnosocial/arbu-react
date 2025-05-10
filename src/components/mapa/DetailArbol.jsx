@@ -110,15 +110,29 @@ function formatDate(date) {
       } */}
       
       <div className="detail-container">
-        <div style={{marginTop:'auto',marginBottom:'auto'}}>
+        <div style={{marginTop:'auto',marginBottom:'auto', position: 'relative', display: 'flex'}}>
           {monitoreos.length > 0 && (
           //   <img
           //   className="image-monitoring"
           //   src={monitoreo?.fotografia}
           //   alt={monitoreo?.timestamp._seconds}
           // />
-          <ImageDetail src={monitoreo?.fotografia}/>
+          <ImageDetail src={arbol?.mapeadoPor ? monitoreo?.fotoArbolCompleto : monitoreo?.fotografia} imageStyles={{top: '60px', borderRadius:'50%', width:'50%', display:'block', marginLeft:'auto', marginRight:'auto'}}
+                       srcToOpen={arbol?.mapeadoPor ? monitoreo?.fotoArbolCompleto : monitoreo?.fotografia}/>
           )}
+
+          {monitoreo?.fotoRaiz && (<ImageDetail src="https://cdn-icons-png.flaticon.com/512/3239/3239326.png" 
+                                                srcToOpen={monitoreo?.fotoRaiz}
+                                                imageStyles={{width:'32px',height:'32px',borderRadius:'50%', position: 'absolute', top: '10px', left: '18%', backgroundColor: '#ebf5ee',padding: '4px'}} />)}
+          {monitoreo?.fotoCorteza && (<ImageDetail src="https://cdn-icons-png.flaticon.com/512/4950/4950866.png" 
+                                                   srcToOpen={monitoreo?.fotoCorteza}
+                                                   imageStyles={{width:'32px',height:'32px',borderRadius:'50%', position: 'absolute', top: '110px', left: '18%', backgroundColor: '#ebf5ee',padding: '4px'}} />)}
+          {monitoreo?.fotoHoja && (<ImageDetail src="https://w7.pngwing.com/pngs/95/245/png-transparent-green-leaf-computer-icons-green-leaf-green-leaf-icon-leaf-plant-stem-grass-thumbnail.png" 
+                                                srcToOpen={monitoreo?.fotoHoja}
+                                                imageStyles={{width:'32px',height:'32px',borderRadius:'50%', position: 'absolute', top: '10px', right: '18%', backgroundColor: '#ebf5ee',padding: '4px'}} />)}
+          {monitoreo?.fotoFlor && (<ImageDetail src="https://cdn-icons-png.flaticon.com/512/346/346167.png" 
+                                                srcToOpen={monitoreo?.fotoFlor}
+                                                imageStyles={{width:'32px',height:'32px',borderRadius:'50%', position: 'absolute', top: '110px', right: '18%', backgroundColor: '#ebf5ee',padding: '4px'}} />)}
         </div>
         <div>
           <h2 className="titles">
@@ -139,8 +153,27 @@ function formatDate(date) {
               {arbol?.lugarDePlantacion}
             </div>
             <div>
-              Adoptado por: <br />
-              {(arbol?.usuariosQueAdoptaron).map((stringIdUser, i) => (
+            {arbol?.mapeadoPor ? (<>Mapeado por: <br /></>) : (<>Adoptado por: <br /></>)}
+
+            {arbol?.mapeadoPor ? (
+              <div key={arbol?.mapeadoPor} style={{display:'table'}}>
+                  {
+                    getUserPhoto(arbol?.mapeadoPor) !== 'default'?
+                    (
+                      <img className="img-usuarios" src={getUserPhoto(arbol?.mapeadoPor)} alt="" width="30px" height="30px" style={{borderRadius:'50%'}} referrerPolicy="no-referrer"/>
+                    ):
+                    (
+                      <SvgComponent />
+                    )
+                  }
+                 
+                  <span className="span-nombre-usuarios" style={{display:'table-cell',verticalAlign:'middle'}}>
+                    {getFullNameUser(arbol?.mapeadoPor)}
+                    {/* {i < arbol?.usuariosQueAdoptaron.length - 1 && `, `} */}
+                  </span>
+                </div>
+            ) :
+              (arbol?.usuariosQueAdoptaron).map((stringIdUser, i) => (
                 <div key={stringIdUser} style={{display:'table'}}>
                   {
                     getUserPhoto(stringIdUser) !== 'default'?
@@ -160,7 +193,8 @@ function formatDate(date) {
               ))}
             </div>
 
-            <div style={{display:'grid',gridTemplateColumns:'50% 50%'}}>
+            {arbol?.plantadoPor && (
+              <div style={{display:'grid',gridTemplateColumns:'50% 50%'}}>
               <div style={{display:'flex'}}>
                 <span className="text-normal">Riegos:</span>&nbsp;
                 <span >
@@ -173,6 +207,8 @@ function formatDate(date) {
                 {arbol?.estado}
               </div>
             </div>
+            )}    
+            
           </div>
         </div>
         
@@ -220,7 +256,7 @@ function formatDate(date) {
             <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={alturaIcon} alt="" width="20px" height="20px"/></span>Altura (m): {monitoreos.length>0 && monitoreo?.altura}  
             </div>
             <div style={{display:'table'}}>
-            <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={estetoscopioIcon} alt="" width="20px" height="20px"/></span>Sanidad: {monitoreos.length>0 && monitoreo?.sanidad}
+            <span style={{display:'table-cell',verticalAlign:'middle'}}><img src={estetoscopioIcon} alt="" width="20px" height="20px"/></span>{arbol?.mapeadoPor ? ('Diámetro a la altura del pecho (cm):') : ('Sanidad:')} {monitoreos.length>0 && arbol?.mapeadoPor ? monitoreo?.diametroAlturaPecho: monitoreo?.sanidad}
             </div>
           
         </div>
@@ -234,7 +270,7 @@ function formatDate(date) {
               
               <div className="monitoreos-container">
                 <div >
-                  <img src={item.fotografia} alt="" width="70px" height="70px" />
+                  <img src={arbol?.mapeadoPor ? item?.fotoArbolCompleto: item.fotografia} alt="" width="70px" height="70px" />
                 </div>
                 <div style={{display:'block',marginTop:'auto',marginBottom:'auto',marginLeft:'8px'}}>
                   <div style={{display:'table'}}>

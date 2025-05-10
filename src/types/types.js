@@ -1,6 +1,9 @@
 export const types = {
+  setUser:'[LOGIN] Set user',
+  clearUser:'[LOGIN] Clear user',
   mapaActiveArbol:'[MAPA] Set active arbol',
   mapaLoadArboles:'[MAPA] Load arboles',
+  mapaLoadArbolesMapeados:'[MAPA] Load arboles mapeados',
   mapaHideDetailArbol: '[MAPA] Hide detail arbol',
   mapaLoadUsuarios:'[MAPA] Load usuarios',
   mapaSetActiveMonitoreo:'[MAPA] Set active monitoreo',

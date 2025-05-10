@@ -7,6 +7,6 @@ export const loadUsuarios = async () => {
   await usuariosSnapshot.forEach((element)=>{
     arrayUsuarios.push(element.data());
   });
-  // return usuarios;
   return arrayUsuarios;
+  // return usuarios;
 }

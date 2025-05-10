@@ -1,6 +1,7 @@
 import { types } from "../types/types";
 const initialState = {
   arboles:[],
+  arbolesMapeados: [],
   active:null,
   usuarios:[],
   monitoreo:null,
@@ -19,6 +20,11 @@ export const mapaReducer = (state=initialState,action) => {
       return {
         ...state,
         arboles:[...action.payload]
+      }
+    case types.mapaLoadArbolesMapeados:
+      return {
+        ...state,
+        arbolesMapeados:[...action.payload]
       }
     case types.mapaHideDetailArbol:
       return {
