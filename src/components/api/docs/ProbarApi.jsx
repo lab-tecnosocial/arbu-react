@@ -6,7 +6,8 @@ import "swagger-ui-react/swagger-ui.css"
 const ProbarApi = () => {
   return (
     <>
-      <SwaggerUI url="https://serviceapiarbu.onrender.com/swagger.json" />
+      {/* <SwaggerUI url="https://serviceapiarbu.onrender.com/swagger.json" /> */}
+      <SwaggerUI url="http://localhost:8111/v3/api-docs" />
     </>
   );
 };
