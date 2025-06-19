@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { activeArbol, hideDetailArbol } from "../../actions/mapaActions";
+import { activeArbol, hideDetailArbol, setBusqueda } from "../../actions/mapaActions";
 import { useMapEvents } from 'react-leaflet/hooks'
 import L, { MarkerCluster } from "leaflet";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import "./MarkerCluster.Default.css";
@@ -34,11 +34,31 @@ const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
   const {
     arboles: arbolesPlantados,
+    arbolesFiltrados,
+    busqueda,
     active,
     filtro,
     filtroAplied,
   } = useSelector((state) => state.mapa);
   const dispatch = useDispatch();
+  const [geoData, setGeoData] = useState(null)
+  // const [busqueda, setBusqueda] = useState("");
+
+  useEffect(() => {
+    fetch('http://localhost:8111/triangulacion_grupos_scouts.geojson')
+      .then((res) => res.json())
+      .then((data) => setGeoData(data))
+  }, dispatch, geoData)
+
+  const datosFiltrados = arbolesPlantados.filter((item) =>
+    item.nombreComun?.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+
+  // console.log("TEST", arbolesPlantados)
+  // console.log("TEST2", geoData)
+  // console.log("TEST3", arbolesFiltrados)
+  // console.log("DATOS FILTRAODS", datosFiltrados)
 
   const markers = useMemo(() => {
     const items = filtroAplied ? filtro : arbolesPlantados;
@@ -87,10 +107,18 @@ const MapaComponent = () => {
     })
     return null
   }
+
+
   return (
     <main>
       {/* <Navbar /> */}
       <DetailArbol />
+      <input
+        type="text"
+        placeholder="Buscar por nombre común..."
+        value={busqueda}
+        onChange={(e) => dispatch(setBusqueda(e.target.value))}
+      />
 
       <FiltroComponent />
       <MapContainer
@@ -103,7 +131,8 @@ const MapaComponent = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-      <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+        {geoData && <GeoJSON data={geoData} />}
+        <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
       </MapContainer>
     </main>
   );

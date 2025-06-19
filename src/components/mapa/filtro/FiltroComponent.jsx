@@ -9,169 +9,371 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import Checkbox from '@mui/material/Checkbox';
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
-
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 import Fab from '@mui/material/Fab';
 
 import './FiltroComponent.css'
-import {especies} from './especies'
-import { useDispatch,useSelector } from 'react-redux';
-import { filterArboles, setFilter } from '../../../actions/mapaActions';
+import { especies } from './especies'
+import { useDispatch, useSelector } from 'react-redux';
+import { filterArboles, resetFiltro, setBusqueda, setFilter, setFiltro } from '../../../actions/mapaActions';
 import ToggleSwitch from './ToggleSwitch';
 especies.sort((a, b) => a.nombreCientifico.toLocaleLowerCase().localeCompare(b.nombreCientifico.toLocaleLowerCase()));
 
+const opcionesRiego = [
+  { label: "Con riegos", value: "con" },
+  { label: "Sin riegos", value: "sin" }
+];
+
+const campos = [
+  { label: "Nombre común", value: "nombreComun" },
+  { label: "Nombre científico", value: "nombreCientifico" },
+  { label: "Nombre propio", value: "nombrePropio" }
+];
+
+const opcionesMonitoreo = [
+  { label: "Todo el tiempo", value: "todo" },
+  { label: "Esta semana", value: "semana" },
+  { label: "Último mes", value: "mes" },
+  { label: "Últimos 3 meses", value: "3meses" },
+  { label: "Personalizado", value: "personalizado" }
+]
+
 const FiltroComponent = () => {
+  const [riegosSeleccionados, setRiegosSeleccionados] = useState(["con", "sin"]);
+
+  const [cantidadRiegos, setCantidadRiegos] = useState("");
+  const [cantidadMaximaRiegos, setCantidadMaximaRiegos] = useState("");
+
+  const [monitoreoSeleccionado, setMonitoreoSeleccionado] = useState("todo");
+
+  const [monitoreoTipo, setMonitoreoTipo] = useState("todo");
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
+
+  const { arbolesFiltrados } = useSelector(state => state.mapa);
+
   const [showFilterWindow, setShowFilterWindow] = useState(false);
-  const [nativas, setNativas] = useState(false);
-  const [introducidas, setIntroducidas] = useState(false);
   const [especiesEspecificas, setEspeciesEspecificas] = useState([]);
   const dispatch = useDispatch();
-  const {arboles} = useSelector(state=>state.mapa);
-  // console.log(especies);
+
+  const [camposSeleccionados, setCamposSeleccionados] = useState([
+    "nombreComun",
+    "nombreCientifico",
+    "nombrePropio"
+  ]);
+  const [busqueda, setBusqueda] = useState("");
+
+  const calcularFechasRango = (tipo) => {
+    const ahora = new Date();
+    const hasta = ahora.getTime();
+    let desde = null;
+
+    switch (tipo) {
+      case "semana":
+        desde = new Date(ahora.setDate(ahora.getDate() - 7)).getTime();
+        break;
+      case "mes":
+        desde = new Date(ahora.setMonth(ahora.getMonth() - 1)).getTime();
+        break;
+      case "3meses":
+        desde = new Date(ahora.setMonth(ahora.getMonth() - 3)).getTime();
+        break;
+      case "todo":
+        desde = null;
+        break;
+    }
+
+    return { desde, hasta };
+  };
+
+  const toggleCampo = (campo) => {
+    setCamposSeleccionados((prev) =>
+      prev.includes(campo)
+        ? prev.filter((c) => c !== campo)
+        : [...prev, campo]
+    );
+  };
+  const toggleRiego = (opcion) => {
+    setRiegosSeleccionados((prev) =>
+      prev.includes(opcion)
+        ? prev.filter((r) => r !== opcion)
+        : [...prev, opcion]
+    );
+  };
+  const handleBuscar = async () => {
+    // const queryParams = new URLSearchParams();
+    // // Filtro por campo
+    // if (valorCampo.trim() !== "") {
+    //   if (campoSeleccionado === "todos") {
+    //     queryParams.append("buscar", valorCampo.trim());
+    //   } else {
+    //     queryParams.append(campoSeleccionado, valorCampo.trim());
+    //   }
+    // }
+    //
+    // // Filtro por existencia de riegos
+    // if (riegosSeleccionado === "con") {
+    //   queryParams.append("tieneRiegos", "true");
+    //   if (cantidadRiegos) {
+    //     queryParams.append("minRiegos", cantidadRiegos);
+    //   }
+    //   if (cantidadMaximaRiegos) {
+    //     queryParams.append("maxRiegos", cantidadMaximaRiegos);
+    //   }
+    // }
+    //
+    // // Filtro por monitoreos
+    // if (monitoreoSeleccionado === "hoy") {
+    //   const today = new Date();
+    //   today.setHours(0, 0, 0, 0);
+    //   queryParams.append("desde", today.toISOString());
+    // } else if (monitoreoSeleccionado === "30") {
+    //   const desde = new Date();
+    //   desde.setDate(desde.getDate() - 30);
+    //   queryParams.append("desde", desde.toISOString());
+    // } else if (monitoreoSeleccionado === "60") {
+    //   const desde = new Date();
+    //   desde.setDate(desde.getDate() - 60);
+    //   queryParams.append("desde", desde.toISOString());
+    // } else if (monitoreoSeleccionado === "personalizado") {
+    //   if (fechaDesde) queryParams.append("desde", new Date(fechaDesde).toISOString());
+    //   if (fechaHasta) queryParams.append("hasta", new Date(fechaHasta).toISOString());
+    // }
+    //
+    // // // Filtros por cantidad
+    // // if (cantidadRiegos) {
+    // //   queryParams.append("minRiegos", cantidadRiegos);
+    // // }
+    // //
+    // // if (cantidadMaximaRiegos) {
+    // //   queryParams.append("maxRiegos", cantidadMaximaRiegos);
+    // // }
+    //
+    // try {
+    //   const res = await fetch(`http://localhost:8111/arboles-plantados/buscar?${queryParams.toString()}`);
+    //   const json = await res.json();
+    //   // setDatos(json);
+    // } catch (err) {
+    //   console.error("Error al obtener árboles:", err);
+    // }
+  };
+
+  const cancel = () => {
+    dispatch(resetFiltro())
+    setBusqueda("")
+    // setValorCampo("")
+    // dispatch(setSelectedPosition(null));
+    // dispatch(setZoomPosition(13));
+  };
+
   const handleClickFilterBtnRound = () => {
     setShowFilterWindow(true);
   }
-  const handleCheckBox=(e)=>{
+
+  const handleCheckBox = (e) => {
     let isChecked = e.target.checked;
-    if(isChecked){
+    if (isChecked) {
       // console.log(e.target.value);
-       setEspeciesEspecificas(v=>[...v,e.target.value]);
-    }else{
+      setEspeciesEspecificas(v => [...v, e.target.value]);
+    } else {
       // console.log(e.target.value);
-      let auxArray = especiesEspecificas.filter(especie=>especie !== e.target.value);
+      let auxArray = especiesEspecificas.filter(especie => especie !== e.target.value);
       setEspeciesEspecificas(auxArray);
     }
   }
-  const handleSwitch = (e) => {
-    let isOn = e.target.checked;
-    if(isOn){
-      //solo nativas o introducidas, objetos Especie
-      let auxEspeciesArray = especies.filter(especie=>especie.origen === e.target.value);
-      let hashSet = new Set();
-      for (let i = 0; i < auxEspeciesArray.length; i++) {
-          hashSet.add(auxEspeciesArray[i].nombreCientifico);        
-      }
-      for (let i = 0; i < especiesEspecificas.length; i++) {
-        if(!hashSet.has(especiesEspecificas[i])){
-          hashSet.add(especiesEspecificas[i])
-        }        
-      }
 
-      setEspeciesEspecificas(Array.from(hashSet));
-      if(e.target.value==='Nativa'){
-        setNativas(true);
-      }else{
-        setIntroducidas(true);
-      }
-    }else{
-      let auxEspeciesArray = especies.filter(especie=>especie.origen === e.target.value);
-
-      let especiesEspecificasAux = [...especiesEspecificas];
-
-      let especiesArrayToFilter = auxEspeciesArray.filter(especie=>especiesEspecificas.includes(especie.nombreCientifico));
-      for( let i = 0; i < especiesEspecificasAux.length; i++){ 
-        for(let j = 0;j<especiesArrayToFilter.length;j++){
-          if ( especiesEspecificasAux[i] === especiesArrayToFilter[j].nombreCientifico) { 
-            especiesEspecificasAux.splice(i, 1); 
-          }
-        }
-      }
-      setEspeciesEspecificas(especiesEspecificasAux);
-      if(e.target.value==='Nativa'){
-        setNativas(false);
-      }else{
-        setIntroducidas(false);
-      }
-    }
-  }
-  const handleSwitchNew = (e) => {
-    let isOn = e.target.checked;
-    if(isOn){
-      //solo nativas o introducidas, objetos Especie
-      let auxEspeciesArray = especies.filter(especie=>especie.origen === e.target.value);
-      let hashSet = new Set();
-      for (let i = 0; i < auxEspeciesArray.length; i++) {
-          hashSet.add(auxEspeciesArray[i].nombreCientifico);        
-      }
-      for (let i = 0; i < especiesEspecificas.length; i++) {
-        if(!hashSet.has(especiesEspecificas[i])){
-          hashSet.add(especiesEspecificas[i])
-        }        
-      }
-      setEspeciesEspecificas(Array.from(hashSet));
-      if(e.target.value==='Nativa'){
-        setNativas(true);
-      }else{
-        setIntroducidas(true);
-      }
-    }else{
-      let auxEspeciesArray = especies.filter(especie=>especie.origen === e.target.value);
-      let especiesEspecificasAux = [...especiesEspecificas];
-      let especiesArrayToFilter = auxEspeciesArray.filter(especie=>especiesEspecificas.includes(especie.nombreCientifico));
-      for( let i = 0; i < especiesEspecificasAux.length; i++){ 
-        for(let j = 0;j<especiesArrayToFilter.length;j++){
-          if ( especiesEspecificasAux[i] === especiesArrayToFilter[j].nombreCientifico) { 
-            especiesEspecificasAux.splice(i, 1); 
-          }
-        }
-      }
-      setEspeciesEspecificas(especiesEspecificasAux);
-      if(e.target.value==='Nativa'){
-        setNativas(false);
-      }else{
-        setIntroducidas(false);
-      }
-    }
-  }
   const handleAplicar = () => {
-    let arbolesFiltradosResult = []
-    for (let index = 0; index < especiesEspecificas.length; index++) {
-      let arbolesFiltrados = arboles.filter(arbol=>arbol.nombreCientifico === especiesEspecificas[index]);
-      arbolesFiltrados.forEach(i=>arbolesFiltradosResult.push(i));
+    let rangoMonitoreo = { tipo: monitoreoTipo, desde: null, hasta: null };
+
+    if (monitoreoTipo === "personalizado") {
+      const desdeMs = fechaDesde ? new Date(fechaDesde).getTime() : null;
+      const hastaMs = fechaHasta ? new Date(fechaHasta).getTime() : null;
+      rangoMonitoreo = {
+        tipo: "personalizado",
+        desde: desdeMs,
+        hasta: hastaMs
+      };
+    } else {
+      rangoMonitoreo = {
+        tipo: monitoreoTipo,
+        ...calcularFechasRango(monitoreoTipo)
+      };
     }
-    setShowFilterWindow(false);
-    // console.log(arbolesFiltradosResult);
-    dispatch(filterArboles(arbolesFiltradosResult))
-    if(nativas || introducidas || especiesEspecificas.length>0){
-      dispatch(setFilter(true));
-      // console.log('Se aplico un filtro')
-    }else{
-      dispatch(setFilter(false));
-      // console.log('No se aplico ningun filtro')
-    }
+    dispatch(setFiltro({
+      busqueda,
+      camposSeleccionados,
+      riegosSeleccionados,
+      monitoreoFiltro:
+        rangoMonitoreo
+    }))
   }
+
   return (
     <>
-    {
-      showFilterWindow===false ?
-      <div className='btn-filter-round'>
-      <Fab aria-label="add" sx={{backgroundColor:'white'}} onClick={handleClickFilterBtnRound}>
-      <FilterAltRoundedIcon />
-    </Fab>
-      </div>
-      :
-      <div className='filtro-layout' >
-      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span className='titles' style={{fontSize:'1.1rem'}}> Filtro</span> </div>
-      <ToggleSwitch
-          id="nativas"
-          checked={nativas}
-          onChange={handleSwitchNew}
-          optionLabels={['Nativas','Nativas']}
-          name="Nativa"
-        />
-        
-      <ToggleSwitch
-        id="introducidas"
-        checked={introducidas}
-        onChange={handleSwitchNew}
-        optionLabels={['Introducidas','Introducidas']}
-        name="Introducida"
-      />
-      
-      {/* <FormControlLabel
+      {
+        showFilterWindow === false ?
+          <div className='btn-filter-round'>
+            <Fab aria-label="add" sx={{ backgroundColor: 'white' }} onClick={handleClickFilterBtnRound}>
+              <FilterAltRoundedIcon />
+            </Fab>
+          </div>
+          :
+          <div className='filtro-layout' >
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span className='titles' style={{ fontSize: '1.1rem' }}> Filtro</span> </div>
+
+            <TextField id="outlined-basic" label={`Buscar`} value={busqueda} onChange={(e) => setBusqueda(e.target.value)} variant="outlined" />
+
+            <Button onClick={cancel} variant="contained" color='error' sx={{ border: '##174C44 solid 1px', backgroundColor: 'lightcoral', color: 'white' }}>
+              Borrar</Button>
+            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
+              >
+                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por nombres</Typography>
+              </AccordionSummary>
+              <AccordionDetails >
+                {campos.map((campo) => (
+                  <FormControlLabel key={campo.value} style={{
+                    display: "block"
+                  }} control={
+                    <Checkbox onChange={() => toggleCampo(campo.value)} style={{
+                      color: "#03B25E",
+                    }}
+                      value={campo.value}
+                      checked={camposSeleccionados.includes(campo.value)}
+                    />}
+                    label={campo.label}
+                  />
+                ))}
+              </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
+              >
+                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Riegos</Typography>
+              </AccordionSummary>
+              <AccordionDetails >
+                {opcionesRiego.map((opcion) => (
+                  <FormControlLabel key={opcion.value} style={{
+                    display: "block"
+                  }} control={
+                    <Checkbox onChange={() => toggleRiego(opcion.value)} style={{
+                      color: "#03B25E",
+                    }}
+                      value={opcion.value}
+                      checked={riegosSeleccionados.includes(opcion.value)}
+                    />}
+                    label={opcion.label}
+                  />
+                ))}
+
+                {riegosSeleccionados === "con" && (
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
+                    <input
+                      type="number"
+                      placeholder="Cantidad mínima"
+                      value={cantidadRiegos}
+                      onChange={(e) => setCantidadRiegos(e.target.value)}
+                    />
+                    <input
+                      type="number"
+                      placeholder="Cantidad máxima"
+                      value={cantidadMaximaRiegos}
+                      onChange={(e) => setCantidadMaximaRiegos(e.target.value)}
+                    />
+                  </div>
+                )}
+
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
+              >
+                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Monitoreos</Typography>
+              </AccordionSummary>
+              <AccordionDetails >
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="todo"
+                    name="radio-buttons-group"
+                  >
+                    {opcionesMonitoreo.map((opt) => (
+                      <FormControlLabel key={opt.value}
+                        value={opt.value}
+                        onChange={() => setMonitoreoTipo(opt.value)}
+                        control={<Radio style={{
+                          color: "#03B25E",
+                        }}
+                        />}
+                        label={opt.label}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+
+                {monitoreoTipo === "personalizado" && (
+                  <div style={{ marginTop: "0.5rem" }}>
+                    <label>
+                      Desde:{" "}
+                      <input
+                        type="date"
+                        value={fechaDesde}
+                        onChange={(e) => setFechaDesde(e.target.value)}
+                      />
+                    </label>
+                    <label style={{ marginLeft: "1rem" }}>
+                      Hasta:{" "}
+                      <input
+                        type="date"
+                        value={fechaHasta}
+                        onChange={(e) => setFechaHasta(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                )}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* <button onClick={handleBubscar}>Buscar</button> */}
+            {/* <button onClick={cancel}>Borrar Filtros</button> */}
+            {/* <ToggleSwitch */}
+            {/*     id="nativas" */}
+            {/*     checked={nativas} */}
+            {/*     onChange={handleSwitchNew} */}
+            {/*     optionLabels={['Nativas','Nativas']} */}
+            {/*     name="Nativa" */}
+            {/*   /> */}
+            {/**/}
+            {/* <ToggleSwitch */}
+            {/*   id="introducidas" */}
+            {/*   checked={introducidas} */}
+            {/*   onChange={handleSwitchNew} */}
+            {/*   optionLabels={['Introducidas','Introducidas']} */}
+            {/*   name="Introducida" */}
+            {/* /> */}
+
+            {/* <FormControlLabel
           value="start"
           control={<Switch color="primary" onChange={handleSwitch} value="Nativa" checked={nativas} />}
           label="Nativas"
@@ -184,48 +386,104 @@ const FiltroComponent = () => {
           label="Introducidas"
           labelPlacement="start"
         /> */}
-        <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)',marginTop:'10px',border:'transparent solid 1px', borderRadius:'10px',boxShadow:'none'}}>
-        <AccordionSummary
-          
-          expandIcon={<ExpandMoreIcon sx={{color:'#03B25E',borderRadius:'50%',backgroundColor:'white'}} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          sx={{backgroundColor:'#03B25E',border:'#174C44 solid 1px', borderRadius:'10px'}}
-        >
-          <Typography sx={{color:'white',fontFamily:`'Poppins',sans-serif`}}>Especies específicas</Typography>
-        </AccordionSummary>
-        <AccordionDetails >
-           <div style={{display:'flex',height:'150px',overflowY:'scroll',flexDirection:'column'}}>
-              {
-                especies.map(item=>(
-                  <FormControlLabel key={item?.id}  control={
-                    <Checkbox  onChange={handleCheckBox} style={{
-                      color: "#03B25E"
-                      }} 
-                      value={item.nombreCientifico} 
-                      checked={especiesEspecificas.includes(item.nombreCientifico)} 
-                    />} 
-                    label={item.nombreCientifico} 
-                  />
-                ))
-              }
-          </div>
-        </AccordionDetails>
-      </Accordion>
-     
 
-      <Stack spacing={2} direction="row" sx={{justifyContent:'center',marginTop:'10px'}}>
-      <Button variant="contained" color='success' sx={{border:'##174C44 solid 1px',backgroundColor:'#268576',color:'white'}}
-        onClick={handleAplicar}
-      >Aplicar</Button>
-      <Button className='btn-cancelar' variant="outlined" sx={{border:'1px solid #174C44',color:'#268576'}}
-        onClick={()=>setShowFilterWindow(false)}
-      >Cancelar</Button>
-      </Stack>
-      
-      {/* <div className="toggle-switch">d</div> */}
-    </div>
-    }
+            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
+              <AccordionSummary
+
+                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
+              >
+                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Especies específicas</Typography>
+              </AccordionSummary>
+              <AccordionDetails >
+                <div style={{ display: 'flex', height: '150px', overflowY: 'scroll', flexDirection: 'column' }}>
+                  {
+                    especies.map(item => (
+                      <FormControlLabel key={item?.id} control={
+                        <Checkbox onChange={handleCheckBox} style={{
+                          color: "#03B25E"
+                        }}
+                          value={item.nombreCientifico}
+                          checked={especiesEspecificas.includes(item.nombreCientifico)}
+                        />}
+                        label={item.nombreCientifico}
+                      />
+                    ))
+                  }
+                </div>
+              </AccordionDetails>
+            </Accordion>
+            {arbolesFiltrados.length > 0 ?
+              <div className="wrapper-results">
+                <p className='subtitle-result'>{arbolesFiltrados.length} resultados:</p>
+                <div className='list'>
+                  {arbolesFiltrados.length > 0 && arbolesFiltrados.map((arbol) => {
+                    return (
+                      <div key={arbol.id} className="row-result" onClick={() => {
+                        dispatch(loadActiveArbol(arbol));
+                        dispatch(setSelectedPosition([arbol.latitud, arbol.longitud]));
+                        dispatch(setZoomPosition(18));
+                      }}>
+                        {/* <h2>{arbol.id}</h2> */}
+                        <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div>
+                        <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div>
+                        <div className='input-row'><span className="label">Nombre comun: </span> {arbol.nombreComun}</div>
+                        <div className='input-row'><span className="label">Cantidad de riegos: </span> {Object.keys(arbol.riegos).length}</div>
+                        <div className='input-row'><span className="label">Cantidad de monitoreos: </span> {Object.keys(arbol.monitoreos).length}</div>
+
+                        {Object.entries(arbol.riegos).map(([id, riego]) => (
+                          <div key={id}>
+                            <p><strong>ID:</strong> {id}</p>
+                            <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p>
+                            {/* <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p> */}
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  })}
+                  {/* {datos.length > 0 && datos.map((arbol) => ( */}
+                  {/*   <div key={arbol.id} className="row-result" onClick={() => { */}
+                  {/*     dispatch(loadActiveArbol(arbol)); */}
+                  {/*     dispatch(setSelectedPosition([arbol.latitud, arbol.longitud])); */}
+                  {/*     dispatch(setZoomPosition(18)); */}
+                  {/*   }}> */}
+                  {/*      <h2>{arbol.id}</h2>  */}
+                  {/*     <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div> */}
+                  {/*     <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div> */}
+                  {/*     <div className='input-row'><span className="label">Nombre comun: </span> {arbol.nombreComun}</div> */}
+                  {/*     <div className='input-row'><span className="label">Cantidad de riegos: </span> {Object.keys(arbol.riegos).length}</div> */}
+                  {/*     <div className='input-row'><span className="label">Cantidad de monitoreos: </span> {Object.keys(arbol.monitoreos).length}</div> */}
+                  {/**/}
+                  {/*     {Object.entries(arbol.riegos).map(([id, riego]) => ( */}
+                  {/*       <div key={id}> */}
+                  {/*         <p><strong>ID:</strong> {id}</p> */}
+                  {/*         <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p> */}
+                  {/*         <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p> */}
+                  {/*       </div> */}
+                  {/*     ))} */}
+                  {/*   </div> */}
+                  {/* ))} */}
+                </div>
+              </div>
+              : null}
+
+
+
+            <Stack spacing={2} direction="row" sx={{ justifyContent: 'center', marginTop: '10px' }}>
+              <Button variant="contained" color='success' sx={{ border: '##174C44 solid 1px', backgroundColor: '#268576', color: 'white' }}
+                onClick={handleAplicar}
+              >Aplicar</Button>
+              <Button className='btn-cancelar' variant="outlined" sx={{ border: '1px solid #174C44', color: '#268576' }}
+                onClick={() => setShowFilterWindow(false)}
+              >Cerrar</Button>
+            </Stack>
+
+            {/* <div className="toggle-switch">d</div> */}
+          </div>
+      }
+
     </>
   )
 }
