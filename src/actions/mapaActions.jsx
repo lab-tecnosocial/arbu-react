@@ -16,6 +16,24 @@ export const startLoadingArboles = () => {
     dispatch(setArboles(arboles_data));
   }
 }
+export const setBusqueda = (busqueda) => {
+  console.log("testing", busqueda)
+  return {
+    type: types.mapaBusquedaArbol,
+    payload: busqueda
+  }
+}
+export const setFiltro = (filtros) => {
+  return {
+    type: types.mapaFiltrarArboles,
+    payload: filtros
+  }
+}
+export const resetFiltro = () => {
+  return {
+    type: types.mapaBorrarFiltros,
+  }
+}
 export const setArboles = (arboles) => {
   return {
     type: types.mapaLoadArboles,
