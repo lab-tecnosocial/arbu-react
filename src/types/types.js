@@ -1,7 +1,8 @@
 export const types = {
   mapaActiveArbol: '[MAPA] Set active arbol',
   mapaFiltrarArboles: '[MAPA] Filtrar arboles',
-  mapaBusquedaArbol: '[MAPA] Filtrar arboles',
+  mapaBorrarFiltros: '[MAPA] Borrar filtro',
+  mapaBusquedaArbol: '[MAPA] Buscar arboles',
   mapaLoadArboles: '[MAPA] Load arboles',
   mapaHideDetailArbol: '[MAPA] Hide detail arbol',
   mapaLoadUsuarios: '[MAPA] Load usuarios',
