@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { activeArbol, hideDetailArbol, setBusqueda } from "../../actions/mapaActions";
 import { useMapEvents } from 'react-leaflet/hooks'
 import L, { MarkerCluster } from "leaflet";
-import { MapContainer, Marker, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import "./MarkerCluster.Default.css";
@@ -108,32 +108,31 @@ const MapaComponent = () => {
     return null
   }
 
-
   return (
     <main>
       {/* <Navbar /> */}
       <DetailArbol />
-      <input
-        type="text"
-        placeholder="Buscar por nombre común..."
-        value={busqueda}
-        onChange={(e) => dispatch(setBusqueda(e.target.value))}
-      />
-
       <FiltroComponent />
-      <MapContainer
-        center={[-17.3917, -66.1448]}
-        zoom={13}
-        scrollWheelZoom={true}
-      >
-        <MyComponent />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        />
-        {geoData && <GeoJSON data={geoData} />}
-        <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
-      </MapContainer>
+      <div className="main-grid">
+        {/* <div className="filtro-sidebar"></div> */}
+        <div className="mapa">
+          <MapContainer
+            center={[-17.3917, -66.1448]}
+            zoom={13}
+            zoomControl={false}
+            scrollWheelZoom={true}
+          >
+            <ZoomControl position="bottomright" />
+            <MyComponent />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            />
+            {geoData && <GeoJSON data={geoData} />}
+            <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+          </MapContainer>
+        </div>
+      </div>
     </main>
   );
 };
