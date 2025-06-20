@@ -25,6 +25,8 @@ import { especies } from './especies'
 import { useDispatch, useSelector } from 'react-redux';
 import { filterArboles, resetFiltro, setBusqueda, setFilter, setFiltro } from '../../../actions/mapaActions';
 import ToggleSwitch from './ToggleSwitch';
+import { IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { CleaningServicesOutlined, ClearRounded } from '@mui/icons-material';
 especies.sort((a, b) => a.nombreCientifico.toLocaleLowerCase().localeCompare(b.nombreCientifico.toLocaleLowerCase()));
 
 const opcionesRiego = [
@@ -47,6 +49,7 @@ const opcionesMonitoreo = [
 ]
 
 const FiltroComponent = () => {
+  const [showFiltros, setShowFiltros] = useState(true)
   const [riegosSeleccionados, setRiegosSeleccionados] = useState(["con", "sin"]);
 
   const [cantidadRiegos, setCantidadRiegos] = useState("");
@@ -167,6 +170,7 @@ const FiltroComponent = () => {
   };
 
   const cancel = () => {
+    setShowFiltros(busqueda.length > 0 ? true : false)
     dispatch(resetFiltro())
     setBusqueda("")
     // setValorCampo("")
@@ -214,6 +218,7 @@ const FiltroComponent = () => {
       monitoreoFiltro:
         rangoMonitoreo
     }))
+    setShowFiltros(false)
   }
 
   return (
@@ -227,153 +232,231 @@ const FiltroComponent = () => {
           </div>
           :
           <div className='filtro-layout' >
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span className='titles' style={{ fontSize: '1.1rem' }}> Filtro</span> </div>
+            <div className='filtro-buscador'>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="outlined-adornment-password">Buscar</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label='Buscar'
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  fullWidth
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      {busqueda.length > 0 ? <>
+                        <IconButton onClick={cancel}>
+                          <ClearRounded></ClearRounded>
+                        </IconButton>
+                      </> : null}
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
 
-            <TextField id="outlined-basic" label={`Buscar`} value={busqueda} onChange={(e) => setBusqueda(e.target.value)} variant="outlined" />
-
-            <Button onClick={cancel} variant="contained" color='error' sx={{ border: '##174C44 solid 1px', backgroundColor: 'lightcoral', color: 'white' }}>
-              Borrar</Button>
-            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
-              >
-                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por nombres</Typography>
-              </AccordionSummary>
-              <AccordionDetails >
-                {campos.map((campo) => (
-                  <FormControlLabel key={campo.value} style={{
-                    display: "block"
-                  }} control={
-                    <Checkbox onChange={() => toggleCampo(campo.value)} style={{
-                      color: "#03B25E",
-                    }}
-                      value={campo.value}
-                      checked={camposSeleccionados.includes(campo.value)}
-                    />}
-                    label={campo.label}
-                  />
-                ))}
-              </AccordionDetails>
-            </Accordion>
-            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
-              >
-                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Riegos</Typography>
-              </AccordionSummary>
-              <AccordionDetails >
-                {opcionesRiego.map((opcion) => (
-                  <FormControlLabel key={opcion.value} style={{
-                    display: "block"
-                  }} control={
-                    <Checkbox onChange={() => toggleRiego(opcion.value)} style={{
-                      color: "#03B25E",
-                    }}
-                      value={opcion.value}
-                      checked={riegosSeleccionados.includes(opcion.value)}
-                    />}
-                    label={opcion.label}
-                  />
-                ))}
-
-                {riegosSeleccionados === "con" && (
-                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
-                    <input
-                      type="number"
-                      placeholder="Cantidad mínima"
-                      value={cantidadRiegos}
-                      onChange={(e) => setCantidadRiegos(e.target.value)}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Cantidad máxima"
-                      value={cantidadMaximaRiegos}
-                      onChange={(e) => setCantidadMaximaRiegos(e.target.value)}
-                    />
-                  </div>
-                )}
-
-              </AccordionDetails>
-            </Accordion>
-
-            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
-              >
-                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Monitoreos</Typography>
-              </AccordionSummary>
-              <AccordionDetails >
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="todo"
-                    name="radio-buttons-group"
-                  >
-                    {opcionesMonitoreo.map((opt) => (
-                      <FormControlLabel key={opt.value}
-                        value={opt.value}
-                        onChange={() => setMonitoreoTipo(opt.value)}
-                        control={<Radio style={{
+            </div>
+            <div className='filtro-groups'>
+              <Accordion
+                expanded={showFiltros}
+                style={{
+                  boxShadow: "none",
+                  borderBottom: "1px solid gray",
+                  borderBottomLeftRadius: "0px",
+                  borderBottomRightRadius: "0px"
+                }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                  style={{
+                    height: "64px",
+                    padding: "1rem"
+                  }}
+                  onClick={() => setShowFiltros(!showFiltros)}
+                >
+                  <h2 style={{ fontSize: "1.2rem" }}>Filtrar Busqueda</h2>
+                  {/* <Typography component="legend">Filtrar busqueda</Typography> */}
+                </AccordionSummary>
+                <AccordionDetails style={{
+                  boxShadow: "none",
+                  padding: "0px 1rem"
+                }}>
+                  <div className='group-filters'>
+                    <FormLabel component="legend">Filtros por campos</FormLabel>
+                    {campos.map((campo) => (
+                      <FormControlLabel key={campo.value} style={{
+                        display: "block"
+                      }} control={
+                        <Checkbox onChange={() => toggleCampo(campo.value)} style={{
                           color: "#03B25E",
+                          padding: "6px 9px",
                         }}
+                          value={campo.value}
+                          checked={camposSeleccionados.includes(campo.value)}
                         />}
-                        label={opt.label}
+                        label={campo.label}
                       />
                     ))}
-                  </RadioGroup>
-                </FormControl>
-
-                {monitoreoTipo === "personalizado" && (
-                  <div style={{ marginTop: "0.5rem" }}>
-                    <label>
-                      Desde:{" "}
-                      <input
-                        type="date"
-                        value={fechaDesde}
-                        onChange={(e) => setFechaDesde(e.target.value)}
-                      />
-                    </label>
-                    <label style={{ marginLeft: "1rem" }}>
-                      Hasta:{" "}
-                      <input
-                        type="date"
-                        value={fechaHasta}
-                        onChange={(e) => setFechaHasta(e.target.value)}
-                      />
-                    </label>
                   </div>
-                )}
-              </AccordionDetails>
-            </Accordion>
+                  {/*   </AccordionDetails> */}
+                  {/* </Accordion> */}
+                  {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
+                  {/*   <AccordionSummary */}
+                  {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
+                  {/*     aria-controls="panel1a-content" */}
+                  {/*     id="panel1a-header" */}
+                  {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
+                  {/*   > */}
+                  {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Riegos</Typography> */}
+                  {/*   </AccordionSummary> */}
+                  {/*   <AccordionDetails > */}
+                  <div className='group-filters'>
+                    <FormLabel component="legend">Filtros por riegos</FormLabel>
+                    {opcionesRiego.map((opcion) => (
+                      <FormControlLabel key={opcion.value} style={{
+                        display: "block"
+                      }} control={
+                        <Checkbox onChange={() => toggleRiego(opcion.value)} style={{
+                          color: "#03B25E",
+                          padding: "6px 9px",
+                        }}
+                          value={opcion.value}
+                          checked={riegosSeleccionados.includes(opcion.value)}
+                        />}
+                        label={opcion.label}
+                      />
+                    ))}
 
-            {/* <button onClick={handleBubscar}>Buscar</button> */}
-            {/* <button onClick={cancel}>Borrar Filtros</button> */}
-            {/* <ToggleSwitch */}
-            {/*     id="nativas" */}
-            {/*     checked={nativas} */}
-            {/*     onChange={handleSwitchNew} */}
-            {/*     optionLabels={['Nativas','Nativas']} */}
-            {/*     name="Nativa" */}
-            {/*   /> */}
-            {/**/}
-            {/* <ToggleSwitch */}
-            {/*   id="introducidas" */}
-            {/*   checked={introducidas} */}
-            {/*   onChange={handleSwitchNew} */}
-            {/*   optionLabels={['Introducidas','Introducidas']} */}
-            {/*   name="Introducida" */}
-            {/* /> */}
+                    {riegosSeleccionados === "con" && (
+                      <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
+                        <input
+                          type="number"
+                          placeholder="Cantidad mínima"
+                          value={cantidadRiegos}
+                          onChange={(e) => setCantidadRiegos(e.target.value)}
+                        />
+                        <input
+                          type="number"
+                          placeholder="Cantidad máxima"
+                          value={cantidadMaximaRiegos}
+                          onChange={(e) => setCantidadMaximaRiegos(e.target.value)}
+                        />
+                      </div>
+                    )}
 
-            {/* <FormControlLabel
+                  </div>
+                  {/*   </AccordionDetails> */}
+                  {/* </Accordion> */}
+
+                  {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
+                  {/*   <AccordionSummary */}
+                  {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
+                  {/*     aria-controls="panel1a-content" */}
+                  {/*     id="panel1a-header" */}
+                  {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
+                  {/*   > */}
+                  {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Monitoreos</Typography> */}
+                  {/*   </AccordionSummary> */}
+                  {/*   <AccordionDetails > */}
+
+                  <div className='group-filters'>
+                    <FormLabel component="legend">Filtros por monitoreos</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue="todo"
+                        name="radio-buttons-group"
+                      >
+                        {opcionesMonitoreo.map((opt) => (
+                          <FormControlLabel key={opt.value}
+                            value={opt.value}
+                            onChange={() => setMonitoreoTipo(opt.value)}
+                            control={<Radio style={{
+                              color: "#03B25E",
+                              padding: "6px 9px",
+                            }}
+                            />}
+                            label={opt.label}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+
+                    {monitoreoTipo === "personalizado" && (
+                      <div style={{ marginTop: "0.5rem" }}>
+                        <label>
+                          Desde:{" "}
+                          <input
+                            type="date"
+                            value={fechaDesde}
+                            onChange={(e) => setFechaDesde(e.target.value)}
+                          />
+                        </label>
+                        <label style={{ marginLeft: "1rem" }}>
+                          Hasta:{" "}
+                          <input
+                            type="date"
+                            value={fechaHasta}
+                            onChange={(e) => setFechaHasta(e.target.value)}
+                          />
+                        </label>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <FormLabel component="legend">Filtros por especies</FormLabel>
+                    <div style={{ display: 'flex', height: '240px', overflowY: 'auto', flexDirection: 'column' }}>
+                      {
+                        especies.map(item => (
+                          <FormControlLabel key={item?.id} control={
+                            <Checkbox onChange={handleCheckBox} style={{
+                              color: "#03B25E",
+                              padding: "6px 9px",
+                            }}
+                              value={item.nombreCientifico}
+                              checked={especiesEspecificas.includes(item.nombreCientifico)}
+                            />}
+                            label={item.nombreCientifico}
+                          />
+                        ))
+                      }
+                    </div>
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+              {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
+              {/*   <AccordionSummary */}
+              {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
+              {/*     aria-controls="panel1a-content" */}
+              {/*     id="panel1a-header" */}
+              {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
+              {/*   > */}
+              {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por nombres</Typography> */}
+              {/*   </AccordionSummary> */}
+              {/*   <AccordionDetails > */}
+
+              {/*   </AccordionDetails> */}
+              {/* </Accordion> */}
+
+              {/* <button onClick={handleBubscar}>Buscar</button> */}
+              {/* <button onClick={cancel}>Borrar Filtros</button> */}
+              {/* <ToggleSwitch */}
+              {/*     id="nativas" */}
+              {/*     checked={nativas} */}
+              {/*     onChange={handleSwitchNew} */}
+              {/*     optionLabels={['Nativas','Nativas']} */}
+              {/*     name="Nativa" */}
+              {/*   /> */}
+              {/**/}
+              {/* <ToggleSwitch */}
+              {/*   id="introducidas" */}
+              {/*   checked={introducidas} */}
+              {/*   onChange={handleSwitchNew} */}
+              {/*   optionLabels={['Introducidas','Introducidas']} */}
+              {/*   name="Introducida" */}
+              {/* /> */}
+
+              {/* <FormControlLabel
           value="start"
           control={<Switch color="primary" onChange={handleSwitch} value="Nativa" checked={nativas} />}
           label="Nativas"
@@ -387,101 +470,68 @@ const FiltroComponent = () => {
           labelPlacement="start"
         /> */}
 
-            <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
-              <AccordionSummary
+              {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
+              {/*   <AccordionSummary */}
+              {/**/}
+              {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
+              {/*     aria-controls="panel1a-content" */}
+              {/*     id="panel1a-header" */}
+              {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
+              {/*   > */}
+              {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Especies específicas</Typography> */}
+              {/*   </AccordionSummary> */}
+              {/*   <AccordionDetails > */}
 
-                expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }}
-              >
-                <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Especies específicas</Typography>
-              </AccordionSummary>
-              <AccordionDetails >
-                <div style={{ display: 'flex', height: '150px', overflowY: 'scroll', flexDirection: 'column' }}>
-                  {
-                    especies.map(item => (
-                      <FormControlLabel key={item?.id} control={
-                        <Checkbox onChange={handleCheckBox} style={{
-                          color: "#03B25E"
-                        }}
-                          value={item.nombreCientifico}
-                          checked={especiesEspecificas.includes(item.nombreCientifico)}
-                        />}
-                        label={item.nombreCientifico}
-                      />
-                    ))
-                  }
+              {/*   </AccordionDetails> */}
+              {/* </Accordion> */}
+              {arbolesFiltrados.length > 0 ?
+                <div className='wrapper-results'>
+                  <h3 style={{ fontSize: "1.2rem", padding: "1rem 1rem" }}>{arbolesFiltrados.length} Resultados</h3>
+                  <div className='list'>
+                    {arbolesFiltrados.length > 0 && arbolesFiltrados.map((arbol) => {
+                      return (
+                        <button key={arbol.id} className="row-result" onClick={() => {
+                          dispatch(loadActiveArbol(arbol));
+                          dispatch(setSelectedPosition([arbol.latitud, arbol.longitud]));
+                          dispatch(setZoomPosition(18));
+                        }}>
+                          <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div>
+                          <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div>
+                          <div className='input-row'><span className="label">Nombre comun: </span> {arbol.nombreComun}</div>
+                          <div className='input-row'><span className="label">Cantidad de riegos: </span> {Object.keys(arbol.riegos).length}</div>
+                          <div className='input-row'><span className="label">Cantidad de monitoreos: </span> {Object.keys(arbol.monitoreos).length}</div>
+
+                          {Object.entries(arbol.riegos).map(([id, riego]) => (
+                            <div key={id}>
+                              <p><strong>ID:</strong> {id}</p>
+                              <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p>
+                              <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p>
+                            </div>
+                          ))}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
-              </AccordionDetails>
-            </Accordion>
-            {arbolesFiltrados.length > 0 ?
-              <div className="wrapper-results">
-                <p className='subtitle-result'>{arbolesFiltrados.length} resultados:</p>
-                <div className='list'>
-                  {arbolesFiltrados.length > 0 && arbolesFiltrados.map((arbol) => {
-                    return (
-                      <div key={arbol.id} className="row-result" onClick={() => {
-                        dispatch(loadActiveArbol(arbol));
-                        dispatch(setSelectedPosition([arbol.latitud, arbol.longitud]));
-                        dispatch(setZoomPosition(18));
-                      }}>
-                        {/* <h2>{arbol.id}</h2> */}
-                        <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div>
-                        <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div>
-                        <div className='input-row'><span className="label">Nombre comun: </span> {arbol.nombreComun}</div>
-                        <div className='input-row'><span className="label">Cantidad de riegos: </span> {Object.keys(arbol.riegos).length}</div>
-                        <div className='input-row'><span className="label">Cantidad de monitoreos: </span> {Object.keys(arbol.monitoreos).length}</div>
-
-                        {Object.entries(arbol.riegos).map(([id, riego]) => (
-                          <div key={id}>
-                            <p><strong>ID:</strong> {id}</p>
-                            <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p>
-                            {/* <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p> */}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                  })}
-                  {/* {datos.length > 0 && datos.map((arbol) => ( */}
-                  {/*   <div key={arbol.id} className="row-result" onClick={() => { */}
-                  {/*     dispatch(loadActiveArbol(arbol)); */}
-                  {/*     dispatch(setSelectedPosition([arbol.latitud, arbol.longitud])); */}
-                  {/*     dispatch(setZoomPosition(18)); */}
-                  {/*   }}> */}
-                  {/*      <h2>{arbol.id}</h2>  */}
-                  {/*     <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div> */}
-                  {/*     <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div> */}
-                  {/*     <div className='input-row'><span className="label">Nombre comun: </span> {arbol.nombreComun}</div> */}
-                  {/*     <div className='input-row'><span className="label">Cantidad de riegos: </span> {Object.keys(arbol.riegos).length}</div> */}
-                  {/*     <div className='input-row'><span className="label">Cantidad de monitoreos: </span> {Object.keys(arbol.monitoreos).length}</div> */}
-                  {/**/}
-                  {/*     {Object.entries(arbol.riegos).map(([id, riego]) => ( */}
-                  {/*       <div key={id}> */}
-                  {/*         <p><strong>ID:</strong> {id}</p> */}
-                  {/*         <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p> */}
-                  {/*         <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p> */}
-                  {/*       </div> */}
-                  {/*     ))} */}
-                  {/*   </div> */}
-                  {/* ))} */}
-                </div>
-              </div>
-              : null}
+                :
+                null
+              }
+            </div>
 
 
 
-            <Stack spacing={2} direction="row" sx={{ justifyContent: 'center', marginTop: '10px' }}>
-              <Button variant="contained" color='success' sx={{ border: '##174C44 solid 1px', backgroundColor: '#268576', color: 'white' }}
-                onClick={handleAplicar}
-              >Aplicar</Button>
-              <Button className='btn-cancelar' variant="outlined" sx={{ border: '1px solid #174C44', color: '#268576' }}
-                onClick={() => setShowFilterWindow(false)}
-              >Cerrar</Button>
-            </Stack>
-
+            <div className='filtro-buttons'>
+              <Stack spacing={2} direction="row" sx={{ justifyContent: 'center' }}>
+                <Button variant="contained" color='success' sx={{ border: '##174C44 solid 1px', backgroundColor: '#268576', color: 'white' }}
+                  onClick={handleAplicar}
+                >Aplicar</Button>
+                <Button className='btn-cancelar' variant="outlined" sx={{ border: '1px solid #174C44', color: '#268576' }}
+                  onClick={() => setShowFilterWindow(false)}
+                >Cerrar</Button>
+              </Stack>
+            </div>
             {/* <div className="toggle-switch">d</div> */}
-          </div>
+          </div >
       }
 
     </>

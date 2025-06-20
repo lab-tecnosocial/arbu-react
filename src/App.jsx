@@ -55,7 +55,6 @@ const navItems = [
   }
 ];
 
-
 function App(props) {
   const { window } = props
   const [mobileOpen, setMobileOpen] = useState(false);
