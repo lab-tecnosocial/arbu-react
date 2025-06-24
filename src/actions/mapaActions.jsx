@@ -8,6 +8,24 @@ export const activeArbol = (id, arbol) => {
     payload: { id, ...arbol }
   }
 }
+export const setShowArbolesPlantados = (value) => {
+  return {
+    type: types.mapaShowArbolesPlantados,
+    payload: value
+  }
+}
+export const setShowArbolesMapeados = (value) => {
+  return {
+    type: types.mapaShowArbolesMapeados,
+    payload: value
+  }
+}
+export const setArbolSeleccionado = (coords) => {
+  return {
+    type: types.mapaArbolSeleccionado,
+    payload: coords
+  }
+}
 export const startLoadingArboles = () => {
   return async (dispatch) => {
     // const arboles = await loadArboles();
