@@ -23,7 +23,7 @@ import Fab from '@mui/material/Fab';
 import './FiltroComponent.css'
 import { especies } from './especies'
 import { useDispatch, useSelector } from 'react-redux';
-import { filterArboles, resetFiltro, setBusqueda, setFilter, setFiltro } from '../../../actions/mapaActions';
+import { activeArbol, filterArboles, resetFiltro, setArbolSeleccionado, setBusqueda, setFilter, setFiltro } from '../../../actions/mapaActions';
 import ToggleSwitch from './ToggleSwitch';
 import { IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { CleaningServicesOutlined, ClearRounded } from '@mui/icons-material';
@@ -50,7 +50,7 @@ const opcionesMonitoreo = [
 
 const FiltroComponent = () => {
   const [showFiltros, setShowFiltros] = useState(true)
-  const [riegosSeleccionados, setRiegosSeleccionados] = useState(["con", "sin"]);
+  const [riegosSeleccionados, setRiegosSeleccionados] = useState([]);
 
   const [cantidadRiegos, setCantidadRiegos] = useState("");
   const [cantidadMaximaRiegos, setCantidadMaximaRiegos] = useState("");
@@ -67,11 +67,7 @@ const FiltroComponent = () => {
   const [especiesEspecificas, setEspeciesEspecificas] = useState([]);
   const dispatch = useDispatch();
 
-  const [camposSeleccionados, setCamposSeleccionados] = useState([
-    "nombreComun",
-    "nombreCientifico",
-    "nombrePropio"
-  ]);
+  const [camposSeleccionados, setCamposSeleccionados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
 
   const calcularFechasRango = (tipo) => {
@@ -226,7 +222,15 @@ const FiltroComponent = () => {
       {
         showFilterWindow === false ?
           <div className='btn-filter-round'>
-            <Fab aria-label="add" sx={{ backgroundColor: 'white' }} onClick={handleClickFilterBtnRound}>
+            <button
+              onClick={handleClickFilterBtnRound}
+            >
+            </button>
+            <Fab
+              aria-label="add"
+              sx={{ backgroundColor: 'white' }}
+              onClick={handleClickFilterBtnRound}
+            >
               <FilterAltRoundedIcon />
             </Fab>
           </div>
@@ -244,7 +248,14 @@ const FiltroComponent = () => {
                   endAdornment={
                     <InputAdornment position='end'>
                       {busqueda.length > 0 ? <>
-                        <IconButton onClick={cancel}>
+                        <IconButton
+                          onClick={() => {
+                            cancel()
+                            dispatch(
+                              setArbolSeleccionado(null)
+                            )
+                          }}
+                        >
                           <ClearRounded></ClearRounded>
                         </IconButton>
                       </> : null}
@@ -257,28 +268,38 @@ const FiltroComponent = () => {
             <div className='filtro-groups'>
               <Accordion
                 expanded={showFiltros}
-                style={{
-                  boxShadow: "none",
-                  borderBottom: "1px solid gray",
-                  borderBottomLeftRadius: "0px",
-                  borderBottomRightRadius: "0px"
-                }}>
+                sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', padding: '1rem', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
-                  style={{
-                    height: "64px",
-                    padding: "1rem"
-                  }}
+                  expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ backgroundColor: '#03B25E', border: 'rgba(0,0,0,.5) solid 1px', borderRadius: '6px' }}
                   onClick={() => setShowFiltros(!showFiltros)}
                 >
-                  <h2 style={{ fontSize: "1.2rem" }}>Filtrar Busqueda</h2>
-                  {/* <Typography component="legend">Filtrar busqueda</Typography> */}
+                  {/* <Accordion */}
+                  {/*   expanded={showFiltros} */}
+                  {/*   style={{ */}
+                  {/*     boxShadow: "none", */}
+                  {/*     borderBottom: "1px solid gray", */}
+                  {/*     borderBottomLeftRadius: "0px", */}
+                  {/*     borderBottomRightRadius: "0px" */}
+                  {/*   }}> */}
+                  {/*   <AccordionSummary */}
+                  {/*     expandIcon={<ExpandMoreIcon />} */}
+                  {/*     aria-controls="panel1-content" */}
+                  {/*     id="panel1-header" */}
+                  {/*     style={{ */}
+                  {/*       height: "64px", */}
+                  {/*       padding: "1rem" */}
+                  {/*     }} */}
+                  {/*     onClick={() => setShowFiltros(!showFiltros)} */}
+                  {/*   > */}
+                  {/* <h2 style={{ fontSize: "1.2rem" }}>Filtrar Busqueda</h2> */}
+                  <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Búsqueda Avanzada</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{
                   boxShadow: "none",
-                  padding: "0px 1rem"
+                  padding: "1rem 1rem"
                 }}>
                   <div className='group-filters'>
                     <FormLabel component="legend">Filtros por campos</FormLabel>
@@ -486,14 +507,16 @@ const FiltroComponent = () => {
               {/* </Accordion> */}
               {arbolesFiltrados.length > 0 ?
                 <div className='wrapper-results'>
-                  <h3 style={{ fontSize: "1.2rem", padding: "1rem 1rem" }}>{arbolesFiltrados.length} Resultados</h3>
+                  <h3 style={{ fontSize: "1.2rem", padding: "0 1rem" }}>{arbolesFiltrados.length} Resultados</h3>
                   <div className='list'>
                     {arbolesFiltrados.length > 0 && arbolesFiltrados.map((arbol) => {
                       return (
                         <button key={arbol.id} className="row-result" onClick={() => {
-                          dispatch(loadActiveArbol(arbol));
-                          dispatch(setSelectedPosition([arbol.latitud, arbol.longitud]));
-                          dispatch(setZoomPosition(18));
+                          dispatch(setArbolSeleccionado([arbol.latitud, arbol.longitud]))
+                          dispatch(activeArbol(arbol.id, { ...arbol }));
+                          // dispatch(loadActiveArbol(arbol));
+                          // dispatch(setSelectedPosition([arbol.latitud, arbol.longitud]));
+                          // dispatch(setZoomPosition(18));
                         }}>
                           <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div>
                           <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div>
@@ -514,12 +537,11 @@ const FiltroComponent = () => {
                   </div>
                 </div>
                 :
-                null
+                <>
+                  <h3 style={{ fontSize: "1.1rem", padding: "0 1rem" }}>{arbolesFiltrados.length} Resultados</h3>
+                </>
               }
             </div>
-
-
-
             <div className='filtro-buttons'>
               <Stack spacing={2} direction="row" sx={{ justifyContent: 'center' }}>
                 <Button variant="contained" color='success' sx={{ border: '##174C44 solid 1px', backgroundColor: '#268576', color: 'white' }}

@@ -2,28 +2,13 @@
   --color-oscuro: #174C44;
 }
 
-/* .titles{
-  font-family: 'Poppins', sans-serif;
-  color: var(--color-oscuro);
-  font-size: 1rem;
-}
-.text-normal{
-  font-family: 'Open Sans' , sans-serif;
-  color: var(--color-oscuro);
-  font-size: 0.4rem;
-} */
-.MuiButtonBase-root {
-  background-color: red;
-}
-
 .filtro-layout {
   width: 100%;
   height: calc(100vh - 4.7rem);
   border-radius: .5rem;
   background-color: rgba(255, 255, 255, 1);
-  border: #174C44 solid 1px;
-  /* padding: 1rem; */
-  z-index: 999;
+  border: 1px solid rgba(0, 0, 0, .2);
+  z-index: 9999;
   position: fixed;
   top: 70px;
   left: 5px;
@@ -67,11 +52,11 @@
   border: 1px solid #174C44 !important;
 }
 
-.btn-filter-round {
+.btn-filter-round-variant {
   z-index: 999;
   position: fixed;
-  top: 80px;
-  left: 10px;
+  top: 160px;
+  left: 1rem;
 }
 
 .mapFilterr {
@@ -82,25 +67,19 @@
   z-index: 9999;
   max-width: 500px;
   max-height: 700px;
-  /* max-height: calc(100vh - 60px - 3rem - 3rem); */
   border-radius: 16px;
   border: 1px solid rgba(111, 111, 111, .3);
   padding: 1.5rem;
   background-color: white;
   border: 1px solid #000000;
-  /* background-image: radial-gradient(circle 814px at 89.6% 92.8%, rgba(221, 221, 221, .6) 0%, rgba(239, 239, 239, .6) 100.2%); */
-  /* backdrop-filter: blur(16px); */
   display: grid;
   gap: 1rem;
   width: 100%;
   height: fit-content;
-  /* overflow-y: auto; */
 }
 
 
 .wrapper-results {
-  /* overflow-y: auto; */
-
   .subtitle-result {
     font-weight: bold;
     font-size: 20px;
