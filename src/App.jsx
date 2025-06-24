@@ -103,14 +103,6 @@ function App(props) {
 
   return (
     <>
-
-      {/* <nav style={{ borderBottom: "solid 1px", paddingBottom: "1rem",}}>
-        <Link to="/">Home</Link> |{" "}
-        <Link to="/mapa">Mapa</Link> |{" "}
-        <Link to="/ranking">Ranking</Link> |{" "}
-        <Link to="/catalogo">Catalogo y Manuales de plantacion</Link> |{" "}
-        <Link to="/api">API</Link> |{" "}
-      </nav> */}
       <Box sx={{ display: 'flex', marginBottom: '65px' }}>
         <AppBar component="nav" style={{ backgroundColor: '#268576', paddingBottom: '0px' }}>
           <Toolbar >
@@ -137,7 +129,6 @@ function App(props) {
               </div>
 
             </Typography>
-            {/* </div> */}
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
 
@@ -145,7 +136,6 @@ function App(props) {
 
                   <Button className='buttons-appbar' sx={{
                     color: '#EBF5EE', textTransform: 'capitalize', borderRadius: '20px',
-                    // border:'1px solid #EBF5EE',
                     marginLeft: '4px', marginRight: '4px', fontFamily: 'Poppins'
                   }}>
                     {item.icon}&nbsp;{item.section}

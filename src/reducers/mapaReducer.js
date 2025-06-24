@@ -2,6 +2,9 @@ import { types } from "../types/types";
 const initialState = {
   arboles: [],
   arbolesFiltrados: [],
+  showArbolesPlantados: true,
+  showArbolesMapeados: false,
+  arbolSeleccionado: null,
   busqueda: "",
   active: null,
   usuarios: [],
@@ -12,6 +15,21 @@ const initialState = {
 }
 export const mapaReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.mapaArbolSeleccionado:
+      return {
+        ...state,
+        arbolSeleccionado: action.payload
+      }
+    case types.mapaShowArbolesPlantados:
+      return {
+        ...state,
+        showArbolesPlantados: action.payload
+      }
+    case types.mapaShowArbolesMapeados:
+      return {
+        ...state,
+        showArbolesMapeados: action.payload
+      }
     case types.mapaActiveArbol:
       return {
         ...state,
@@ -33,7 +51,7 @@ export const mapaReducer = (state = initialState, action) => {
         );
         const tieneRiegos = item.riegos && Object.keys(item.riegos).length > 0;
         const tipoRiego = tieneRiegos ? "con" : "sin";
-        const coincideRiego = riegosSeleccionados.includes(tipoRiego);
+        const coincideRiego = riegosSeleccionados.length === 0 || riegosSeleccionados.includes(tipoRiego);
 
         const monitoreos = item.monitoreos || {};
         const hayMonitoreoEnRango = Object.values(monitoreos).some((mon) => {
