@@ -51,24 +51,19 @@ const opcionesMonitoreo = [
 const FiltroComponent = () => {
   const [showFiltros, setShowFiltros] = useState(true)
   const [riegosSeleccionados, setRiegosSeleccionados] = useState([]);
-
   const [cantidadRiegos, setCantidadRiegos] = useState("");
   const [cantidadMaximaRiegos, setCantidadMaximaRiegos] = useState("");
-
-  const [monitoreoSeleccionado, setMonitoreoSeleccionado] = useState("todo");
-
   const [monitoreoTipo, setMonitoreoTipo] = useState("todo");
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
-
-  const { arbolesFiltrados } = useSelector(state => state.mapa);
-
   const [showFilterWindow, setShowFilterWindow] = useState(false);
   const [especiesEspecificas, setEspeciesEspecificas] = useState([]);
-  const dispatch = useDispatch();
-
   const [camposSeleccionados, setCamposSeleccionados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [startBusqueda, setStartBusqueda] = useState(false)
+
+  const { arbolesFiltrados } = useSelector(state => state.mapa);
+  const dispatch = useDispatch();
 
   const calcularFechasRango = (tipo) => {
     const ahora = new Date();
@@ -107,68 +102,12 @@ const FiltroComponent = () => {
         : [...prev, opcion]
     );
   };
-  const handleBuscar = async () => {
-    // const queryParams = new URLSearchParams();
-    // // Filtro por campo
-    // if (valorCampo.trim() !== "") {
-    //   if (campoSeleccionado === "todos") {
-    //     queryParams.append("buscar", valorCampo.trim());
-    //   } else {
-    //     queryParams.append(campoSeleccionado, valorCampo.trim());
-    //   }
-    // }
-    //
-    // // Filtro por existencia de riegos
-    // if (riegosSeleccionado === "con") {
-    //   queryParams.append("tieneRiegos", "true");
-    //   if (cantidadRiegos) {
-    //     queryParams.append("minRiegos", cantidadRiegos);
-    //   }
-    //   if (cantidadMaximaRiegos) {
-    //     queryParams.append("maxRiegos", cantidadMaximaRiegos);
-    //   }
-    // }
-    //
-    // // Filtro por monitoreos
-    // if (monitoreoSeleccionado === "hoy") {
-    //   const today = new Date();
-    //   today.setHours(0, 0, 0, 0);
-    //   queryParams.append("desde", today.toISOString());
-    // } else if (monitoreoSeleccionado === "30") {
-    //   const desde = new Date();
-    //   desde.setDate(desde.getDate() - 30);
-    //   queryParams.append("desde", desde.toISOString());
-    // } else if (monitoreoSeleccionado === "60") {
-    //   const desde = new Date();
-    //   desde.setDate(desde.getDate() - 60);
-    //   queryParams.append("desde", desde.toISOString());
-    // } else if (monitoreoSeleccionado === "personalizado") {
-    //   if (fechaDesde) queryParams.append("desde", new Date(fechaDesde).toISOString());
-    //   if (fechaHasta) queryParams.append("hasta", new Date(fechaHasta).toISOString());
-    // }
-    //
-    // // // Filtros por cantidad
-    // // if (cantidadRiegos) {
-    // //   queryParams.append("minRiegos", cantidadRiegos);
-    // // }
-    // //
-    // // if (cantidadMaximaRiegos) {
-    // //   queryParams.append("maxRiegos", cantidadMaximaRiegos);
-    // // }
-    //
-    // try {
-    //   const res = await fetch(`http://localhost:8111/arboles-plantados/buscar?${queryParams.toString()}`);
-    //   const json = await res.json();
-    //   // setDatos(json);
-    // } catch (err) {
-    //   console.error("Error al obtener árboles:", err);
-    // }
-  };
 
   const cancel = () => {
     setShowFiltros(busqueda.length > 0 ? true : false)
     dispatch(resetFiltro())
     setBusqueda("")
+    setStartBusqueda(false)
     // setValorCampo("")
     // dispatch(setSelectedPosition(null));
     // dispatch(setZoomPosition(13));
@@ -215,6 +154,7 @@ const FiltroComponent = () => {
         rangoMonitoreo
     }))
     setShowFiltros(false)
+    setStartBusqueda(true)
   }
 
   return (
@@ -263,7 +203,6 @@ const FiltroComponent = () => {
                   }
                 />
               </FormControl>
-
             </div>
             <div className='filtro-groups'>
               <Accordion
@@ -276,25 +215,6 @@ const FiltroComponent = () => {
                   sx={{ backgroundColor: '#03B25E', border: 'rgba(0,0,0,.5) solid 1px', borderRadius: '6px' }}
                   onClick={() => setShowFiltros(!showFiltros)}
                 >
-                  {/* <Accordion */}
-                  {/*   expanded={showFiltros} */}
-                  {/*   style={{ */}
-                  {/*     boxShadow: "none", */}
-                  {/*     borderBottom: "1px solid gray", */}
-                  {/*     borderBottomLeftRadius: "0px", */}
-                  {/*     borderBottomRightRadius: "0px" */}
-                  {/*   }}> */}
-                  {/*   <AccordionSummary */}
-                  {/*     expandIcon={<ExpandMoreIcon />} */}
-                  {/*     aria-controls="panel1-content" */}
-                  {/*     id="panel1-header" */}
-                  {/*     style={{ */}
-                  {/*       height: "64px", */}
-                  {/*       padding: "1rem" */}
-                  {/*     }} */}
-                  {/*     onClick={() => setShowFiltros(!showFiltros)} */}
-                  {/*   > */}
-                  {/* <h2 style={{ fontSize: "1.2rem" }}>Filtrar Busqueda</h2> */}
                   <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Búsqueda Avanzada</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{
@@ -318,18 +238,6 @@ const FiltroComponent = () => {
                       />
                     ))}
                   </div>
-                  {/*   </AccordionDetails> */}
-                  {/* </Accordion> */}
-                  {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
-                  {/*   <AccordionSummary */}
-                  {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
-                  {/*     aria-controls="panel1a-content" */}
-                  {/*     id="panel1a-header" */}
-                  {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
-                  {/*   > */}
-                  {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Riegos</Typography> */}
-                  {/*   </AccordionSummary> */}
-                  {/*   <AccordionDetails > */}
                   <div className='group-filters'>
                     <FormLabel component="legend">Filtros por riegos</FormLabel>
                     {opcionesRiego.map((opcion) => (
@@ -365,20 +273,6 @@ const FiltroComponent = () => {
                     )}
 
                   </div>
-                  {/*   </AccordionDetails> */}
-                  {/* </Accordion> */}
-
-                  {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
-                  {/*   <AccordionSummary */}
-                  {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
-                  {/*     aria-controls="panel1a-content" */}
-                  {/*     id="panel1a-header" */}
-                  {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
-                  {/*   > */}
-                  {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por Monitoreos</Typography> */}
-                  {/*   </AccordionSummary> */}
-                  {/*   <AccordionDetails > */}
-
                   <div className='group-filters'>
                     <FormLabel component="legend">Filtros por monitoreos</FormLabel>
                     <FormControl>
@@ -445,66 +339,6 @@ const FiltroComponent = () => {
                   </div>
                 </AccordionDetails>
               </Accordion>
-              {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
-              {/*   <AccordionSummary */}
-              {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
-              {/*     aria-controls="panel1a-content" */}
-              {/*     id="panel1a-header" */}
-              {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
-              {/*   > */}
-              {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Filtro por nombres</Typography> */}
-              {/*   </AccordionSummary> */}
-              {/*   <AccordionDetails > */}
-
-              {/*   </AccordionDetails> */}
-              {/* </Accordion> */}
-
-              {/* <button onClick={handleBubscar}>Buscar</button> */}
-              {/* <button onClick={cancel}>Borrar Filtros</button> */}
-              {/* <ToggleSwitch */}
-              {/*     id="nativas" */}
-              {/*     checked={nativas} */}
-              {/*     onChange={handleSwitchNew} */}
-              {/*     optionLabels={['Nativas','Nativas']} */}
-              {/*     name="Nativa" */}
-              {/*   /> */}
-              {/**/}
-              {/* <ToggleSwitch */}
-              {/*   id="introducidas" */}
-              {/*   checked={introducidas} */}
-              {/*   onChange={handleSwitchNew} */}
-              {/*   optionLabels={['Introducidas','Introducidas']} */}
-              {/*   name="Introducida" */}
-              {/* /> */}
-
-              {/* <FormControlLabel
-          value="start"
-          control={<Switch color="primary" onChange={handleSwitch} value="Nativa" checked={nativas} />}
-          label="Nativas"
-          labelPlacement="start"
-        />
-        <br />
-      <FormControlLabel
-          value="start"
-          control={<Switch color="primary" onChange={handleSwitch} value="Introducida" checked={introducidas}/>}
-          label="Introducidas"
-          labelPlacement="start"
-        /> */}
-
-              {/* <Accordion sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', marginTop: '10px', border: 'transparent solid 1px', borderRadius: '10px', boxShadow: 'none' }}> */}
-              {/*   <AccordionSummary */}
-              {/**/}
-              {/*     expandIcon={<ExpandMoreIcon sx={{ color: '#03B25E', borderRadius: '50%', backgroundColor: 'white' }} />} */}
-              {/*     aria-controls="panel1a-content" */}
-              {/*     id="panel1a-header" */}
-              {/*     sx={{ backgroundColor: '#03B25E', border: '#174C44 solid 1px', borderRadius: '10px' }} */}
-              {/*   > */}
-              {/*     <Typography sx={{ color: 'white', fontFamily: `'Poppins',sans-serif` }}>Especies específicas</Typography> */}
-              {/*   </AccordionSummary> */}
-              {/*   <AccordionDetails > */}
-
-              {/*   </AccordionDetails> */}
-              {/* </Accordion> */}
               {arbolesFiltrados.length > 0 ?
                 <div className='wrapper-results'>
                   <h3 style={{ fontSize: "1.2rem", padding: "0 1rem" }}>{arbolesFiltrados.length} Resultados</h3>
@@ -537,9 +371,10 @@ const FiltroComponent = () => {
                   </div>
                 </div>
                 :
-                <>
+                startBusqueda ?
                   <h3 style={{ fontSize: "1.1rem", padding: "0 1rem" }}>{arbolesFiltrados.length} Resultados</h3>
-                </>
+                  :
+                  null
               }
             </div>
             <div className='filtro-buttons'>
@@ -552,10 +387,8 @@ const FiltroComponent = () => {
                 >Cerrar</Button>
               </Stack>
             </div>
-            {/* <div className="toggle-switch">d</div> */}
           </div >
       }
-
     </>
   )
 }
