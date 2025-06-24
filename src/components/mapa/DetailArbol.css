@@ -1,18 +1,20 @@
-:root{
-  --color-oscuro:#174C44 ;
+:root {
+  --color-oscuro: #174C44;
 }
-.titles{
+
+.titles {
   font-family: 'Poppins', sans-serif;
   color: var(--color-oscuro);
   font-size: 1rem;
 }
-.text-normal{
-  font-family: 'Open Sans' , sans-serif;
+
+.text-normal {
+  font-family: 'Open Sans', sans-serif;
   color: var(--color-oscuro);
   font-size: 0.9rem;
 }
 
-.detail-arbol{
+.detail-arbol {
   z-index: 1000;
   position: fixed;
   width: 100%;
@@ -23,6 +25,7 @@
   right: -100%;
   transition: all 0.2s ease-in-out;
 }
+
 .active {
   right: 0;
 }
@@ -30,30 +33,35 @@
 .preview__description__container {
   padding: 1rem;
 }
+
 /* .no-active{
   display: none;
 } */
 /* .active{
   display: block;
 } */
-.img-usuarios{
+.img-usuarios {
   width: 20px;
   height: 20px;
   margin-right: 2px;
 }
-.span-nombre-usuarios{
+
+.span-nombre-usuarios {
   font-size: 0.9rem;
 }
-.detail-container{
+
+.detail-container {
   display: grid;
   grid-template-columns: 50% 50%;
   margin-top: -20px;
 }
-.monitores-list{
+
+.monitores-list {
   overflow-y: scroll;
   height: 285px;
 }
-.image-monitoring{
+
+.image-monitoring {
   border-radius: 50%;
   width: 150px;
   height: 150px;
@@ -64,32 +72,37 @@
 
 .card {
   /* Add shadows to create the "card" effect */
-  box-shadow: 1px 2px 4px 1px rgba(0,0,0,0.2);
+  box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.2);
   font-size: 0.85rem;
   margin: 20px;
 }
-.hover:hover{
+
+.hover:hover {
   cursor: pointer;
 }
+
 /* Add some padding inside the card container */
 .container {
   padding: 2px 16px;
   display: grid;
-  grid-template-columns: repeat(2,1fr);
-  grid-template-rows: repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 5px;
   align-items: center;
 }
-.monitoreos-container{
+
+.monitoreos-container {
   padding: 2px 6px 2px 6px;
   display: grid;
   grid-template-columns: 20% 80%;
   margin-bottom: 20px;
 }
+
 @media only screen and (min-width: 768px) {
   .detail-arbol {
     top: auto;
     width: 50%;
+    max-width: 580px;
   }
 }
 
@@ -97,5 +110,6 @@
   .detail-arbol {
     top: auto;
     width: 40%;
+    max-width: 580px;
   }
 }

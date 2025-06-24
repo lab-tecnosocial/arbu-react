@@ -1,21 +1,18 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { activeArbol, hideDetailArbol, setBusqueda } from "../../actions/mapaActions";
+import { activeArbol, hideDetailArbol, setArbolSeleccionado, setBusqueda } from "../../actions/mapaActions";
 import { useMapEvents } from 'react-leaflet/hooks'
 import L, { MarkerCluster } from "leaflet";
-import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import "./MarkerCluster.Default.css";
 import "./MapaComponent.css";
-// import { arboles } from "./arbolesPlantados";
-// import { db } from "../../firebase/firebase-config";
-import { usuarios as users } from './usuarios';
-// import PopupMarker from "./PopupMarker";
 import DetailArbol from "./DetailArbol";
 import FiltroComponent from "./filtro/FiltroComponent";
 import locationIcon from "./location.svg";
 import Navbar from "./Navbar";
+import FiltroVarianteComponent from "./filtrovariante/FiltroVarianteComponent";
 const customIcon = new L.Icon({
   iconUrl: locationIcon,
   iconSize: new L.Point(40, 47),
@@ -34,11 +31,14 @@ const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
   const {
     arboles: arbolesPlantados,
+    showArbolesPlantados,
+    showArbolesMapeados,
     arbolesFiltrados,
     busqueda,
     active,
     filtro,
     filtroAplied,
+    arbolSeleccionado
   } = useSelector((state) => state.mapa);
   const dispatch = useDispatch();
   const [geoData, setGeoData] = useState(null)
@@ -50,18 +50,18 @@ const MapaComponent = () => {
       .then((data) => setGeoData(data))
   }, dispatch, geoData)
 
-  const datosFiltrados = arbolesPlantados.filter((item) =>
-    item.nombreComun?.toLowerCase().includes(busqueda.toLowerCase())
-  );
-
-
+  // const datosFiltrados = arbolesPlantados.filter((item) =>
+  //   item.nombreComun?.toLowerCase().includes(busqueda.toLowerCase())
+  // );
+  //
   // console.log("TEST", arbolesPlantados)
   // console.log("TEST2", geoData)
   // console.log("TEST3", arbolesFiltrados)
   // console.log("DATOS FILTRAODS", datosFiltrados)
 
   const markers = useMemo(() => {
-    const items = filtroAplied ? filtro : arbolesPlantados;
+    // const items = filtroAplied ? filtro : arbolesPlantados;
+    const items = arbolesFiltrados.length > 0 ? arbolesFiltrados : arbolesPlantados;
     return items.map((item) => (
       <Marker
         key={item.id}
@@ -72,6 +72,7 @@ const MapaComponent = () => {
           click: () => {
             if (active?.id !== item?.id) {
               dispatch(activeArbol(item.id, { ...item }));
+              dispatch(setArbolSeleccionado([item.latitud, item, longitud]))
               document.querySelector(".leaflet-control-zoom-in").style.display = "none";
               document.querySelector(".leaflet-control-zoom-out").style.display = "none";
             }
@@ -79,7 +80,7 @@ const MapaComponent = () => {
         }}
       />
     ));
-  }, [filtroAplied, filtro, arbolesPlantados, active, dispatch]);
+  }, [arbolesFiltrados, filtroAplied, filtro, arbolesPlantados, active, dispatch]);
   // const MyComponent = React.memo(() => {
   //   const map = useMapEvents({
   //     click: () => {
@@ -108,11 +109,22 @@ const MapaComponent = () => {
     return null
   }
 
+  const MapView = ({ position, zoomCurrent = 18 }) => {
+    const map = useMap();
+    map.flyTo(position, zoomCurrent);
+    return null;
+  }
+
+  console.log("arbolSeleccionado", arbolSeleccionado)
+
   return (
     <main>
       {/* <Navbar /> */}
       <DetailArbol />
       <FiltroComponent />
+      {geoData &&
+        <FiltroVarianteComponent geoData={geoData} />
+      }
       <div className="main-grid">
         {/* <div className="filtro-sidebar"></div> */}
         <div className="mapa">
@@ -123,13 +135,37 @@ const MapaComponent = () => {
             scrollWheelZoom={true}
           >
             <ZoomControl position="bottomright" />
+
             <MyComponent />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
               url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             />
-            {geoData && <GeoJSON data={geoData} />}
-            <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+
+            {arbolSeleccionado && <MapView position={arbolSeleccionado} />}
+
+            {showArbolesMapeados && geoData && <GeoJSON data={geoData} />}
+            {showArbolesPlantados ?
+              <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+              : null
+            }
+            {/* <MarkerClusterGroup> */}
+            {/*   {arbolesPlantados ? arbolesPlantados.map((arbol_marker) => { */}
+            {/*     const { id, nombrePropio, latitud, longitud } = arbol_marker; */}
+            {/*     return ( */}
+            {/*       <Marker */}
+            {/*         key={id} */}
+            {/*         position={[latitud, longitud]} */}
+            {/*         icon={customIcon} */}
+            {/*         title={nombrePropio} */}
+            {/*       // eventHandlers={{ */}
+            {/*       //   click: () => dispatch(loadActiveArbol(arbol_marker)) */}
+            {/*       // }} */}
+            {/*       > */}
+            {/*       </Marker> */}
+            {/*     ); */}
+            {/*   }) : null} */}
+            {/* </MarkerClusterGroup> */}
           </MapContainer>
         </div>
       </div>
