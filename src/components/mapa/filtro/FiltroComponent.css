@@ -94,7 +94,7 @@
 .row-result {
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   padding: 1rem;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .row-result:hover {
@@ -103,6 +103,13 @@
 
 .input-row {
   display: flex;
+  gap: 1rem;
+  padding: .1rem 0;
+
+  span {
+    text-align: start;
+    width: 100%;
+  }
 }
 
 .label {

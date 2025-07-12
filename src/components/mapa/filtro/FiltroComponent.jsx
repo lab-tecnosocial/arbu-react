@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react';
-import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -9,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 
 import Checkbox from '@mui/material/Checkbox';
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
@@ -17,16 +15,16 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-
 import Fab from '@mui/material/Fab';
 
 import './FiltroComponent.css'
 import { especies } from './especies'
 import { useDispatch, useSelector } from 'react-redux';
-import { activeArbol, filterArboles, resetFiltro, setArbolSeleccionado, setBusqueda, setFilter, setFiltro } from '../../../actions/mapaActions';
+import { activeArbol, resetFiltro, setArbolSeleccionado, setFiltro } from '../../../actions/mapaActions';
 import ToggleSwitch from './ToggleSwitch';
 import { IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
-import { CleaningServicesOutlined, ClearRounded } from '@mui/icons-material';
+import { ClearRounded } from '@mui/icons-material';
+import { useEffect } from 'react';
 especies.sort((a, b) => a.nombreCientifico.toLocaleLowerCase().localeCompare(b.nombreCientifico.toLocaleLowerCase()));
 
 const opcionesRiego = [
@@ -60,6 +58,7 @@ const FiltroComponent = () => {
   const [especiesEspecificas, setEspeciesEspecificas] = useState([]);
   const [camposSeleccionados, setCamposSeleccionados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [placeHolder, setPlaceHolder] = useState("Buscar")
   const [startBusqueda, setStartBusqueda] = useState(false)
 
   const { arbolesFiltrados } = useSelector(state => state.mapa);
@@ -104,13 +103,11 @@ const FiltroComponent = () => {
   };
 
   const cancel = () => {
-    setShowFiltros(busqueda.length > 0 ? true : false)
+    setShowFiltros(busqueda.length || placeHolder.length > 0 ? true : false)
     dispatch(resetFiltro())
     setBusqueda("")
     setStartBusqueda(false)
-    // setValorCampo("")
-    // dispatch(setSelectedPosition(null));
-    // dispatch(setZoomPosition(13));
+    setEspeciesEspecificas([])
   };
 
   const handleClickFilterBtnRound = () => {
@@ -120,14 +117,21 @@ const FiltroComponent = () => {
   const handleCheckBox = (e) => {
     let isChecked = e.target.checked;
     if (isChecked) {
-      // console.log(e.target.value);
       setEspeciesEspecificas(v => [...v, e.target.value]);
     } else {
-      // console.log(e.target.value);
       let auxArray = especiesEspecificas.filter(especie => especie !== e.target.value);
       setEspeciesEspecificas(auxArray);
     }
   }
+
+  useEffect(() => {
+    if (especiesEspecificas.length > 0) {
+      setPlaceHolder(`${especiesEspecificas.length} especies seleccionadas`)
+      setBusqueda("")
+    } else {
+      setPlaceHolder("Buscar")
+    }
+  }, [especiesEspecificas])
 
   const handleAplicar = () => {
     let rangoMonitoreo = { tipo: monitoreoTipo, desde: null, hasta: null };
@@ -150,8 +154,8 @@ const FiltroComponent = () => {
       busqueda,
       camposSeleccionados,
       riegosSeleccionados,
-      monitoreoFiltro:
-        rangoMonitoreo
+      monitoreoFiltro: rangoMonitoreo,
+      especiesSeleccionadas: especiesEspecificas
     }))
     setShowFiltros(false)
     setStartBusqueda(true)
@@ -178,16 +182,28 @@ const FiltroComponent = () => {
           <div className='filtro-layout' >
             <div className='filtro-buscador'>
               <FormControl fullWidth>
-                <InputLabel htmlFor="outlined-adornment-password">Buscar</InputLabel>
+                <InputLabel htmlFor="outlined-adornment-password">{placeHolder}</InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  label='Buscar'
+                  label={placeHolder}
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
                   fullWidth
                   endAdornment={
                     <InputAdornment position='end'>
                       {busqueda.length > 0 ? <>
+                        <IconButton
+                          onClick={() => {
+                            cancel()
+                            dispatch(
+                              setArbolSeleccionado(null)
+                            )
+                          }}
+                        >
+                          <ClearRounded></ClearRounded>
+                        </IconButton>
+                      </> : null}
+                      {placeHolder !== "Buscar" ? <>
                         <IconButton
                           onClick={() => {
                             cancel()
@@ -323,14 +339,17 @@ const FiltroComponent = () => {
                     <div style={{ display: 'flex', height: '240px', overflowY: 'auto', flexDirection: 'column' }}>
                       {
                         especies.map(item => (
-                          <FormControlLabel key={item?.id} control={
-                            <Checkbox onChange={handleCheckBox} style={{
-                              color: "#03B25E",
-                              padding: "6px 9px",
-                            }}
-                              value={item.nombreCientifico}
-                              checked={especiesEspecificas.includes(item.nombreCientifico)}
-                            />}
+                          <FormControlLabel key={item?.id}
+                            control={
+                              <Checkbox
+                                onChange={(e) => handleCheckBox(e)}
+                                style={{
+                                  color: "#03B25E",
+                                  padding: "6px 9px",
+                                }}
+                                value={item.nombreCientifico}
+                                checked={especiesEspecificas.includes(item.nombreCientifico)}
+                              />}
                             label={item.nombreCientifico}
                           />
                         ))
@@ -352,19 +371,35 @@ const FiltroComponent = () => {
                           // dispatch(setSelectedPosition([arbol.latitud, arbol.longitud]));
                           // dispatch(setZoomPosition(18));
                         }}>
-                          <div className='input-row'><span className="label">Nombre propio: </span> {arbol.nombrePropio}</div>
-                          <div className='input-row'><span className="label">Nombre cientifico: </span> {arbol.nombreCientifico}</div>
-                          <div className='input-row'><span className="label">Nombre comun: </span> {arbol.nombreComun}</div>
-                          <div className='input-row'><span className="label">Cantidad de riegos: </span> {Object.keys(arbol.riegos).length}</div>
-                          <div className='input-row'><span className="label">Cantidad de monitoreos: </span> {Object.keys(arbol.monitoreos).length}</div>
-
-                          {Object.entries(arbol.riegos).map(([id, riego]) => (
-                            <div key={id}>
-                              <p><strong>ID:</strong> {id}</p>
-                              <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p>
-                              <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p>
-                            </div>
-                          ))}
+                          <div className='input-row'>
+                            <span className="label">Nombre propio: </span>
+                            <span>{arbol.nombrePropio}</span>
+                          </div>
+                          <div className='input-row'>
+                            <span className="label">Nombre cientifico: </span>
+                            <span>{arbol.nombreCientifico}</span>
+                          </div>
+                          <div className='input-row'>
+                            <span className="label">Nombre comun: </span>
+                            <span>{arbol.nombreComun}</span>
+                          </div>
+                          <div className='input-row'>
+                            <span className="label">Cantidad de riegos: </span>
+                            <span>{Object.keys(arbol.riegos).length}</span>
+                          </div>
+                          <div className='input-row'>
+                            <span className="label">Cantidad de monitoreos: </span>
+                            <span>{Object.keys(arbol.monitoreos).length}</span>
+                          </div>
+                          {/* {Object.entries(arbol.riegos).map(([id, riego]) => ( */}
+                          {/*   <div className='sub' key={id}> */}
+                          {/*     <p> */}
+                          {/*       <strong>ID:</strong> {id} */}
+                          {/*     </p> */}
+                          {/*     <p><strong>Realizado por:</strong> {riego?.riegoRealizadoPor}</p> */}
+                          {/*     <p><strong>Fecha:</strong> {new Date(riego?.timestamp.seconds * 1000).toLocaleDateString()}</p> */}
+                          {/*   </div> */}
+                          {/* ))} */}
                         </button>
                       )
                     })}
@@ -383,7 +418,9 @@ const FiltroComponent = () => {
                   onClick={handleAplicar}
                 >Aplicar</Button>
                 <Button className='btn-cancelar' variant="outlined" sx={{ border: '1px solid #174C44', color: '#268576' }}
-                  onClick={() => setShowFilterWindow(false)}
+                  onClick={() => {
+                    setShowFilterWindow(false)
+                  }}
                 >Cerrar</Button>
               </Stack>
             </div>

@@ -27,3 +27,31 @@
 .leaflet-control-attribution {
   display: none;
 }
+
+.popup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.popup-title {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+}
+
+.marker-wrapper {
+  max-height: 350px;
+  overflow-y: auto;
+  /* display: flex; */
+}
+
+.marker-dentro {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.marker-row {
+  /* border: 1px solid blue; */
+}

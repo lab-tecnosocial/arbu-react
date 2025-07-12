@@ -5,6 +5,7 @@ const initialState = {
   showArbolesPlantados: true,
   showArbolesMapeados: false,
   arbolSeleccionado: null,
+  zonaSeleccionada: null,
   busqueda: "",
   active: null,
   usuarios: [],
@@ -19,6 +20,11 @@ export const mapaReducer = (state = initialState, action) => {
       return {
         ...state,
         arbolSeleccionado: action.payload
+      }
+    case types.mapaZonaSeleccionada:
+      return {
+        ...state,
+        zonaSeleccionada: action.payload
       }
     case types.mapaShowArbolesPlantados:
       return {
@@ -42,11 +48,19 @@ export const mapaReducer = (state = initialState, action) => {
         // arbolesFiltrados: [...action.payload]
       }
     case types.mapaFiltrarArboles:
-      const { busqueda, camposSeleccionados, riegosSeleccionados, monitoreoFiltro } = action.payload;
+      const {
+        busqueda,
+        camposSeleccionados,
+        riegosSeleccionados,
+        monitoreoFiltro,
+        especiesSeleccionadas
+      } = action.payload;
+      console.log(especiesSeleccionadas)
+
       const texto = busqueda.toLowerCase();
 
       const filtrados = state.arboles.filter((item) => {
-        const coincideTexto = camposSeleccionados.some((campo) =>
+        const coincideTexto = texto === "" || camposSeleccionados.some((campo) =>
           item[campo]?.toLowerCase().includes(texto)
         );
         const tieneRiegos = item.riegos && Object.keys(item.riegos).length > 0;
@@ -66,8 +80,13 @@ export const mapaReducer = (state = initialState, action) => {
         const coincideMonitoreo =
           monitoreoFiltro.tipo === "todo" || hayMonitoreoEnRango;
 
-        return coincideTexto && coincideRiego && coincideMonitoreo;
+        const coincideEspecie =
+          especiesSeleccionadas.length === 0 ||
+          especiesSeleccionadas.includes(item.nombreCientifico);
+
+        return coincideTexto && coincideEspecie && coincideRiego && coincideMonitoreo;
       });
+      console.log("filtrados", filtrados)
 
       return {
         ...state,

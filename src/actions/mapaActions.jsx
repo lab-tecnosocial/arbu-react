@@ -26,6 +26,12 @@ export const setArbolSeleccionado = (coords) => {
     payload: coords
   }
 }
+export const setZonaSeleccionada = (id) => {
+  return {
+    type: types.mapaZonaSeleccionada,
+    payload: id
+  }
+}
 export const startLoadingArboles = () => {
   return async (dispatch) => {
     // const arboles = await loadArboles();

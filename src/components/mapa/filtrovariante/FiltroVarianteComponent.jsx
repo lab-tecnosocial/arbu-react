@@ -19,7 +19,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Fab from '@mui/material/Fab';
 import './FiltroVarianteComponent.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { filterArboles, resetFiltro, setBusqueda, setFilter, setFiltro, setShowArbolesMapeados, setShowArbolesPlantados } from '../../../actions/mapaActions';
+import { filterArboles, resetFiltro, setBusqueda, setFilter, setFiltro, setShowArbolesMapeados, setShowArbolesPlantados, setZonaSeleccionada } from '../../../actions/mapaActions';
 import { FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { CleaningServicesOutlined, ClearRounded } from '@mui/icons-material';
 import ToggleSwitch from '../filtro/ToggleSwitch';
@@ -66,7 +66,7 @@ const FiltroVarianteComponent = ({ geoData }) => {
 
   const dispatch = useDispatch();
 
-  const grupos = geoData.features.map((feature) => feature.properties["GRUPO SCOUT"]);
+  // const grupos = geoData.features.map((feature) => feature.properties["GRUPO SCOUT"]);
 
   const calcularFechasRango = (tipo) => {
     const ahora = new Date();
@@ -174,7 +174,7 @@ const FiltroVarianteComponent = ({ geoData }) => {
           <div className='filtro-layout' >
             <div className='filtro-tabs'>
               <button
-                style={currentTab === 1 ? { borderBottom: "2px solid #1976d2" } : {}}
+                style={currentTab === 1 ? { borderBottom: "3px solid #03B25E" } : {}}
                 onClick={() => {
                   setCurrentTab(1)
                   dispatch(setShowArbolesPlantados(true))
@@ -183,7 +183,7 @@ const FiltroVarianteComponent = ({ geoData }) => {
               >OTB
               </button>
               <button
-                style={currentTab === 2 ? { borderBottom: "2px solid #1976d2" } : {}}
+                style={currentTab === 2 ? { borderBottom: "3px solid #03B25E" } : {}}
                 onClick={() => {
                   setCurrentTab(2)
                   dispatch(setShowArbolesPlantados(false))
@@ -263,41 +263,41 @@ const FiltroVarianteComponent = ({ geoData }) => {
                           />
                         ))}
                       </div>
-                      <div className='group-filters'>
-                        <FormLabel component="legend">Filtros por riegos</FormLabel>
-                        {opcionesRiego.map((opcion) => (
-                          <FormControlLabel key={opcion.value} style={{
-                            display: "block"
-                          }} control={
-                            <Checkbox onChange={() => toggleRiego(opcion.value)} style={{
-                              color: "#03B25E",
-                              padding: "6px 9px",
-                            }}
-                              value={opcion.value}
-                              checked={riegosSeleccionados.includes(opcion.value)}
-                            />}
-                            label={opcion.label}
-                          />
-                        ))}
-
-                        {riegosSeleccionados === "con" && (
-                          <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
-                            <input
-                              type="number"
-                              placeholder="Cantidad mínima"
-                              value={cantidadRiegos}
-                              onChange={(e) => setCantidadRiegos(e.target.value)}
-                            />
-                            <input
-                              type="number"
-                              placeholder="Cantidad máxima"
-                              value={cantidadMaximaRiegos}
-                              onChange={(e) => setCantidadMaximaRiegos(e.target.value)}
-                            />
-                          </div>
-                        )}
-
-                      </div>
+                      {/* <div className='group-filters'> */}
+                      {/*   <FormLabel component="legend">Filtros por riegos</FormLabel> */}
+                      {/*   {opcionesRiego.map((opcion) => ( */}
+                      {/*     <FormControlLabel key={opcion.value} style={{ */}
+                      {/*       display: "block" */}
+                      {/*     }} control={ */}
+                      {/*       <Checkbox onChange={() => toggleRiego(opcion.value)} style={{ */}
+                      {/*         color: "#03B25E", */}
+                      {/*         padding: "6px 9px", */}
+                      {/*       }} */}
+                      {/*         value={opcion.value} */}
+                      {/*         checked={riegosSeleccionados.includes(opcion.value)} */}
+                      {/*       />} */}
+                      {/*       label={opcion.label} */}
+                      {/*     /> */}
+                      {/*   ))} */}
+                      {/**/}
+                      {/*   {riegosSeleccionados === "con" && ( */}
+                      {/*     <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}> */}
+                      {/*       <input */}
+                      {/*         type="number" */}
+                      {/*         placeholder="Cantidad mínima" */}
+                      {/*         value={cantidadRiegos} */}
+                      {/*         onChange={(e) => setCantidadRiegos(e.target.value)} */}
+                      {/*       /> */}
+                      {/*       <input */}
+                      {/*         type="number" */}
+                      {/*         placeholder="Cantidad máxima" */}
+                      {/*         value={cantidadMaximaRiegos} */}
+                      {/*         onChange={(e) => setCantidadMaximaRiegos(e.target.value)} */}
+                      {/*       /> */}
+                      {/*     </div> */}
+                      {/*   )} */}
+                      {/**/}
+                      {/* </div> */}
                       <div className='group-filters'>
                         <FormLabel component="legend">Filtros por monitoreos</FormLabel>
                         <FormControl>
@@ -345,22 +345,22 @@ const FiltroVarianteComponent = ({ geoData }) => {
                     </AccordionDetails>
                   </Accordion>
 
-                  {
-                    grupos ?
-                      <div className='wrapper-results'>
-                        <h3
-                          style={{ fontSize: "1.2rem", padding: "1rem 1rem" }}
-                        >
-                          {grupos.length} ZONAS
-                        </h3>
-                        <div className='list'>
-                          {grupos.map((grupo, index) => (
-                            <button key={index} className='row-result'>{grupo}</button>
-                          ))}
-                        </div>
-                      </div>
-                      : null
-                  }
+                  {/* { */}
+                  {/*   grupos ? */}
+                  {/*     <div className='wrapper-results'> */}
+                  {/*       <h3 */}
+                  {/*         style={{ fontSize: "1.2rem", padding: "1rem 1rem" }} */}
+                  {/*       > */}
+                  {/*         {grupos.length} ZONAS */}
+                  {/*       </h3> */}
+                  {/*       <div className='list'> */}
+                  {/*         {grupos.map((grupo, index) => ( */}
+                  {/*           <button key={index} className='row-result'>{grupo}</button> */}
+                  {/*         ))} */}
+                  {/*       </div> */}
+                  {/*     </div> */}
+                  {/*     : null */}
+                  {/* } */}
 
                   {arbolesFiltrados.length > 0 ?
                     <div className='wrapper-results'>
@@ -524,16 +524,22 @@ const FiltroVarianteComponent = ({ geoData }) => {
                   </Accordion>
 
                   {
-                    grupos ?
+                    geoData.features ?
                       <div className='wrapper-results'>
                         <h3
                           style={{ fontSize: "1.2rem", padding: "1rem 1rem" }}
                         >
-                          {grupos.length} ZONAS
+                          {geoData.features.length} ZONAS
                         </h3>
                         <div className='list'>
-                          {grupos.map((grupo, index) => (
-                            <button key={index} className='row-result'>{grupo}</button>
+                          {geoData.features.map((grupo, index) => (
+                            <button
+                              key={index}
+                              className='row-result'
+                              onClick={() => {
+                                dispatch(setZonaSeleccionada(grupo.id))
+                              }}
+                            >{grupo.properties["GRUPO SCOUT"]}</button>
                           ))}
                         </div>
                       </div>
