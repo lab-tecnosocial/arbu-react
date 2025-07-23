@@ -20,7 +20,7 @@ import Fab from '@mui/material/Fab';
 import './FiltroComponent.css'
 import { especies } from './especies'
 import { useDispatch, useSelector } from 'react-redux';
-import { activeArbol, resetFiltro, setArbolSeleccionado, setFiltro } from '../../../actions/mapaActions';
+import { activeArbol, resetFiltro, setArbolSeleccionado, setFiltro, setShowArbolesMapeados, setShowArbolesPlantados } from '../../../actions/mapaActions';
 import ToggleSwitch from './ToggleSwitch';
 import { IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { ClearRounded } from '@mui/icons-material';
@@ -166,14 +166,18 @@ const FiltroComponent = () => {
       {
         showFilterWindow === false ?
           <div className='btn-filter-round'>
-            <button
-              onClick={handleClickFilterBtnRound}
-            >
-            </button>
+            {/* <button */}
+            {/*   onClick={handleClickFilterBtnRound} */}
+            {/* > */}
+            {/* </button> */}
             <Fab
               aria-label="add"
               sx={{ backgroundColor: 'white' }}
-              onClick={handleClickFilterBtnRound}
+              onClick={() => {
+                handleClickFilterBtnRound()
+                dispatch(setShowArbolesMapeados(false))
+                dispatch(setShowArbolesPlantados(true))
+              }}
             >
               <FilterAltRoundedIcon />
             </Fab>
