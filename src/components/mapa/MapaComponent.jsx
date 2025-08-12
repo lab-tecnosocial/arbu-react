@@ -1,4 +1,3 @@
-// import * as turf from '@turf/turf';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point, polygon } from '@turf/helpers';
 import React, { useState, useMemo, useEffect } from "react";
@@ -21,15 +20,6 @@ const customIcon = new L.Icon({
   iconUrl: locationIcon,
   iconSize: new L.Point(40, 47),
 });
-
-// const createClusterCustomIcon = function (cluster: MarkerCluster) {
-//   return L.divIcon({
-//     html: `<span>${cluster.getChildCount()}</span>`,
-//     className: "custom-marker-cluster",
-//     iconSize: L.point(33, 33, true),
-//   });
-// };
-
 
 const MapaComponent = () => {
   const poligonoActivoRef = useRef(null);
@@ -155,7 +145,6 @@ const MapaComponent = () => {
     // });
 
     layer.on('click', () => {
-      // seleccionarPoligono(idFeature, map)
       const poligono = polygon(feature.geometry.coordinates);
 
       const markers_ArbolesPlantadosDentro = arbolesPlantados.filter((marker) => {
@@ -261,25 +250,6 @@ const MapaComponent = () => {
 
     const bounds = layer.getBounds();
     console.log("bounds", bounds)
-    // map.fitBounds(bounds, {
-    //   paddingTopLeft: [150, 20],
-    //   paddingBottomRight: [20, 20],
-    //   animate: true,
-    //   duration: 2,
-    //   easeLinearity: 0.5
-    // });
-    // const map = useMap();
-    // const layer = layersRef.current.get(id);
-    // console.log("useeffect", layer)
-    // const bounds = layer.getBounds();
-    // map.fitBounds(bounds, {
-    //   paddingTopLeft: [150, 20],
-    //   paddingBottomRight: [20, 20],
-    //   animate: true,
-    //   duration: 2,
-    //   easeLinearity: 0.5
-    // });
-    //
   }
 
   useEffect(() => {
@@ -296,9 +266,6 @@ const MapaComponent = () => {
       .then((res) => res.json())
       .then((data) => setArbolesMapeados(data))
   }, dispatch, arbolesMapeados, geoData)
-
-  // if(geoData.features.)
-  // console.log("geoicons", geoData.features)
 
   return (
     <main>

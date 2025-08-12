@@ -166,10 +166,6 @@ const FiltroComponent = () => {
       {
         showFilterWindow === false ?
           <div className='btn-filter-round'>
-            {/* <button */}
-            {/*   onClick={handleClickFilterBtnRound} */}
-            {/* > */}
-            {/* </button> */}
             <Fab
               aria-label="add"
               sx={{ backgroundColor: 'white' }}
