@@ -21,7 +21,7 @@ const IniciarSesion = () => {
       const result = await signInWithPopup(auth, provider);
       const loggedUser = result.user;
       dispatch(setUser(loggedUser));
-      navigate("/dashboard");
+      navigate("/tabla");
     } catch (error) {
       console.error("Error al iniciar sesión con Google:", error);
     }
@@ -32,7 +32,7 @@ const IniciarSesion = () => {
       if (user) {
         console.info('despachando');
         dispatch(setUser(user));
-        navigate("/dashboard");
+        navigate("/tabla");
       } else {
         dispatch(clearUser());
       }

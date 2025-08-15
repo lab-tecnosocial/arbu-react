@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const PublicRoute = ({ element }) => {
   const user = useSelector((state) => state.auth?.user);
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || '/tabla';
   // return user ? <Navigate to="/dashboard" replace /> : element;
 
   if (user) {

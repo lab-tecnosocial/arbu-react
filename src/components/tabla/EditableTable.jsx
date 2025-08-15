@@ -34,8 +34,7 @@ const EditableTable = ({ data }) => {
             { tipo: "Corteza", url: first.fotoCorteza },
             { tipo: "Hoja", url: first.fotoHoja },
             { tipo: "Flor", url: first.fotoFlor },
-        ].filter((img) => img.url); // Solo incluimos las que tienen URL
-
+        ].filter((img) => img.url); 
         if (images.length > 0) {
             setCarouselImages(images);
             setModalOpen(true);
@@ -43,8 +42,8 @@ const EditableTable = ({ data }) => {
     };
 
     const formatTimestamp = (timestamp) => {
-        if (!timestamp || !timestamp._seconds) return "";
-        const date = new Date(timestamp._seconds * 1000);
+        if (!timestamp || !timestamp.seconds) return "";
+        const date = new Date(timestamp.seconds * 1000);
         return date.toLocaleString();
     };
 
@@ -61,7 +60,7 @@ const EditableTable = ({ data }) => {
             item.nombrePropio,
             monitoreo.altura,
             monitoreo.diametroAlturaPecho,
-            fecha.split(",")[0], // solo fecha, sin hora
+            fecha.split(",")[0], 
         ];
 
         return fieldsToCheck.some(field =>
