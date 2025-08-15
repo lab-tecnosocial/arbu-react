@@ -57,6 +57,16 @@ export const mapaReducer = (state=initialState,action) => {
       ...state,
       filtroAplied: action.payload
     }
+    case types.tablaUpdateNombreMapeado:
+      return {
+        ...state,
+        arbolesMapeados: state.arbolesMapeados.map((mapeado) =>
+        mapeado.id === action.payload.id
+            ? { ...mapeado, nombreComun: action.payload.nombreComun, nombreCientifico: action.payload.nombreCientifico }
+            : mapeado
+        ),
+      };
+
     default:
       return state;
   }

@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../../actions/authActions";
 
 import { getAuth, signOut } from "firebase/auth";
-import { app } from "../../firebase/firebase-config";
+import { app, db } from "../../firebase/firebase-config";
 import SolicitudList from "./SolicitudList";
+import { startLoadingInscripciones, setInscripciones } from "../../actions/dashboardActions";
 
 const auth = getAuth(app);
 
@@ -66,17 +67,25 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const inscripciones = useSelector((state) => state.dashboard.inscripciones);
+  
+  useEffect(() => {
+    console.log("user en useEffect", user);
+    if(user) {
+      dispatch(startLoadingInscripciones());
+    }
+  }, [dispatch, user]);
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
       dispatch(clearUser());
+      dispatch(setInscripciones([]));
       navigate("/iniciar-sesion");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
-
 
   return (
     <div className="dashboard-container">
@@ -87,7 +96,7 @@ const Dashboard = () => {
           Cerrar sesión
         </button>
       </div>
-      <SolicitudList solicitudes={solicitudes} />
+      <SolicitudList solicitudes={inscripciones} />
     </div>
   );
 };

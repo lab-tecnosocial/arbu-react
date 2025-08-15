@@ -1,12 +1,17 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const PublicRoute = ({ element }) => {
-  const user = useSelector((state) => state.auth?.user); // Asegurar que Redux contiene el usuario
+  const user = useSelector((state) => state.auth?.user);
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
+  // return user ? <Navigate to="/dashboard" replace /> : element;
 
-  console.log("PublicRoute - User:", user); // Debug: Verifica si el usuario está presente
+  if (user) {
+    return <Navigate to={from} replace />;
+  }
 
-  return user ? <Navigate to="/dashboard" replace /> : element;
+  return element;
 };
 
 export default PublicRoute;

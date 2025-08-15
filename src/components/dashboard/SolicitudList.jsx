@@ -1,12 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './SolicitudList.css';
 import ConfirmDialog from './ConfirmDialog';
+import {startUpdateSolicitudEstado, startDeleteSolicitud} from '../../actions/dashboardActions'
+import { useDispatch } from "react-redux";
 
 const SolicitudList = ({solicitudes = []}) => {
   const [solicitudesState, setSolicitudesState] = useState(solicitudes);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [accionActual, setAccionActual] = useState(null);
   const [solicitudActual, setSolicitudActual] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setSolicitudesState(solicitudes);
+  }, [solicitudes]);
 
   const abrirConfirmacion = (sol, accion) => {
     setSolicitudActual(sol);
@@ -24,13 +31,18 @@ const SolicitudList = ({solicitudes = []}) => {
     if (!solicitudActual || !accionActual) return;
 
     // Simula cambio de estado (esto puedes reemplazar por la llamada a tu API)
-    setSolicitudesState((prev) =>
-      prev.map((s) =>
-        s.id === solicitudActual.id
-          ? { ...s, estado: accionActual === "Aceptar" ? "Aceptado" : "Rechazado" }
-          : s
-      )
-    );
+    // setSolicitudesState((prev) =>
+    //   prev.map((s) =>
+    //     s.id === solicitudActual.id
+    //       ? { ...s, estado: accionActual === "Aceptar" ? "Aceptado" : "Rechazado" }
+    //       : s
+    //   )
+    // );
+    if( accionActual === 'Aceptar') {
+      dispatch(startUpdateSolicitudEstado(solicitudActual.id, 'Aceptado'));
+    } else if(accionActual === 'Rechazar') {
+      dispatch(startDeleteSolicitud(solicitudActual.id));
+    }
 
     cerrarConfirmacion();
 
@@ -53,6 +65,12 @@ const SolicitudList = ({solicitudes = []}) => {
             <p><strong>Email:</strong> {sol.email}</p>
             <p><strong>Rama:</strong> {sol.rama}</p>
             <p><strong>Grupo:</strong> {sol.grupo}</p>
+            {
+              sol.rama === 'Dirigentes' && (
+                <p><strong>Rama a la que dirige:</strong> {sol.ramaALaQueDirige}</p>
+              )
+            }
+            
             <p><strong>Estado:</strong> {sol.estado}</p>
             <div className="botones">
               <button

@@ -25,6 +25,7 @@ import IniciarSesion from './components/autenticacion/IniciarSesion.jsx';
 import ProtectedRoute from './components/autenticacion/ProtectedRoute.jsx';
 import PublicRoute from './components/autenticacion/PublicRoute.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
+import Tabla from './components/tabla/Tabla.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -45,9 +46,10 @@ root.render(
           <Route path='licencias-limitaciones' element={<Licencias />} />
         </Route>
         <Route path="acerca" element={<Acerca />} />
-        {/* <Route path="iniciar-sesion" element={<PublicRoute element={<IniciarSesion />} />} />
+        <Route path="iniciar-sesion" element={<PublicRoute element={<IniciarSesion />} />} />
 
-        <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} /> */}
+        <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route path="tabla" element={<ProtectedRoute element={<Tabla />} />} />
 
         <Route path="*" element={<main style={{ padding: "1rem" }}><h2>Ho hay nada aquí!</h2></main>} />
       </Routes>

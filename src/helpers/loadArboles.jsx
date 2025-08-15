@@ -9,6 +9,7 @@ export const loadArboles = async () => {
     arbolesArray.push(element.data());
   });
   return arbolesArray;
+  // return arboles;
 }
 
 export const loadArbolesMapeados = async () => {
@@ -18,4 +19,5 @@ export const loadArbolesMapeados = async () => {
     arbolesArray.push(element.data());
   });
   return arbolesArray;
+  // return arbolesMapeados;
 }
