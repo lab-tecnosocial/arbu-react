@@ -30,14 +30,6 @@ const SolicitudList = ({solicitudes = []}) => {
   const confirmarAccion = () => {
     if (!solicitudActual || !accionActual) return;
 
-    // Simula cambio de estado (esto puedes reemplazar por la llamada a tu API)
-    // setSolicitudesState((prev) =>
-    //   prev.map((s) =>
-    //     s.id === solicitudActual.id
-    //       ? { ...s, estado: accionActual === "Aceptar" ? "Aceptado" : "Rechazado" }
-    //       : s
-    //   )
-    // );
     if( accionActual === 'Aceptar') {
       dispatch(startUpdateSolicitudEstado(solicitudActual.id, 'Aceptado'));
     } else if(accionActual === 'Rechazar') {
@@ -45,9 +37,6 @@ const SolicitudList = ({solicitudes = []}) => {
     }
 
     cerrarConfirmacion();
-
-    // Aquí puedes hacer tu llamada real a la base de datos
-    console.log(`Acción "${accionActual}" confirmada para: ${solicitudActual.nombre}`);
   };
 
 

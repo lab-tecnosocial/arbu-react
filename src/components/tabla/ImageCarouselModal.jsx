@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
+const isMobile = window.innerWidth <= 768;
+
 const ImageCarouselModal = ({ images, isOpen, onClose }) => {
     const [current, setCurrent] = useState(0);
     const [zoom, setZoom] = useState(1);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
-    // Refs para valores mutables
+
     const draggingRef = useRef(false);
     const startPosRef = useRef({ x: 0, y: 0 });
     const lastOffsetRef = useRef({ x: 0, y: 0 });
@@ -15,7 +17,7 @@ const ImageCarouselModal = ({ images, isOpen, onClose }) => {
             setZoom(1);
             setOffset({ x: 0, y: 0 });
             lastOffsetRef.current = { x: 0, y: 0 };
-          }
+        }
     }, [isOpen]);
 
     const handleKeyDown = useCallback(
@@ -27,7 +29,7 @@ const ImageCarouselModal = ({ images, isOpen, onClose }) => {
             } else if (e.key === "ArrowRight" && current < images.length - 1) {
                 setCurrent((prev) => prev + 1);
             } else if (e.key === "Escape") {
-                onClose(); // cerrar modal con ESC
+                onClose();
             }
         },
         [current, images.length, isOpen, onClose]
@@ -42,55 +44,53 @@ const ImageCarouselModal = ({ images, isOpen, onClose }) => {
         e.preventDefault();
         const delta = e.deltaY || e.detail || e.wheelDelta;
         setZoom((prev) => {
-          let newZoom = prev - delta * 0.001;
-          if (newZoom < 1) newZoom = 1;
-          if (newZoom > 5) newZoom = 5;
-          return newZoom;
+            let newZoom = prev - delta * 0.001;
+            if (newZoom < 1) newZoom = 1;
+            if (newZoom > 5) newZoom = 5;
+            return newZoom;
         });
-      };
-    
-      const handleMouseDown = (e) => {
+    };
+
+    const handleMouseDown = (e) => {
         if (zoom <= 1) return;
         draggingRef.current = true;
         startPosRef.current = {
             x: e.clientX - lastOffsetRef.current.x,
             y: e.clientY - lastOffsetRef.current.y,
-          };
-        
-          window.addEventListener("mousemove", handleMouseMove);
-          window.addEventListener("mouseup", handleMouseUp);
-      };
-    
-      const handleMouseMove = (e) => {
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
         if (!draggingRef.current) return;
         const dx = e.clientX - startPosRef.current.x;
         const dy = e.clientY - startPosRef.current.y;
-      
+
         const newOffset = { x: dx, y: dy };
         setOffset(newOffset);
         lastOffsetRef.current = newOffset;
-      };
-    
-      const handleMouseUp = () => {
+    };
+
+    const handleMouseUp = () => {
         if (!draggingRef.current) return;
         draggingRef.current = false;
-    
-        // Guarda último offset en ref para siguiente drag
-        // lastOffsetRef.current = offset;
-    
+
+
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
-      };
-    
-      const handleDoubleClick = () => {
+    };
+
+    const handleDoubleClick = () => {
         if (zoom > 1) {
             setZoom(1);
             setOffset({ x: 0, y: 0 });
             lastOffsetRef.current = { x: 0, y: 0 };
-          } else {
+        } else {
             setZoom(2);
-          }
-      };
+        }
+    };
 
     if (!isOpen || images.length === 0) return null;
 
@@ -119,13 +119,12 @@ const ImageCarouselModal = ({ images, isOpen, onClose }) => {
                     alt={currentImage.tipo}
                     style={{
                         ...styles.image,
-                        transform: `scale(${zoom}) translate(${offset.x / zoom}px, ${
-                          offset.y / zoom
-                        }px)`,
+                        transform: `scale(${zoom}) translate(${offset.x / zoom}px, ${offset.y / zoom
+                            }px)`,
                         cursor: zoom > 1 ? (draggingRef.current ? "grabbing" : "grab") : "auto",
                         transition: draggingRef.current ? "none" : "transform 0.3s ease",
                         userSelect: "none",
-                      }}
+                    }}
                     onMouseDown={handleMouseDown}
                     onDoubleClick={handleDoubleClick}
                     draggable={false}
@@ -155,31 +154,32 @@ const styles = {
         justifyContent: "center",
         alignItems: "center",
         zIndex: 9999,
-        padding: "0 60px",
+        padding: isMobile ? "0 15px" : "0 60px",
         boxSizing: "border-box",
     },
     content: {
         textAlign: "center",
         color: "#fff",
-        maxWidth: "80vw",
+        maxWidth: isMobile ? "95vw" : "80vw",
     },
     closeButton: {
         position: "absolute",
-        top: "20px", right: "30px",
+        top: isMobile ? "10px" : "20px",
+        right: isMobile ? "15px" : "30px",
         background: "transparent",
         border: "none",
         color: "#fff",
-        fontSize: "24px",
+        fontSize: isMobile ? "20px" : "24px",
         cursor: "pointer",
     },
     imageLabel: {
-        fontSize: "20px",
+        fontSize: isMobile ? "14px" : "20px",
         marginBottom: "10px",
         color: "white"
     },
     image: {
-        maxWidth: "80vw",
-        maxHeight: "80vh",
+        maxWidth: isMobile ? "95vw" : "80vw",
+        maxHeight: isMobile ? "70vh" : "80vh",
         borderRadius: "8px",
     },
     outsideButton: {
@@ -189,7 +189,7 @@ const styles = {
         backgroundColor: "transparent",
         border: "none",
         color: "#fff",
-        fontSize: "40px",
+        fontSize: isMobile ? "30px" : "40px",
         cursor: "pointer",
         zIndex: 10000,
     },

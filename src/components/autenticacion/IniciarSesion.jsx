@@ -30,7 +30,6 @@ const IniciarSesion = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.info('despachando');
         dispatch(setUser(user));
         navigate("/tabla");
       } else {
