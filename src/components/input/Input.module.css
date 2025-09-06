@@ -1,0 +1,59 @@
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 0 12px;
+  height: 40px;
+  border: 1px solid var(--geyser-200);
+  border-radius: var(--br-small);
+  width: fit-content;
+}
+
+.larger {
+  padding: 0 16px;
+  height: 56px;
+  border-radius: var(--br-medium);
+}
+
+.medium {
+  padding: 0 12px;
+  height: 40px;
+  border-radius: var(--br-small);
+
+  input {
+    font-size: 14px;
+    /* background-color: lightseagreen; */
+  }
+}
+
+.icon {
+  display: flex;
+}
+
+.input {
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.inputContainer:focus {
+  border-color: var(--geyser-400);
+  background-color: red;
+}
+
+.fullWidth {
+  width: 100%;
+}
