@@ -1,0 +1,47 @@
+.cell {
+  display: flex;
+  align-items: center;
+  background-color: #D0FBD6;
+  color: var(--green2);
+  border-radius: 100px;
+  height: 28px;
+  padding: 0 10px 0 5px;
+  gap: 5px;
+
+  .icon {
+    background-color: var(--green2);
+    border-radius: 100px;
+    color: #D0FBD6;
+    height: 18px;
+    width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  span {
+    font-weight: 500;
+    font-size: 14px;
+  }
+}
+
+.success {
+  background-color: #D0FBD6;
+  color: var(--green2);
+}
+
+.warning {
+  background-color: var(--persian-red-100);
+  color: var(--persian-red-500);
+
+  .icon {
+    background-color: var(--persian-red-500);
+    color: var(--persian-red-100);
+  }
+}
