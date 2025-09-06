@@ -1,0 +1,92 @@
+.button {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 24px;
+  padding-right: 24px;
+  font-size: 16px;
+  border-radius: var(--border16);
+  height: 56px;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.primary {
+  color: white;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  background-color: var(--green2);
+  background:
+    linear-gradient(to top,
+      rgba(255, 218, 28, .2) 0%,
+      rgba(255, 255, 255, 0) 100%),
+    var(--green2);
+}
+
+.primary:hover {
+  background-color: var(--green2);
+  background-color: rgba(33, 133, 118, .8);
+}
+
+.secondary {
+  color: white;
+  background-color: var(--green2);
+}
+
+.secondary:hover {
+  background-color: var(--green3);
+}
+
+.terciary {
+  border: 1px solid var(--geyser-200);
+  background-color: white;
+  color: var(--green2);
+}
+
+.terciary-disabled {
+  color: var(--geyser-200);
+}
+
+.danger {
+  background-color: #dc2626;
+  color: white;
+}
+
+.danger:hover {
+  background-color: #b91c1c;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading {
+  position: relative;
+}
+
+.spinner {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #111827;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+.spaceIcon {
+  padding-left: 14px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
