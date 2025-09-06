@@ -1,17 +1,13 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
-import App from './App.jsx';
-
 
 import RankingComponent from './components/ranking/RankingComponent';
 import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import APIComponent from './components/api/APIComponent';
-import HomeComponent from './components/home/HomeComponent';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import MapaComponent from './components/mapa/MapaComponent';
+import MapaComponent from './pages/mapav/MapaComponent';
 import Acerca from './components/acerca/Acerca';
 import {
   ComoEmpezar,
@@ -21,14 +17,17 @@ import {
   ContactoSoporte,
   Licencias
 } from './components/api/docs'
+import { Navbar } from './components/navbar/Navbar.jsx';
+import { HomePage } from './pages/homev/HomePage.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      {/* <App /> */}
+      <Navbar />
       <Routes>
-        <Route path="/" element={<HomeComponent />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="mapa" element={<MapaComponent />} />
         <Route path="ranking" element={<RankingComponent />} />
         <Route path="aprende" element={<CatalogoComponent />} />
