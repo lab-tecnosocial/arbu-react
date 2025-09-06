@@ -1,0 +1,8 @@
+.radioInput {
+  font-weight: 400;
+  color: var(--geyser-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
