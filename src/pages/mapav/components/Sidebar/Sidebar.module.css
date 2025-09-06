@@ -1,0 +1,94 @@
+.sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 24px;
+  max-height: calc(100vh - 124px);
+  width: 100%;
+  max-width: 320px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .withResult {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    color: var(--geyser-950);
+
+    span {
+      margin-top: 3px;
+    }
+  }
+}
+
+.body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+.resultsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.rowSidebar {
+  h3 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--geyser-950);
+  }
+
+  .options {
+    display: flex;
+    gap: 8px;
+  }
+
+  .accordionFilters {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.inputOptions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dateInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.clearOptions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--geyser-400);
+  width: fit-content;
+  transition: .2s ease;
+}
+
+.disabled {
+  color: var(--persian-red-500);
+}

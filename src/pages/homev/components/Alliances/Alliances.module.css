@@ -1,0 +1,27 @@
+.alliances {
+  background-color: var(--geyser-50);
+  border-bottom: 1px solid var(--geyser-200);
+  border-top: 1px solid var(--geyser-200);
+  padding: 3.5rem 0;
+}
+
+.logosWrapper {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+
+  h3 {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--geyser-600);
+  }
+
+  .logos {
+    display: flex;
+    gap: 4rem;
+  }
+}

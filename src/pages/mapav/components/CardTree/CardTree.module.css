@@ -1,0 +1,247 @@
+.cardTree {
+  border: 1px solid var(--geyser-200);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cardInner {
+  min-width: 500px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.topBar {
+  width: 100%;
+  background-color: var(--geyser-50);
+  height: 56px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--geyser-200);
+
+  .topBarOptions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    .closeButton {
+      color: var(--geyser-400);
+    }
+  }
+
+  .topBarIndicator {
+    font-size: 14px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 4px;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      background-color: var(--green2);
+      border-radius: 8px;
+      border: 1px solid var(--geyser-200);
+      color: var(--white);
+    }
+  }
+}
+
+.cardBody {
+  overflow-y: auto;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+
+  .treeInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .headerTitle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+
+      h2 {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--geyser-950);
+        /* overflow: hidden; */
+        text-overflow: ellipsis;
+        line-height: 1;
+      }
+
+      .headerDetails {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+    .info {
+      display: flex;
+      gap: 16px;
+
+      .picture {
+        aspect-ratio: 4/3;
+        max-width: 210px;
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+
+        img {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .detail {
+          display: flex;
+          flex-direction: column;
+
+          .labelFirst {
+            font-size: 14px;
+            color: var(--geyser-500);
+          }
+
+          .labelSecond {
+            font-size: 16px;
+            color: var(--geyser-950);
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+
+  .treeFeatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 16px;
+    width: 100%;
+
+    .feature {
+      display: flex;
+      align-items: start;
+      gap: 8px;
+
+      .featureIcon {
+        width: 40px;
+        height: 40px;
+        aspect-ratio: 1/1;
+        background-color: var(--green2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .detail {
+        display: flex;
+        flex-direction: column;
+        margin-top: -2px;
+
+        .labelFirst {
+          font-size: 14px;
+          color: var(--geyser-500);
+        }
+
+        .labelSecond {
+          font-size: 16px;
+          color: var(--geyser-950);
+          font-weight: 400;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  .treeMonitoring {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    overflow: hidden;
+
+    h3 {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--geyser-950);
+    }
+
+    .monitoring {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+
+      .monitoringPicture {
+        border-radius: 8px;
+        aspect-ratio: 4/3;
+        max-width: 135px;
+        min-width: 135px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .monitoringInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+        overflow: hidden;
+
+        .detail {
+          display: flex;
+          gap: 8px;
+          width: 100%;
+
+          .labelFirst {
+            font-size: 14px;
+            color: var(--geyser-600);
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            text-wrap: nowrap;
+            gap: 4px;
+            width: 100%;
+          }
+
+          .labelSecond {
+            font-size: 14px;
+            color: var(--geyser-950);
+            font-weight: 400;
+            text-wrap: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

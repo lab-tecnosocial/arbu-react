@@ -1,0 +1,134 @@
+:root {
+  --color-oscuro: #174C44;
+}
+
+/* .titles{
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-oscuro);
+  font-size: 1rem;
+}
+.text-normal{
+  font-family: 'Open Sans' , sans-serif;
+  color: var(--color-oscuro);
+  font-size: 0.4rem;
+} */
+
+.filtro-layout {
+  width: 100%;
+  height: calc(100vh - 6rem);
+  border-radius: .5rem;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(0, 0, 0, .2);
+  z-index: 9999;
+  position: fixed;
+  top: 80px;
+  left: 1rem;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filtro-tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  width: 100%;
+  display: flex;
+
+  button {
+    width: 100%;
+    padding: 1rem 2rem;
+  }
+}
+
+.filtro-buscador {
+  padding: 1rem;
+  padding-bottom: 0px;
+  height: fit-content;
+  max-height: 600px;
+}
+
+.filtro-groups {
+  height: 100%;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+}
+
+.filtro-groups::-webkit-scrollbar {
+  display: none;
+}
+
+.group-filters {
+  margin-bottom: 1rem;
+}
+
+.filtro-buttons {
+  padding: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancelar:hover {
+  border: 1px solid #174C44 !important;
+}
+
+.btn-filter-round {
+  z-index: 999;
+  position: fixed;
+  top: 84px;
+  left: 1rem;
+}
+
+.mapFilterr {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 15px 0px;
+  position: absolute;
+  top: calc(60px + 10rem);
+  left: .4rem;
+  z-index: 9999;
+  max-width: 500px;
+  max-height: 700px;
+  /* max-height: calc(100vh - 60px - 3rem - 3rem); */
+  border-radius: 16px;
+  border: 1px solid rgba(111, 111, 111, .3);
+  padding: 1.5rem;
+  background-color: white;
+  border: 1px solid #000000;
+  /* background-image: radial-gradient(circle 814px at 89.6% 92.8%, rgba(221, 221, 221, .6) 0%, rgba(239, 239, 239, .6) 100.2%); */
+  /* backdrop-filter: blur(16px); */
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  height: fit-content;
+  /* overflow-y: auto; */
+}
+
+
+.wrapper-results {
+  /* overflow-y: auto; */
+
+  .subtitle-result {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-result {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  font-size: 14px;
+}
+
+.row-result:hover {
+  background-color: rgba(200, 200, 200, 0.25);
+}
+
+.input-row {
+  display: flex;
+}
+
+.label {
+  text-wrap: nowrap;
+  font-weight: bold;
+}

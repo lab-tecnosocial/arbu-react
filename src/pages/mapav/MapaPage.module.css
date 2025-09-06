@@ -1,0 +1,44 @@
+.mainGrid {
+  display: flex;
+  flex-direction: row;
+  /* grid-template-columns: 320px 1fr; */
+  height: calc(100vh - 100px);
+  padding-inline: 24px;
+  padding-bottom: 24px;
+  gap: var(--spacing-larger);
+}
+
+.card {
+  border: 1px solid var(--geyser-200);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: 0.3s ease;
+  background: white;
+  width: 0px;
+  /* opacity: 0; */
+  display: none;
+}
+
+.inner {
+  padding: 12px;
+  min-width: 500px;
+  background-color: lightgrey;
+}
+
+.open {
+  /* display: block; */
+  /* opacity: 1; */
+  /* transition: 0.3s ease; */
+  /* width: 500px; */
+}
+
+.sidebar {
+  /* border: 1px solid black; */
+}
+
+.map {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--br-medium);
+  border: 1px solid #E1E9E9;
+}
