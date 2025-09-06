@@ -14,6 +14,7 @@ const initialState = {
   filtro: [],
   filtroAplied: false
 }
+
 export const mapaReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.mapaArbolSeleccionado:
@@ -55,7 +56,6 @@ export const mapaReducer = (state = initialState, action) => {
         monitoreoFiltro,
         especiesSeleccionadas
       } = action.payload;
-      console.log(especiesSeleccionadas)
 
       const texto = busqueda.toLowerCase();
 
