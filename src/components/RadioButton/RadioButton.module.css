@@ -1,0 +1,26 @@
+.radioButton {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 13px;
+  height: 38px;
+  border: 1px solid var(--geyser-200);
+  border-radius: 8px;
+  color: var(--geyser-400);
+  background-color: white;
+  font-weight: 500;
+  transition: .2s ease;
+}
+
+.checked {
+  transition: .2s ease;
+  font-weight: 500;
+  background-color: var(--geyser-50);
+  color: var(--green2);
+}
+
+.fullWidth {
+  width: 100%;
+}
