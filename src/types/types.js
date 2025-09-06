@@ -1,4 +1,26 @@
 export const types = {
+  FETCH_ARBOLES_PLANTADOS_REQUEST: '[ARBOL] fetch arboles plantados request',
+  FETCH_ARBOLES_PLANTADOS_SUCCESS: '[ARBOL] fetch arboles plantados success',
+  FETCH_ARBOLES_PLANTADOS_FAILURE: '[ARBOL] fetch arboles plantados failure',
+  SHOW_DATA_ARBOLES_PLANTADOS: '[ARBOL] show data arboles plantados',
+  FILTRAR_ARBOLES_PLANTADOS: '[ARBOL] filtrar arboles plantados',
+  RESET_PLANTADOS_FILTRADOS: '[ARBOL] reset arboles plantados filtrados',
+  SET_ACTIVE_ARBOL_PLANTADO: '[ARBOL] set active arbol plantado',
+  SETLECT_ARBOL_PLANTADO: '[ARBOL] select arbol plantado',
+  START_BUSQUEDA: '[ARBOL] start busqueda',
+
+  FETCH_ARBOLES_MAPEADOS_REQUEST: '[ARBOL] fetch arboles mapeados request',
+  FETCH_ARBOLES_MAPEADOS_SUCCESS: '[ARBOL] fetch arboles mapeados success',
+  FETCH_ARBOLES_MAPEADOS_FAILURE: '[ARBOL] fetch arboles mapeados failure',
+  SHOW_DATA_ARBOLES_MAPEADOS: '[ARBOL] show data arboles mapeados',
+  FILTRAR_ARBOLES_MAPEADOS: '[ARBOL] filtrar arboles mapeados',
+  RESET_MAPEADOS_FILTRADOS: '[ARBOL] reset arboles mapeados filtrados',
+
+  FETCH_GEO_SCOUTS: '[GEO] fetch geo scouts',
+  SHOW_GEO_SCOUTS: '[GEO] show geo scouts',
+  FETCH_GEO_OTBS: '[GEO] fetch geo otbs',
+  SHOW_GEO_OTBS: '[GEO] show geo otbs',
+
   mapaActiveArbol: '[MAPA] Set active arbol',
   mapaArbolSeleccionado: '[MAPA] Set arbol selected',
   mapaZonaSeleccionada: '[MAPA] Set zona selected',
