@@ -13,7 +13,6 @@ import "./MapaComponent.css";
 import DetailArbol from "./DetailArbol";
 import FiltroComponent from "./filtro/FiltroComponent";
 import locationIcon from "./location.svg";
-import Navbar from "./Navbar";
 import FiltroVarianteComponent from "./filtrovariante/FiltroVarianteComponent";
 import { useRef } from 'react';
 const customIcon = new L.Icon({
