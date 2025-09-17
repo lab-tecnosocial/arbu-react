@@ -63,7 +63,6 @@ function App(props) {
     dispatch(startLoadEspeciesCatalogo());
     dispatch(loadScoresMes());
     dispatch(loadScoresGlobal());
-    console.log("usuarios")
   }, [dispatch]);
 
   const handleDrawerToggle = () => {
