@@ -1,7 +1,7 @@
 import styles from "./MapaPage.module.css";
-import "./MarkerCluster.Default.css";
+// import "./MarkerCluster.Default.css"
 
-import { MapBox } from './components/MapBox/MapBox';
+import { MapWrapper } from './components/MapWrapper/MapWrapper';
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ const MapaComponent = () => {
     <div className={styles.mainGrid} >
       <Sidebar />
       <CardTree />
-      <MapBox />
+      <MapWrapper />
     </div >
   );
 };
