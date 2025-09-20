@@ -2,6 +2,34 @@ import { loadArboles } from "../helpers/loadArboles"
 import { loadUsuarios } from "../helpers/loadUsuarios"
 import { types } from "../types/types"
 
+export const setShowControls = (value) => {
+  return {
+    type: types.MAPA_SHOW_CONTROLS,
+    payload: value
+  }
+}
+
+export const setClickPosition = (value) => {
+  return {
+    type: types.MAPA_CLICK_POSITION,
+    payload: value
+  }
+}
+
+export const setShowTreeMappingForm = (value) => {
+  return {
+    type: types.MAPA_SHOW_TREE_MAPPING_FORM,
+    payload: value
+  }
+}
+
+export const setShowTreeAdoptForm = (value) => {
+  return {
+    type: types.MAPA_SHOW_TREE_ADOPT_FORM,
+    payload: value
+  }
+}
+
 export const activeArbol = (id, arbol) => {
   return {
     type: types.mapaActiveArbol,
