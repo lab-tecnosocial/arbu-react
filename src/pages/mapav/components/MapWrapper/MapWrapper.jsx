@@ -1,4 +1,4 @@
-import styles from "./MapBox.module.css"
+import styles from "./MapWrapper.module.css"
 import { activeArbol, hideDetailArbol, setArbolSeleccionado, setBusqueda } from "../../../../actions/mapaActions";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point, polygon } from '@turf/helpers';
@@ -9,16 +9,18 @@ import { useMapEvents } from 'react-leaflet/hooks'
 import { useSelector, useDispatch } from "react-redux";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { seleccionarPoligono } from '../../utils/selectPolygon';
-import locationIcon from "../../location.svg";
 import { selectArbolPlantado, setActiveArbolPlantado } from "../../../../actions/arbolesPlantados.actions";
+import { X } from "lucide-react"
+import { ClickableMarker } from "./ClickableMarker";
 
 const customIcon = new L.Icon({
-  iconUrl: locationIcon,
+  iconUrl: "location.svg",
   iconSize: new L.Point(40, 47),
 });
 
-export const MapBox = () => {
+export const MapWrapper = () => {
   const layersRef = useRef(new Map());
+  const [clickPosition, setClickPosition] = useState(null);
   const {
     // arboles: arbolesPlantados,
     showArbolesPlantados,
@@ -91,17 +93,24 @@ export const MapBox = () => {
     ));
   }, [dataArbolesMapeados, active, dispatch]);
 
-  function MyComponent() {
-    const map = useMapEvents({
-      click: () => {
-        // console.log('map clicked');
-        if (active !== null) {
-          dispatch(hideDetailArbol());
-          document.querySelector('.leaflet-control-zoom-in').style.display = 'block';
-          document.querySelector('.leaflet-control-zoom-out').style.display = 'block';
-        }
+  const MapEvents = () => {
+    useMapEvents({
+      click(e) {
+        setClickPosition([e.latlng.lat, e.latlng.lng]);
       },
-
+    })
+    return null
+  }
+  function MyComponent() {
+    useMapEvents({
+      // click: () => {
+      //   // console.log('map clicked');
+      //   if (active !== null) {
+      //     dispatch(hideDetailArbol());
+      //     document.querySelector('.leaflet-control-zoom-in').style.display = 'block';
+      //     document.querySelector('.leaflet-control-zoom-out').style.display = 'block';
+      //   }
+      // },
     })
     return null
   }
@@ -204,17 +213,26 @@ export const MapBox = () => {
   //     .then((res) => res.json())
   //     .then((data) => setArbolesMapeados(data))
   // }, dispatch, arbolesMapeados, geoData)
-  // console.log('isactive', isActiveArbolesMapeados)
-  // console.log('isactive', dataArbolesMapeados)
 
   return (
     <div className={styles.map}>
+      {
+        clickPosition && (
+          <div className={styles.mapControls}>
+            <button>Adoptar Arbol</button>
+            <button>Mapear Arbol</button>
+            <button onClick={() => setClickPosition(null)}><X /></button>
+          </div>
+        )
+      }
+
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
         zoomControl={false}
         scrollWheelZoom={true}
       >
+        <MapEvents />
         <ZoomControl position="bottomright" />
 
         {/* <MyComponent /> */}
@@ -240,6 +258,11 @@ export const MapBox = () => {
           </MarkerClusterGroup>
           : null
         }
+
+        {clickPosition && (
+          <Marker position={clickPosition} icon={customIcon} />
+        )}
+        {/* <ClickableMarker /> */}
       </MapContainer>
     </div>
   )

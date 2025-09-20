@@ -5,8 +5,8 @@ export const Button = ({
   variant = "primary",
   isLoading = false,
   disabled,
-  icon,
   fullWidth,
+  icon,
   ...props
 }) => {
   return (

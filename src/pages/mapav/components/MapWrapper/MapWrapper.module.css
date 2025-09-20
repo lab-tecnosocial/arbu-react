@@ -1,0 +1,31 @@
+.map {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--br-medium);
+  border: 1px solid #E1E9E9;
+  position: relative;
+}
+
+.mapControls {
+  position: absolute;
+  bottom: 24px;
+  right: 50%;
+  display: flex;
+  gap: 8px;
+  z-index: 999;
+  background-color: var(--green2);
+  transform: translateX(50%);
+  padding: 8px;
+  border-radius: var(--br-medium);
+  box-shadow: var(--shadow-medium);
+
+  button {
+    border: 1px solid var(--geyser-200);
+    padding: 10px 20px;
+    border-radius: var(--br-small);
+    color: var(--green2);
+    font-weight: 500;
+    font-size: 16px;
+    background-color: white;
+  }
+}

@@ -1,5 +1,5 @@
 import { Search, X } from "lucide-react";
-import styles from "./Input.module.css"
+import styles from "./Input.module.css";
 
 export const Input = ({
   label,
@@ -14,21 +14,28 @@ export const Input = ({
   closeOnClick,
   size = "medium",
   fullWidth,
+  disabled,
   ...props
 }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      searchOnClick()
+      searchOnClick();
     }
   };
   return (
-    <div className={styles.inputWrapper}>
-      {label && <label className={styles.label}>{label}</label>}
-      <div className={`
+    <div className={styles.inputWrapper} style={{ opacity: disabled ? 0.5 : 1 }}>
+      {label && (
+        <label className={styles.label}>
+          {label}
+        </label>
+      )}
+      <div
+        className={`
         ${styles.inputContainer}
         ${styles[size]}
         ${fullWidth ? styles.fullWidth : ""}
-`}>
+`}
+      >
         <input
           type={type}
           placeholder={placeholder}
@@ -36,22 +43,20 @@ export const Input = ({
           onChange={onChange}
           onKeyDown={(e) => handleKeyDown(e)}
           className={`${styles.input} `}
+          disabled={disabled}
           {...props}
         />
-        {
-          closeIcon &&
+        {closeIcon && (
           <button onClick={closeOnClick} className={styles.icon}>
             <X size={24} strokeWidth={1.5} color="var(--geyser-400)" />
           </button>
-        }
-        {
-          searchIcon &&
+        )}
+        {searchIcon && (
           <button onClick={searchOnClick} className={styles.icon}>
             <Search size={24} strokeWidth={1.5} color="var(--green2)" />
           </button>
-        }
+        )}
       </div>
     </div>
-  )
-}
-
+  );
+};
