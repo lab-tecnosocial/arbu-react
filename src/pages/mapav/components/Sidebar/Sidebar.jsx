@@ -4,7 +4,7 @@ import { ArrowLeft, Plus, Search, Trash, Trash2, X } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
 import { RadioButton } from "../../../../components/RadioButton/RadioButton";
-import { RadioInput } from "../../../../components/RadioInput/RadioInput";
+import { Radio } from "../../../../components/Radio/Radio";
 import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -192,7 +192,7 @@ export const Sidebar = () => {
                 >
                   <div className={styles.inputOptions}>
                     {optionsCategorias.map((option) => (
-                      <RadioInput
+                      <Radio
                         key={option.value}
                         value={option.label}
                         onClick={() => setSelectedCategorias(option.value)}
@@ -216,7 +216,7 @@ export const Sidebar = () => {
                 >
                   <div className={styles.inputOptions}>
                     {optionsRiegos.map((option) => (
-                      <RadioInput
+                      <Radio
                         key={option.value}
                         value={option.label}
                         onClick={() => setSelectedRiegos(option.value)}
@@ -240,7 +240,7 @@ export const Sidebar = () => {
                 >
                   <div className={styles.inputOptions}>
                     {optionsMonitoreos.map((option) => (
-                      <RadioInput
+                      <Radio
                         key={option.value}
                         value={option.label}
                         onClick={() => setSelectedMonitoreos(option.value)}
