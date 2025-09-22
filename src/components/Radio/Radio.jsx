@@ -1,13 +1,11 @@
 import styles from "./Radio.module.css";
 
-export const Radio = ({ key, value, checked, onClick, fullWidth }) => {
+export const Radio = ({ value, checked, onClick, fullWidth }) => {
   return (
     <button
-      key={key}
       onClick={onClick}
-      className={`${styles.radio} ${checked ? styles.checked : ""} ${
-        fullWidth ? styles.fullWidth : ""
-      }`}
+      className={`${styles.radio} ${checked ? styles.checked : ""} ${fullWidth ? styles.fullWidth : ""
+        }`}
     >
       {checked ? (
         <svg

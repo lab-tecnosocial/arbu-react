@@ -1,11 +1,10 @@
-import styles from "./RadioButton.module.css"
+import styles from "./OptionChip.module.css"
 
-export const RadioButton = ({ key, children, checked, onClick, fullWidth }) => {
+export const OptionChip = ({ children, checked, onClick, fullWidth }) => {
   return (
     <button
-      key={key}
       onClick={onClick}
-      className={`${styles.radioButton} ${checked ? styles.checked : ""} ${fullWidth ? styles.fullWidth : ""}`}>
+      className={`${styles.optionChip} ${checked ? styles.checked : ""} ${fullWidth ? styles.fullWidth : ""}`}>
       {checked ?
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="0.5" y="1" width="15" height="15" rx="7.5" stroke="#268576" />
