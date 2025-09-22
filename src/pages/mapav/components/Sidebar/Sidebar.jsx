@@ -3,8 +3,8 @@ import { Input } from "../../../../components/Input/Input"
 import { ArrowLeft, Plus, Search, Trash, Trash2, X } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
-import { RadioButton } from "../../../../components/RadioButton/RadioButton";
 import { Radio } from "../../../../components/Radio/Radio";
+import { OptionChip } from "../../../../components/OptionChip/OptionChip"
 import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -154,7 +154,7 @@ export const Sidebar = () => {
               <h3>Geo Visualización</h3>
               <div className={styles.options}>
                 {optionsGeo.map((option) => (
-                  <RadioButton
+                  <OptionChip
                     key={option.value}
                     onClick={() => {
                       handleToggleGeo(option.value)
@@ -162,7 +162,7 @@ export const Sidebar = () => {
                     checked={option.value === geoValues}
                   >
                     {option.label}
-                  </RadioButton>
+                  </OptionChip>
                 ))}
               </div>
             </div>
@@ -170,7 +170,7 @@ export const Sidebar = () => {
               <h3>Árboles</h3>
               <div className={styles.options}>
                 {optionsArbol.map((option) => (
-                  <RadioButton
+                  <OptionChip
                     key={option.value}
                     onClick={() => {
                       handleToggleArbol(option.value)
@@ -178,7 +178,7 @@ export const Sidebar = () => {
                     checked={arbolValues.includes(option.value)}
                   >
                     {option.label}
-                  </RadioButton>
+                  </OptionChip>
                 ))}
               </div>
             </div>
