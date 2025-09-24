@@ -33,12 +33,9 @@ export const MapWrapper = () => {
     arbolSeleccionado,
     zonaSeleccionada
   } = useSelector((state) => state.mapa);
-  const {
-    arbolesPlantadosData, isActiveArbolesPlantados, arbolesPlantadosFiltrados
-  } = useSelector((state) => state.arbolesPlantados)
-  const {
-    dataArbolesMapeados, isActiveArbolesMapeados
-  } = useSelector((state) => state.arbolesMapeados)
+
+  const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles)
+
   const {
     isActiveScouts, scouts
   } = useSelector((state) => state.geoScouts)
@@ -46,7 +43,7 @@ export const MapWrapper = () => {
   const dispatch = useDispatch();
 
   const markersArbolesPlantados = useMemo(() => {
-    const items = arbolesPlantadosFiltrados.length > 0 ? arbolesPlantadosFiltrados : arbolesPlantadosData;
+    const items = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData : arbolesPlantados.data;
     return items.map((item) => (
       <Marker
         key={item.id}
@@ -67,12 +64,12 @@ export const MapWrapper = () => {
         }}
       />
     ));
-  }, [arbolesPlantadosFiltrados, filtroAplied, filtro, arbolesPlantadosData, active, dispatch]);
+  }, [arbolesPlantados.filteredData, filtroAplied, filtro, arbolesPlantados.data, active, dispatch]);
 
   const markersArbolesMapeados = useMemo(() => {
     // const items = arbolesMapeados;
-    // const items = arbolesFiltrados.length > 0 ? arbolesFiltrados : dataArbolesMapeados;
-    return dataArbolesMapeados.map((item) => (
+    // const items = arbolesFiltrados.length > 0 ? arbolesFiltrados : arbolesMapeados.data;
+    return arbolesMapeados.data.map((item) => (
       <Marker
         key={item.id}
         position={[item.latitud, item.longitud]}
@@ -91,26 +88,14 @@ export const MapWrapper = () => {
         }}
       />
     ));
-  }, [dataArbolesMapeados, active, dispatch]);
+  }, [arbolesMapeados.data, active, dispatch]);
 
   const MapEvents = () => {
     useMapEvents({
       click(e) {
         setClickPosition([e.latlng.lat, e.latlng.lng]);
+        map.flyTo(pos, map.getZoom(), { duration: 1.5 });
       },
-    })
-    return null
-  }
-  function MyComponent() {
-    useMapEvents({
-      // click: () => {
-      //   // console.log('map clicked');
-      //   if (active !== null) {
-      //     dispatch(hideDetailArbol());
-      //     document.querySelector('.leaflet-control-zoom-in').style.display = 'block';
-      //     document.querySelector('.leaflet-control-zoom-out').style.display = 'block';
-      //   }
-      // },
     })
     return null
   }
@@ -156,12 +141,12 @@ export const MapWrapper = () => {
     layer.on('click', () => {
       const poligono = polygon(feature.geometry.coordinates);
 
-      const markers_ArbolesPlantadosDentro = arbolesPlantadosData.filter((marker) => {
+      const markers_ArbolesPlantadosDentro = arbolesPlantados.data.filter((marker) => {
         const punto = point([marker.longitud, marker.latitud]);
         return booleanPointInPolygon(punto, poligono);
       });
 
-      const markers_ArbolesMapeadosDentro = dataArbolesMapeados.filter((marker) => {
+      const markers_ArbolesMapeadosDentro = arbolesMapeados.data.filter((marker) => {
         const punto = point([marker.longitud, marker.latitud]);
         return booleanPointInPolygon(punto, poligono);
       });
@@ -205,15 +190,6 @@ export const MapWrapper = () => {
     }
   }, [zonaSeleccionada]);
 
-  // useEffect(() => {
-  //   fetch('http://localhost:8080/triangulacion_grupos_scouts.geojson')
-  //     .then((res) => res.json())
-  //     .then((data) => setGeoData(data))
-  //   fetch('http://localhost:8080/arboles-mapeados')
-  //     .then((res) => res.json())
-  //     .then((data) => setArbolesMapeados(data))
-  // }, dispatch, arbolesMapeados, geoData)
-
   return (
     <div className={styles.map}>
       {
@@ -235,7 +211,6 @@ export const MapWrapper = () => {
         <MapEvents />
         <ZoomControl position="bottomright" />
 
-        {/* <MyComponent /> */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -246,13 +221,13 @@ export const MapWrapper = () => {
         {isActiveScouts && scouts &&
           <GeoJSON data={scouts} />
         }
-        {isActiveArbolesMapeados ?
+        {arbolesMapeados.isActive ?
           <MarkerClusterGroup chunkedLoading>
             {markersArbolesMapeados}
           </MarkerClusterGroup>
           : null
         }
-        {isActiveArbolesPlantados ?
+        {arbolesPlantados.isActive ?
           <MarkerClusterGroup chunkedLoading>
             {markersArbolesPlantados}
           </MarkerClusterGroup>
