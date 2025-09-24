@@ -6,6 +6,7 @@ import { mapaReducer } from "../reducers/mapaReducer";
 import { arbolesPlantadosReducer } from "../reducers/arbolesPlantados.reducer";
 import { arbolesMapeadosReducer } from "../reducers/arbolesMapeados.reducer";
 import { geoScoutsReducer } from "../reducers/geoScouts.reducer";
+import treeReducers from "../reducers/arboles.reducer";
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const reducers = combineReducers({
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   arbolesPlantados: arbolesPlantadosReducer,
   arbolesMapeados: arbolesMapeadosReducer,
   geoScouts: geoScoutsReducer,
+  arboles: treeReducers,
 });
 export const store = createStore(reducers
   ,
