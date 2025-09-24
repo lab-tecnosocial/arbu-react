@@ -26,7 +26,7 @@ const MapaComponent = () => {
       <Sidebar />
       <CardTree />
       <MapWrapper />
-    </div >
+    </div>
   );
 };
 

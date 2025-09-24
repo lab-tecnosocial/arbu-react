@@ -10,6 +10,7 @@ import Modal from "./components/Modal/Modal";
 import { fetchArbolesMapeados } from "../../actions/arbolesMapeados.actions";
 import { fetchGeoScouts } from "../../actions/geoScouts.actions";
 import { startLoadingUsuarios } from "../../actions/mapaActions";
+import { fetchMappedTrees, fetchPlantedTrees } from "../../actions/arboles.actions";
 
 const MapaPage = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,9 @@ const MapaPage = () => {
     dispatch(fetchArbolesMapeados());
     dispatch(fetchGeoScouts());
     dispatch(startLoadingUsuarios());
+
+    dispatch(fetchMappedTrees())
+    dispatch(fetchPlantedTrees())
   }, [dispatch]);
 
   return (
