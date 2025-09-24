@@ -13,6 +13,7 @@ import { setActiveArbolesMapeados } from "../../../../actions/arbolesMapeados.ac
 import { setActiveGeoScouts } from "../../../../actions/geoScouts.actions";
 import { optionsGeo, optionsArbol, optionsCategorias, optionsRiegos, optionsMonitoreos } from "./Utils/filterOptions";
 import { especies } from "../../../../components/mapa/filtro/especies";
+import { setActiveMappedTrees, setActivePlantedTrees } from "../../../../actions/arboles.actions";
 
 export const Sidebar = () => {
   const dispatch = useDispatch()
@@ -44,12 +45,12 @@ export const Sidebar = () => {
   const handleToggleArbol = (value) => {
     if (arbolValues.includes(value)) {
       setArbolValues(arbolValues.filter((item) => item !== value));
-      if (value === 'plantados') dispatch(setActiveArbolesPlantados(false))
-      if (value === 'mapeados') dispatch(setActiveArbolesMapeados(false))
+      if (value === 'plantados') dispatch(setActivePlantedTrees(false))
+      if (value === 'mapeados') dispatch(setActiveMappedTrees(false))
     } else {
       setArbolValues([...arbolValues, value]);
-      if (value === 'plantados') dispatch(setActiveArbolesPlantados(true))
-      if (value === 'mapeados') dispatch(setActiveArbolesMapeados(true))
+      if (value === 'plantados') dispatch(setActivePlantedTrees(true))
+      if (value === 'mapeados') dispatch(setActiveMappedTrees(true))
     }
   };
 
@@ -76,14 +77,12 @@ export const Sidebar = () => {
     return { desde, hasta };
   };
 
-  const handleCheckBox = (e) => {
-    let isChecked = e.target.checked;
-    if (isChecked) {
-      setSelectedEspecies(v => [...v, e.target.value]);
-    } else {
-      let auxArray = selectedEspecies.filter(especie => especie !== e.target.value);
-      setSelectedEspecies(auxArray);
-    }
+  const handleCheckBox = (value) => {
+    setSelectedEspecies(prev =>
+      prev.includes(value)
+        ? prev.filter((especie) => especie !== value)
+        : [...prev, value]
+    )
   }
 
   const handleAplicar = () => {
@@ -280,17 +279,12 @@ export const Sidebar = () => {
                 >
                   <div className={styles.inputOptions}>
                     {especies.map((especie) => (
-                      <label key={especie.id}>
-                        <input
-                          key={especie.id}
-                          type="checkbox"
-                          name=""
-                          value={especie.nombreCientifico}
-                          checked={selectedEspecies.includes(especie.nombreCientifico)}
-                          onChange={(e) => handleCheckBox(e)}
-                        />
-                        {especie.nombreCientifico}
-                      </label>
+                      <Radio
+                        key={especie.id}
+                        value={especie.nombreCientifico}
+                        onClick={() => handleCheckBox(especie.nombreCientifico)}
+                        checked={selectedEspecies.includes(especie.nombreCientifico)}
+                      />
                     ))}
                   </div>
                   <button
