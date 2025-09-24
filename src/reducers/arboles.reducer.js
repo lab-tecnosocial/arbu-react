@@ -23,12 +23,12 @@ const initialPlantedTreesState = {
 
 // Combined initial state
 const initialState = {
-  mappedTrees: initialMappedTreesState,
-  plantedTrees: initialPlantedTreesState,
+  arbolesMapeados: initialMappedTreesState,
+  arbolesPlantados: initialPlantedTreesState,
 };
 
 // Mapped trees reducer
-const mappedTreesReducer = (state = initialMappedTreesState, action) => {
+const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
   switch (action.type) {
     case types.FETCH_ARBOLES_MAPEADOS_REQUEST:
       return {
@@ -113,7 +113,7 @@ const mappedTreesReducer = (state = initialMappedTreesState, action) => {
 };
 
 // Planted trees reducer
-const plantedTreesReducer = (state = initialPlantedTreesState, action) => {
+const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
   switch (action.type) {
     case types.SET_ACTIVE_ARBOL_PLANTADO:
       return {
@@ -226,8 +226,8 @@ const plantedTreesReducer = (state = initialPlantedTreesState, action) => {
 // Root reducer
 const treeReducers = (state = initialState, action) => {
   return {
-    mappedTrees: mappedTreesReducer(state.mappedTrees, action),
-    plantedTrees: plantedTreesReducer(state.plantedTrees, action),
+    arbolesMapeados: arbolesMapeadosReducer(state.arbolesMapeados, action),
+    arbolesPlantados: arbolesPlantadosReducer(state.arbolesPlantados, action),
   };
 };
 
