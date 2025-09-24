@@ -1,0 +1,12 @@
+.checkbox {
+  font-weight: 400;
+  color: var(--geyser-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  span {
+    margin-top: 2px;
+  }
+}
