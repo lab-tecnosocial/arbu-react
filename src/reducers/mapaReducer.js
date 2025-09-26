@@ -1,3 +1,4 @@
+import { act } from "react";
 import { types } from "../types/types";
 const initialState = {
   arboles: [],
@@ -12,11 +13,59 @@ const initialState = {
   monitoreo: null,
   usuariosMap: null,
   filtro: [],
-  filtroAplied: false
+  filtroAplied: false,
+
+  // Modal
+  modalState: "CLOSE",
+  selectedTree: {},
+
+  geoScouts: null,
+  isActiveGeoScouts: false,
+
+  geoOtbs: null,
+  isActiveGeoOtbs: false,
+  geoMode: "normal",
 }
 
 export const mapaReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.SET_GEO_MODE:
+      return {
+        ...state,
+        geoMode: action.payload
+      }
+    // GeoScouts
+    case types.SET_ACTIVE_GEO_SCOUTS:
+      return {
+        ...state,
+        isActiveGeoScouts: action.payload
+      }
+    case types.LOAD_GEO_SCOUTS:
+      return {
+        ...state,
+        geoScouts: action.payload
+      }
+
+    // GeoOtbs
+    case types.SET_ACTIVE_GEO_OTBS:
+      return {
+        ...state,
+        isActiveGeoOtbs: action.payload
+      }
+    case types.LOAD_GEO_OTBS:
+      return {
+        ...state,
+        geoOtbs: action.payload
+      }
+
+    // Modal
+    case types.SET_MODAL_STATE:
+      return {
+        ...state,
+        // NOTE: Analize whether a modalState and selectedTree should be in a separate reducer
+        modalState: action.payload.modalState,
+        selectedTree: action.payload.selectedTree,
+      }
     case types.mapaArbolSeleccionado:
       return {
         ...state,
