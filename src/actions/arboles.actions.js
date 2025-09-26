@@ -1,5 +1,7 @@
 import { types } from "../types/types";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 // Action creators for mapped trees (árboles mapeados)
 export const fetchMappedTreesRequest = () => ({
   type: types.FETCH_ARBOLES_MAPEADOS_REQUEST,
@@ -49,10 +51,10 @@ export const resetPlantedTreesFilter = () => ({
   type: types.RESET_PLANTADOS_FILTRADOS,
 });
 
-export const setActivePlantedTree = (value) => ({
-  type: types.SET_ACTIVE_ARBOL_PLANTADO,
-  payload: value,
-});
+// export const setActivePlantedTree = (value) => ({
+//   type: types.SET_ACTIVE_ARBOL_PLANTADO,
+//   payload: value,
+// });
 
 export const selectPlantedTree = (value) => ({
   type: types.SETLECT_ARBOL_PLANTADO,
@@ -69,7 +71,7 @@ export const fetchMappedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchMappedTreesRequest());
-      const response = await fetch("http://localhost:8080/arboles-mapeados");
+      const response = await fetch(`${API_URL}/arboles-mapeados`);
 
       if (!response.ok) {
         throw new Error("Error al obtener los árboles mapeados");
@@ -87,7 +89,7 @@ export const fetchPlantedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchPlantedTreesRequest());
-      const response = await fetch("http://localhost:8080/arboles-plantados");
+      const response = await fetch(`${API_URL}/arboles-plantados`);
 
       if (!response.ok) {
         throw new Error("Error al obtener los árboles plantados");
@@ -101,7 +103,6 @@ export const fetchPlantedTrees = () => {
   };
 };
 
-// Combined action to fetch both types of trees
 export const fetchAllTrees = () => {
   return async (dispatch) => {
     await Promise.all([
