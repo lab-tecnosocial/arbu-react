@@ -2,11 +2,39 @@
   font-weight: 400;
   color: var(--geyser-800);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: start;
+  justify-content: start;
   gap: 10px;
+  margin-bottom: 2px;
 
   span {
-    margin-top: 2px;
+    margin-top: -1px;
+    text-align: start;
+  }
+}
+
+.icon {
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  border: 1px solid var(--geyser-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+
+  svg {
+    color: var(--white);
+  }
+}
+
+.checkedIcon {
+  border: 1px solid var(--green2);
+  background-color: var(--geyser-50);
+
+  svg {
+    color: var(--green2);
   }
 }

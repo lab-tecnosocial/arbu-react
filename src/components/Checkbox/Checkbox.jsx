@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import styles from "./Checkbox.module.css";
 
 export const Checkbox = ({ value, checked, onClick, fullWidth }) => {
@@ -7,42 +8,9 @@ export const Checkbox = ({ value, checked, onClick, fullWidth }) => {
       className={`${styles.checkbox} ${checked ? styles.checked : ""} ${fullWidth ? styles.fullWidth : ""
         }`}
     >
-      {checked ? (
-        <svg
-          width="16"
-          height="17"
-          viewBox="0 0 16 17"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect
-            x="0.5"
-            y="1"
-            width="15"
-            height="15"
-            rx="7.5"
-            stroke="#268576"
-          />
-          <circle cx="8" cy="8.5" r="5" fill="#268576" />
-        </svg>
-      ) : (
-        <svg
-          width="16"
-          height="17"
-          viewBox="0 0 16 17"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect
-            x="0.5"
-            y="1"
-            width="15"
-            height="15"
-            rx="7.5"
-            stroke="var(--geyser-300)"
-          />
-        </svg>
-      )}
+      <div className={`${styles.icon} ${checked ? styles.checkedIcon : ""}`}>
+        <Check size={16} strokeWidth={3.5} />
+      </div>
       <span>{value}</span>
     </button>
   );
