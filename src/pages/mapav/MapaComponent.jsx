@@ -1,23 +1,21 @@
 import styles from "./MapaPage.module.css";
-// import "./MarkerCluster.Default.css"
 
 import { MapWrapper } from './components/MapWrapper/MapWrapper';
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { fetchArbolesPlantados } from "../../actions/arbolesPlantados.actions";
-import { fetchArbolesMapeados } from "../../actions/arbolesMapeados.actions";
-import { fetchGeoScouts } from "../../actions/geoScouts.actions";
-import { startLoadingUsuarios } from "../../actions/mapaActions";
+import { loadGeoScouts, startLoadingUsuarios } from "../../actions/mapaActions";
+import { fetchMappedTrees, fetchPlantedTrees } from "../../actions/arboles.actions";
 
 const MapaComponent = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchArbolesPlantados())
-    dispatch(fetchArbolesMapeados())
-    dispatch(fetchGeoScouts())
+    // NOTE: fetch data, load archivos
+    dispatch(fetchPlantedTrees())
+    dispatch(fetchMappedTrees())
+    dispatch(loadGeoScouts())
     dispatch(startLoadingUsuarios());
   }, [dispatch])
 
