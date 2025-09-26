@@ -1,110 +1,37 @@
 import styles from "./MapWrapper.module.css"
-import { activeArbol, hideDetailArbol, setArbolSeleccionado, setBusqueda } from "../../../../actions/mapaActions";
+import { loadGeoScouts } from "../../../../actions/mapaActions";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point, polygon } from '@turf/helpers';
 import { useEffect, useState, useMemo, useRef } from "react";
-import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl, useMap } from "react-leaflet";
-import L, { MarkerCluster } from "leaflet";
-import { useMapEvents } from 'react-leaflet/hooks'
+import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl, useMap, useMapEvents } from "react-leaflet";
+// import { useMapEvents } from 'react-leaflet/hooks'
+import { MapEvents } from "./Utils/MapEvents";
 import { useSelector, useDispatch } from "react-redux";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { seleccionarPoligono } from '../../utils/selectPolygon';
-import { selectArbolPlantado, setActiveArbolPlantado } from "../../../../actions/arbolesPlantados.actions";
 import { X } from "lucide-react"
-import { ClickableMarker } from "./ClickableMarker";
-
-const customIcon = new L.Icon({
-  iconUrl: "location.svg",
-  iconSize: new L.Point(40, 47),
-});
+import { customIcon } from "./Utils/CustomIcon";
+import { ClickableMarker } from "./Utils/ClickableMarker";
+import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
+import ClusterArbolesMapeados from "./Utils/ClusterArbolesMapeados";
 
 export const MapWrapper = () => {
+  const dispatch = useDispatch();
   const layersRef = useRef(new Map());
   const [clickPosition, setClickPosition] = useState(null);
   const {
-    // arboles: arbolesPlantados,
-    showArbolesPlantados,
-    showArbolesMapeados,
-    arbolesFiltrados,
-    busqueda,
     active,
     filtro,
     filtroAplied,
-    arbolSeleccionado,
-    zonaSeleccionada
+    zonaSeleccionada,
+    geoScouts,
+    geoOtbs,
+    isActiveGeoScouts,
+    isActiveGeoOtbs,
+    geoMode,
   } = useSelector((state) => state.mapa);
 
   const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles)
-
-  const {
-    isActiveScouts, scouts
-  } = useSelector((state) => state.geoScouts)
-
-  const dispatch = useDispatch();
-
-  const markersArbolesPlantados = useMemo(() => {
-    const items = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData : arbolesPlantados.data;
-    return items.map((item) => (
-      <Marker
-        key={item.id}
-        position={[item.latitud, item.longitud]}
-        title={item.nombrePropio}
-        icon={customIcon}
-        eventHandlers={{
-          click: () => {
-            // if (active?.id !== item?.id) {
-            // dispatch(activeArbol(item.id, { ...item }));
-            dispatch(setActiveArbolPlantado(true))
-            dispatch(selectArbolPlantado(item))
-            // dispatch(setArbolSeleccionado([item.latitud, item.longitud]))
-            document.querySelector(".leaflet-control-zoom-in").style.display = "none";
-            document.querySelector(".leaflet-control-zoom-out").style.display = "none";
-            // }
-          },
-        }}
-      />
-    ));
-  }, [arbolesPlantados.filteredData, filtroAplied, filtro, arbolesPlantados.data, active, dispatch]);
-
-  const markersArbolesMapeados = useMemo(() => {
-    // const items = arbolesMapeados;
-    // const items = arbolesFiltrados.length > 0 ? arbolesFiltrados : arbolesMapeados.data;
-    return arbolesMapeados.data.map((item) => (
-      <Marker
-        key={item.id}
-        position={[item.latitud, item.longitud]}
-        title={item.nombrePropio}
-        icon={customIcon}
-        eventHandlers={{
-          click: () => {
-            // if (active?.id !== item?.id) {
-            // dispatch(setActiveArbolPlantado(item.id, { ...item }));
-            dispatch(setActiveArbolPlantado(item));
-            // dispatch(setArbolSeleccionado([item.latitud, item.longitud]))
-            document.querySelector(".leaflet-control-zoom-in").style.display = "none";
-            document.querySelector(".leaflet-control-zoom-out").style.display = "none";
-            // }
-          },
-        }}
-      />
-    ));
-  }, [arbolesMapeados.data, active, dispatch]);
-
-  const MapEvents = () => {
-    useMapEvents({
-      click(e) {
-        setClickPosition([e.latlng.lat, e.latlng.lng]);
-        map.flyTo(pos, map.getZoom(), { duration: 1.5 });
-      },
-    })
-    return null
-  }
-
-  const MapView = ({ position, zoomCurrent = 18 }) => {
-    const map = useMap();
-    map.flyTo(position, zoomCurrent);
-    return null;
-  }
 
   const onEachFeature = (feature, layer) => {
     const map = useMap();
@@ -185,10 +112,9 @@ export const MapWrapper = () => {
   };
 
   useEffect(() => {
-    if (zonaSeleccionada !== null) {
-      seleccionarPoligono(zonaSeleccionada);
-    }
-  }, [zonaSeleccionada]);
+    if (!geoScouts) dispatch(loadGeoScouts());
+  }, [geoScouts]);
+
 
   return (
     <div className={styles.map}>
@@ -208,7 +134,6 @@ export const MapWrapper = () => {
         zoomControl={false}
         scrollWheelZoom={true}
       >
-        <MapEvents />
         <ZoomControl position="bottomright" />
 
         <TileLayer
@@ -216,28 +141,21 @@ export const MapWrapper = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
 
-        {/* {arbolSeleccionado && <MapView position={arbolSeleccionado} />} */}
-        {/* {showArbolesMapeados && geoData && <GeoJSON data={geoData} onEachFeature={onEachFeature} />} */}
-        {isActiveScouts && scouts &&
-          <GeoJSON data={scouts} />
-        }
-        {arbolesMapeados.isActive ?
-          <MarkerClusterGroup chunkedLoading>
-            {markersArbolesMapeados}
-          </MarkerClusterGroup>
-          : null
-        }
-        {arbolesPlantados.isActive ?
-          <MarkerClusterGroup chunkedLoading>
-            {markersArbolesPlantados}
-          </MarkerClusterGroup>
-          : null
-        }
+        <MapEvents setMarkerCoords={setClickPosition} markerCoords={clickPosition} />
+        <ClickableMarker position={clickPosition} icon={customIcon} />
 
-        {clickPosition && (
-          <Marker position={clickPosition} icon={customIcon} />
-        )}
-        {/* <ClickableMarker /> */}
+        {geoMode === "scouts" && <GeoJSON data={geoScouts} onEachFeature={onEachFeature} />}
+
+        <ClusterArbolesPlantados
+          arbolesPlantados={arbolesPlantados}
+          customIcon={customIcon}
+          setClickPosition={setClickPosition}
+        />
+        <ClusterArbolesMapeados
+          arbolesMapeados={arbolesMapeados}
+          customIcon={customIcon}
+          setClickPosition={setClickPosition}
+        />
       </MapContainer>
     </div>
   )
