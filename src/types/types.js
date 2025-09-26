@@ -16,12 +16,12 @@ export const types = {
   FILTRAR_ARBOLES_MAPEADOS: '[ARBOL] filtrar arboles mapeados',
   RESET_MAPEADOS_FILTRADOS: '[ARBOL] reset arboles mapeados filtrados',
 
-  FETCH_GEO_SCOUTS: '[GEO] fetch geo scouts',
-  SHOW_GEO_SCOUTS: '[GEO] show geo scouts',
-  FETCH_GEO_OTBS: '[GEO] fetch geo otbs',
-  SHOW_GEO_OTBS: '[GEO] show geo otbs',
-
+  SET_MODAL_STATE: '[MAPA] Set show modal',
+  LOAD_GEO_SCOUTS: '[MAPA] Load geo scouts',
+  LOAD_GEO_OTBS: '[MAPA] Load geo otbs',
+  SET_GEO_MODE: '[MAPA] Set geo mode',
   mapaActiveArbol: '[MAPA] Set active arbol',
+
   mapaArbolSeleccionado: '[MAPA] Set arbol selected',
   mapaZonaSeleccionada: '[MAPA] Set zona selected',
   mapaShowArbolesPlantados: '[MAPA] Show data arboles plantados',
