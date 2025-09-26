@@ -1,19 +1,18 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Input } from "../../../../components/Input/Input"
-import { ArrowLeft, Plus, Search, Trash, Trash2, X } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
 import { Radio } from "../../../../components/Radio/Radio";
 import { OptionChip } from "../../../../components/OptionChip/OptionChip"
 import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
-import { useDispatch, useSelector } from "react-redux";
-import { defaultPlantadosFiltrados, setActiveArbolesPlantados, setFiltroArbolesPlantados, setStartBusqueda } from "../../../../actions/arbolesPlantados.actions";
-import { setActiveArbolesMapeados } from "../../../../actions/arbolesMapeados.actions";
-import { setActiveGeoScouts } from "../../../../actions/geoScouts.actions";
 import { optionsGeo, optionsArbol, optionsCategorias, optionsRiegos, optionsMonitoreos } from "./Utils/filterOptions";
 import { especies } from "../../../../components/mapa/filtro/especies";
-import { setActiveMappedTrees, setActivePlantedTrees } from "../../../../actions/arboles.actions";
+import { resetPlantedTreesFilter, setActiveMappedTrees, setActivePlantedTrees, setPlantedTreesFilter } from "../../../../actions/arboles.actions";
+import { setGeoMode } from "../../../../actions/mapaActions";
+import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 
 export const Sidebar = () => {
   const dispatch = useDispatch()
@@ -27,18 +26,18 @@ export const Sidebar = () => {
   const [fechaDesde, setDesde] = useState("");
   const [fechaHasta, setHasta] = useState("");
 
-  const { arbolesPlantadosFiltrados, statusSearch } = useSelector((state) => state.arbolesPlantados)
+  const { arbolesPlantados } = useSelector((state) => state.arboles)
 
   const handleToggleGeo = (value) => {
     setGeoValues(value)
     if (value === 'normal') {
-      dispatch(setActiveGeoScouts(false))
+      dispatch(setGeoMode("normal"))
     }
     if (value === 'otbs') {
-      dispatch(setActiveGeoScouts(false))
+      dispatch(setGeoMode("otbs"))
     }
     if (value === 'scouts') {
-      dispatch(setActiveGeoScouts(true))
+      dispatch(setGeoMode("scouts"))
     }
   };
 
@@ -103,8 +102,7 @@ export const Sidebar = () => {
         ...calcularFechasRango(selectedMonitoreos)
       };
     }
-
-    dispatch(setFiltroArbolesPlantados({
+    dispatch(setPlantedTreesFilter({
       search,
       selectedCategorias,
       selectedRiegos,
@@ -127,27 +125,27 @@ export const Sidebar = () => {
           closeIcon={search ? true : false}
           closeOnClick={() => setSearch("")}
         />
-        {statusSearch && arbolesPlantadosFiltrados.length > 0 &&
+        {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 &&
           <div className={styles.withResult}>
             <ArrowLeft size={22} strokeWidth={1.75} />
             <button
-              onClick={() => dispatch(defaultPlantadosFiltrados())}
-            >{arbolesPlantadosFiltrados.length} Resultados
+              onClick={() => dispatch(resetPlantedTreesFilter())}
+            >{arbolesPlantados.filteredData.length} Resultados
             </button>
           </div>
         }
-        {statusSearch && !arbolesPlantadosFiltrados.length > 0 &&
+        {arbolesPlantados.isSearching && !arbolesPlantados.filteredData.length > 0 &&
           <div className={styles.withResult}>
             <ArrowLeft size={22} strokeWidth={1.75} />
             <button
-              onClick={() => dispatch(defaultPlantadosFiltrados())}
+              onClick={() => dispatch(resetPlantedTreesFilter())}
             >Volver
             </button>
           </div>
         }
       </div>
       <div className={styles.body}>
-        {!statusSearch && !arbolesPlantadosFiltrados.length > 0 && (
+        {!arbolesPlantados.isSearching && !arbolesPlantados.filteredData.length > 0 && (
           <>
             <div className={styles.rowSidebar}>
               <h3>Geo Visualización</h3>
@@ -275,11 +273,11 @@ export const Sidebar = () => {
                 </Accordion>
                 <Accordion
                   label={"Especies"}
-                  isActive={selectedMonitoreos ? true : false}
+                  isActive={selectedEspecies.length > 0 ? true : false}
                 >
                   <div className={styles.inputOptions}>
                     {especies.map((especie) => (
-                      <Radio
+                      <Checkbox
                         key={especie.id}
                         value={especie.nombreCientifico}
                         onClick={() => handleCheckBox(especie.nombreCientifico)}
@@ -289,9 +287,9 @@ export const Sidebar = () => {
                   </div>
                   <button
                     onClick={() => {
-                      setSelectedMonitoreos("")
+                      setSelectedEspecies([])
                     }}
-                    className={`${styles.clearOptions} ${selectedMonitoreos ? styles.disabled : ""}`}
+                    className={`${styles.clearOptions} ${selectedEspecies ? styles.disabled : ""}`}
                   >
                     <Trash2 size={18} strokeWidth={1.75} />
                     <span>Eliminar filtro</span>
@@ -303,18 +301,18 @@ export const Sidebar = () => {
           </>
         )}
 
-        {statusSearch && arbolesPlantadosFiltrados.length > 0 ?
+        {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 ?
           <div className={styles.resultsWrapper}>
             {
-              arbolesPlantadosFiltrados.map((item) => {
+              arbolesPlantados.filteredData.map((arbol) => {
                 return (
-                  <ResultCard key={item.id} data={item} />
+                  <ResultCard key={arbol.id} arbolData={arbol} />
                 )
               })
             }
           </div>
           :
-          statusSearch && !arbolesPlantadosFiltrados.length > 0 && (
+          arbolesPlantados.isSearching && !arbolesPlantados.filteredData.length > 0 && (
             <>sin resultados</>
           )
         }
@@ -325,12 +323,13 @@ export const Sidebar = () => {
           variant="terciary"
           fullWidth
           disabled={
-            (selectedCategorias || selectedMonitoreos || selectedRiegos) === ""
+            (selectedCategorias || selectedMonitoreos || selectedRiegos) === "" && selectedEspecies.length === 0
           }
           onClick={() => {
             setSelectedCategorias("")
             setSelectedMonitoreos("")
             setSelectedRiegos("")
+            setSelectedEspecies([])
           }}
         >Deshacer</Button>
         <Button variant="secondary" fullWidth onClick={handleAplicar}>Buscar</Button>
