@@ -1,32 +1,27 @@
 import styles from "./MapaPage.module.css";
 
-import { MapWrapper } from "./components/MapWrapper/MapWrapper";
+import { MapWrapper } from './components/MapWrapper/MapWrapper';
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
 import { useDispatch } from "react-redux";
-import React, { useEffect } from "react";
-import { fetchArbolesPlantados } from "../../actions/arbolesPlantados.actions";
-import Modal from "./components/Modal/Modal";
-import { fetchArbolesMapeados } from "../../actions/arbolesMapeados.actions";
-import { fetchGeoScouts } from "../../actions/geoScouts.actions";
-import { startLoadingUsuarios } from "../../actions/mapaActions";
+import { useEffect } from "react";
+import { loadGeoScouts, startLoadingUsuarios } from "../../actions/mapaActions";
 import { fetchMappedTrees, fetchPlantedTrees } from "../../actions/arboles.actions";
+import Modal from "./components/Modal/Modal";
 
-const MapaPage = () => {
-  const dispatch = useDispatch();
+const MapaComponent = () => {
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchArbolesPlantados());
-    dispatch(fetchArbolesMapeados());
-    dispatch(fetchGeoScouts());
-    dispatch(startLoadingUsuarios());
-
-    dispatch(fetchMappedTrees())
+    // NOTE: fetch data, load archivos
     dispatch(fetchPlantedTrees())
-  }, [dispatch]);
+    dispatch(fetchMappedTrees())
+    dispatch(loadGeoScouts())
+    dispatch(startLoadingUsuarios());
+  }, [dispatch])
 
   return (
-    <div className={styles.mainGrid}>
+    <div className={styles.mainGrid} >
       <Sidebar />
       <CardTree />
       <MapWrapper />
@@ -35,4 +30,4 @@ const MapaPage = () => {
   );
 };
 
-export default MapaPage;
+export default MapaComponent;

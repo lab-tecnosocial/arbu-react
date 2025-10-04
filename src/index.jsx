@@ -7,7 +7,7 @@ import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import APIComponent from './components/api/APIComponent';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import MapaComponent from './pages/mapav/MapaComponent';
+import MapaPage from './pages/mapav/MapaPage.jsx';
 import Acerca from './components/acerca/Acerca';
 import {
   ComoEmpezar,
@@ -19,6 +19,7 @@ import {
 } from './components/api/docs'
 import { Navbar } from './components/navbar/Navbar.jsx';
 import { HomePage } from './pages/homev/HomePage.jsx';
+import { Registro } from './pages/Registro.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,9 +29,10 @@ root.render(
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="mapa" element={<MapaComponent />} />
+        <Route path="mapa" element={<MapaPage />} />
         <Route path="ranking" element={<RankingComponent />} />
         <Route path="aprende" element={<CatalogoComponent />} />
+        <Route path="registro" element={<Registro />} />
         <Route path="api" element={<APIComponent />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
           <Route path='referencia-endpoints' element={<ReferenciaEndpoints />} />

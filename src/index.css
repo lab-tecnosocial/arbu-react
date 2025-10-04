@@ -4,7 +4,7 @@
   --green2: #268576;
   --green3: #03b25e;
   --light: #ebf5ee;
-  --white: #fff;
+  --white: #FFFFFF;
   --black: #000;
   --geyser-50: #f5f6f6;
   --geyser-100: #edf0f1;
@@ -109,6 +109,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-y: overlay;
+  background-color: var(--white);
 }
 
 code {
@@ -206,63 +207,71 @@ svg {
 }
 
 .marker-cluster-small {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
+
 .marker-cluster-small div {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
 
 .marker-cluster-medium {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
+
 .marker-cluster-medium div {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
 
 .marker-cluster-large {
-	background-color: #268576 !important;
-	}
-.marker-cluster-large div {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
 
-	/* IE 6-8 fallback colors */
+.marker-cluster-large div {
+  background-color: #268576 !important;
+}
+
+/* IE 6-8 fallback colors */
 .leaflet-oldie .marker-cluster-small {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
+
 .leaflet-oldie .marker-cluster-small div {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
 
 .leaflet-oldie .marker-cluster-medium {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
+
 .leaflet-oldie .marker-cluster-medium div {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
 
 .leaflet-oldie .marker-cluster-large {
-	background-color: #268576 !important;
-	}
+  background-color: #268576 !important;
+}
+
 .leaflet-oldie .marker-cluster-large div {
-	background-color: #268576 !important;
+  background-color: #268576 !important;
 }
 
 .marker-cluster {
-	background-clip: padding-box;
-	border-radius: 20px;
-	}
-.marker-cluster div {
-	width: 30px;
-	height: 30px;
-	margin-left: 5px;
-	margin-top: 5px;
+  background-clip: padding-box;
+  border-radius: 20px;
+}
 
-	text-align: center;
-	border-radius: 15px;
-	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
-	color: white;
-	}
+.marker-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+
+  text-align: center;
+  border-radius: 15px;
+  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  color: white;
+}
+
 .marker-cluster span {
-	line-height: 30px;
-	}
+  line-height: 30px;
+}
