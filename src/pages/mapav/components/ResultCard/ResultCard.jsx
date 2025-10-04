@@ -1,16 +1,17 @@
 import { ClipboardPlus, Droplet, Heart, MapPinCheckInside, MoveVertical } from "lucide-react"
 import styles from "./ResultCard.module.css"
 import { useDispatch } from "react-redux"
-import { setModalState } from "../../../../actions/mapaActions"
-// import { selectArbolPlantado, setActiveArbolPlantado } from "../../../../actions/arbolesPlantados.actions"
+import { setPanelState, setSelectedCoords, setSelectedTree } from "../../../../actions/mapaActions"
 
-export const ResultCard = ({ arbolData }) => {
+export const ResultCard = ({ index, arbolData }) => {
   const dispatch = useDispatch()
-  // const obj = Object.keys(data.monitoreos)[0]
-  // const { sanidad, altura } = data.monitoreos[obj]
+
   const handleButton = () => {
-    dispatch(setModalState("OPEN", arbolData))
+    dispatch(setPanelState("OPEN"))
+    dispatch(setSelectedTree(index, arbolData))
+    dispatch(setSelectedCoords([arbolData.latitud, arbolData.longitud], 18))
   }
+
   return (
     <button className={styles.resultCard}
       onClick={handleButton}
