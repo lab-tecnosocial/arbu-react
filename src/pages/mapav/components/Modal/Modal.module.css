@@ -13,14 +13,13 @@
 
 .modal {
   background: white;
-  padding: 24px;
   border-radius: 16px;
+  border: 1px solid var(--geyser-200);
   max-width: 500px;
   width: 100%;
   position: relative;
-  max-height: 90vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  max-height: 80vh;
+  overflow: hidden;
 }
 
 .closeButton {
