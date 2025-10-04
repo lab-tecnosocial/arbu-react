@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "../../../../components/Input/Input"
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
@@ -9,10 +8,11 @@ import { OptionChip } from "../../../../components/OptionChip/OptionChip"
 import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
 import { optionsGeo, optionsArbol, optionsCategorias, optionsRiegos, optionsMonitoreos } from "./Utils/filterOptions";
-import { especies } from "../../../../components/mapa/filtro/especies";
+import { especies } from "../../utils/especies";
 import { resetPlantedTreesFilter, setActiveMappedTrees, setActivePlantedTrees, setPlantedTreesFilter } from "../../../../actions/arboles.actions";
 import { setGeoMode } from "../../../../actions/mapaActions";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
+import { Input } from "../../../../components/input/Input";
 
 export const Sidebar = () => {
   const dispatch = useDispatch()
@@ -304,9 +304,9 @@ export const Sidebar = () => {
         {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 ?
           <div className={styles.resultsWrapper}>
             {
-              arbolesPlantados.filteredData.map((arbol) => {
+              arbolesPlantados.filteredData.map((arbol, i) => {
                 return (
-                  <ResultCard key={arbol.id} arbolData={arbol} />
+                  <ResultCard index={i} key={arbol.id} arbolData={arbol} />
                 )
               })
             }
