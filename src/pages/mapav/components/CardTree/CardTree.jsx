@@ -5,18 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { ArrowDown01, Calendar, Check, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
 import { Chip } from "../../../../components/Chip/Chip";
 import { selectPlantedTree } from "../../../../actions/arboles.actions";
-import { setModalState } from "../../../../actions/mapaActions";
+import { setModalState, setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
 
 export const CardTree = () => {
   const dispatch = useDispatch()
   const contentRef = useRef(null)
-  const { usuarios, modalState, selectedTree } = useSelector((state) => state.mapa)
+  const { usuarios, panelState, selectedTree, index } = useSelector((state) => state.mapa)
+  const { arbolesPlantados } = useSelector((state) => state.arboles)
   const [monitoreos, setMonitoreos] = useState([])
   const [riegos, setRiegos] = useState([])
-
-  // const nk = Object.keys(selectedTree).length
-  // console.log("selectedTree", selectedTree, nk)
-
 
   const getFullNameUser = (id) => {
     if (selectedTree && usuarios) {
@@ -57,8 +54,9 @@ export const CardTree = () => {
     }
   }, [selectedTree])
 
+
   useEffect(() => {
-    if (modalState === "OPEN") {
+    if (panelState === "OPEN") {
       animate(contentRef.current, {
         minWidth: "500px",
         width: "500px",
@@ -67,7 +65,7 @@ export const CardTree = () => {
         ease: 'outQuad',
         display: "block",
       })
-    } else if (modalState === "CLOSE") {
+    } else if (panelState === "CLOSE") {
       animate(contentRef.current, {
         minWidth: "0px",
         width: "0px",
@@ -77,16 +75,12 @@ export const CardTree = () => {
         onComplete: () => {
           animate(contentRef.current, {
             display: "none",
-            opacity: 0,
-            // duration: 100,
-            ease: 'outQuad',
+            duration: 300,
           })
         }
       })
     }
-  }, [modalState])
-
-  if (Object.keys(selectedTree).length === 0) return null;
+  }, [panelState, selectedTree])
 
   return (
     <div
@@ -98,15 +92,34 @@ export const CardTree = () => {
           <span>Detalles de Árbol</span>
           <div className={styles.topBarOptions}>
             <span className={styles.topBarIndicator}>
-              14 de 18
+              {index + 1} de {arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length}
             </span>
             <div className={styles.buttons}>
-              <button><ChevronLeft size={20} strokeWidth={1.75} /></button>
-              <button><ChevronRight size={20} strokeWidth={1.75} /></button>
+              <button
+                onClick={() => {
+                  if (index > 0) {
+                    const newIndex = index - 1;
+                    const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
+                    dispatch(setSelectedTree(newIndex, newTree));
+                  }
+                }}
+              ><ChevronLeft size={20} strokeWidth={1.75} /></button>
+              <button
+                onClick={() => {
+                  const maxIndex = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredDatal.length : arbolesPlantados.data.length;
+                  if (index < maxIndex - 1) {
+                    const newIndex = index + 1;
+                    const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
+                    dispatch(setSelectedTree(newIndex, newTree));
+                  }
+                }}
+              ><ChevronRight size={20} strokeWidth={1.75} /></button>
             </div>
             <button
               className={styles.closeButton}
-              onClick={() => dispatch(setModalState("CLOSE", selectedTree))}
+              onClick={() => {
+                dispatch(setPanelState("CLOSE"))
+              }}
             >
               <X strokeWidth={1.75} />
             </button>
@@ -119,22 +132,31 @@ export const CardTree = () => {
                 {selectedTree.nombreComun}
               </h2>
               <div className={styles.headerDetails}>
-                {monitoreos.length > 0 ?
-                  <Chip label="Monitoreado" variant="success" />
-                  :
-                  <Chip label="Monitoreado" variant="warning" />
+                {
+                  monitoreos.length > 0 ?
+                    <Chip label="Monitoreado" variant="success" />
+                    :
+                    <Chip label="Monitoreado" variant="warning" />
                 }
-                {riegos.length > 0 ?
-                  <Chip label="Regado" variant="success" />
-                  :
-                  <Chip label="Sin regar" variant="warning" />
+                {
+                  !Object.hasOwn(selectedTree, "mapeadoPor") ?
+                    (riegos.length > 0 ?
+                      <Chip label="Regado" variant="success" />
+                      :
+                      <Chip label="Sin regar" variant="warning" />
+                    ) : (null)
                 }
               </div>
             </div>
             <div className={styles.info}>
               <div className={styles.picture}>
                 {monitoreos.length > 0 &&
-                  <img src={monitoreos[0].fotografia} alt="monitoreo" loading="lazy" />
+                  (
+                    Object.hasOwn(selectedTree, "mapeadoPor") ?
+                      <img src={monitoreos[0].fotoArbolCompleto} alt="monitoreo" loading="lazy" />
+                      :
+                      <img src={monitoreos[0].fotografia} alt="monitoreo" loading="lazy" />
+                  )
                 }
               </div>
               <div className={styles.details}>
@@ -152,6 +174,12 @@ export const CardTree = () => {
                 </div>
               </div>
             </div>
+            <div className={styles.estadoMapeo}>
+              <div className={styles.estadoImg}>Raiz o base</div>
+              <div className={styles.estadoImg}>Corteza</div>
+              <div className={styles.estadoImg}>Hoja</div>
+              <div className={styles.estadoImg}>Floor</div>
+            </div>
           </div>
           <div className="line"></div>
           <div className={styles.treeFeatures}>
@@ -159,7 +187,7 @@ export const CardTree = () => {
               <div className={styles.featureIcon}><Heart size={20} /></div>
               <div className={styles.detail}>
                 <span className={styles.labelFirst}>Estado</span>
-                <span className={styles.labelSecond}>{selectedTree.estado}</span>
+                <span className={styles.labelSecond}>{Object.hasOwn(selectedTree, "estado") ? selectedTree.estado : "mapeado"}</span>
               </div>
             </div>
             <div className={styles.feature}>
@@ -169,27 +197,33 @@ export const CardTree = () => {
                 <span className={styles.labelSecond}>{monitoreos.length > 0 && monitoreos[0].altura}</span>
               </div>
             </div>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}><Droplets size={20} /></div>
-              <div className={styles.detail}>
-                <span className={styles.labelFirst}>Riegos</span>
-                <span className={styles.labelSecond}>{riegos.length}</span>
+            {
+              Object.hasOwn(selectedTree, "riegos") &&
+              <div className={styles.feature}>
+                <div className={styles.featureIcon}><Droplets size={20} /></div>
+                <div className={styles.detail}>
+                  <span className={styles.labelFirst}>Riegos</span>
+                  <span className={styles.labelSecond}>{riegos.length}</span>
+                </div>
               </div>
-            </div>
+            }
             <div className={styles.feature}>
               <div className={styles.featureIcon}><MapPinCheckInside size={20} /></div>
               <div className={styles.detail}>
                 <span className={styles.labelFirst}>Monitoreos</span>
-                <span className={styles.labelSecond}>{selectedTree.estado}</span>
+                <span className={styles.labelSecond}>{monitoreos.length}</span>
               </div>
             </div>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}><ShieldUser size={20} /></div>
-              <div className={styles.detail}>
-                <span className={styles.labelFirst}>Adoptado por</span>
-                <span className={styles.labelSecond}>{selectedTree.estado}</span>
+            {
+              Object.hasOwn(selectedTree, 'usuariosQueAdoptaron') &&
+              <div className={styles.feature}>
+                <div className={styles.featureIcon}><ShieldUser size={20} /></div>
+                <div className={styles.detail}>
+                  <span className={styles.labelFirst}>Adoptado por</span>
+                  <span className={styles.labelSecond}>{getFullNameUser(selectedTree.usuariosQueAdoptaron[0])}</span>
+                </div>
               </div>
-            </div>
+            }
             <div className={styles.feature}>
               <div className={styles.featureIcon}><MapPinned size={20} /></div>
               <div className={styles.detail}>
@@ -206,9 +240,12 @@ export const CardTree = () => {
                 const date = toDate(item.timestamp)
                 return (
                   <div key={item.monitoreoRealizadoPor} className={styles.monitoring}>
-                    <div className={styles.monitoringPicture}>{monitoreos.length > 0 &&
-                      <img src={monitoreos[0].fotografia} alt="monitoreo" loading="lazy" />
-                    }
+                    <div className={styles.monitoringPicture}>
+                      {Object.hasOwn(selectedTree, "mapeadoPor") && monitoreos.length > 0 ?
+                        <img src={monitoreos[0].fotoArbolCompleto} alt="monitoreo" loading="lazy" />
+                        :
+                        <img src={monitoreos[0].fotografia} alt="monitoreo" loading="lazy" />
+                      }
                     </div>
                     <div className={styles.monitoringInfo}>
                       <div className={styles.detail}>
@@ -231,13 +268,24 @@ export const CardTree = () => {
                         </div>
                         <span className={styles.labelSecond}>{item.altura}</span>
                       </div>
-                      <div className={styles.detail}>
-                        <div className={styles.labelFirst}>
-                          <ShieldPlus size={16} />
-                          <span>Sanidad</span>
-                        </div>
-                        <span className={styles.labelSecond}>{item.sanidad}</span>
-                      </div>
+                      {
+                        Object.hasOwn(selectedTree, "mapeadoPor") ?
+                          <div className={styles.detail}>
+                            <div className={styles.labelFirst}>
+                              <MoveVertical size={16} />
+                              <span>Diametro</span>
+                            </div>
+                            <span className={styles.labelSecond}>{item.diametroAlturaPecho}</span>
+                          </div>
+                          :
+                          <div className={styles.detail}>
+                            <div className={styles.labelFirst}>
+                              <ShieldPlus size={16} />
+                              <span>Sanidad</span>
+                            </div>
+                            <span className={styles.labelSecond}>{item.sanidad}</span>
+                          </div>
+                      }
                     </div>
                   </div>
                 )

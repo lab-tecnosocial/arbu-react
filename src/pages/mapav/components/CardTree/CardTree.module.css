@@ -2,6 +2,9 @@
   border: 1px solid var(--geyser-200);
   border-radius: 16px;
   overflow: hidden;
+  display: none;
+  width: 0px;
+  max-width: 0px;
 }
 
 .cardInner {
@@ -126,6 +129,20 @@
             font-weight: 400;
           }
         }
+      }
+    }
+
+    .estadoMapeo {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+
+      .estadoImg {
+        width: 100%;
+        background-color: var(--geyser-100);
+        padding: 8px;
+        border-radius: 6px;
       }
     }
   }
