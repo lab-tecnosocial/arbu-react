@@ -1,5 +1,5 @@
 import styles from "./MapWrapper.module.css"
-import { loadGeoScouts } from "../../../../actions/mapaActions";
+import { loadGeoScouts, setModalState, setSelectedCoords, setShowTreeMappingForm } from "../../../../actions/mapaActions";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point, polygon } from '@turf/helpers';
 import { useEffect, useState, useMemo, useRef } from "react";
@@ -14,21 +14,16 @@ import { customIcon } from "./Utils/CustomIcon";
 import { ClickableMarker } from "./Utils/ClickableMarker";
 import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
 import ClusterArbolesMapeados from "./Utils/ClusterArbolesMapeados";
+import { TreeMappingForm } from "../TreeMappingForm/TreeMappingForm";
 
 export const MapWrapper = () => {
   const dispatch = useDispatch();
   const layersRef = useRef(new Map());
-  const [clickPosition, setClickPosition] = useState(null);
   const {
-    active,
-    filtro,
-    filtroAplied,
-    zonaSeleccionada,
     geoScouts,
-    geoOtbs,
-    isActiveGeoScouts,
-    isActiveGeoOtbs,
     geoMode,
+    selectedCoords,
+    showTreeMappingForm
   } = useSelector((state) => state.mapa);
 
   const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles)
@@ -115,15 +110,14 @@ export const MapWrapper = () => {
     if (!geoScouts) dispatch(loadGeoScouts());
   }, [geoScouts]);
 
-
   return (
     <div className={styles.map}>
       {
-        clickPosition && (
+        selectedCoords && (
           <div className={styles.mapControls}>
-            <button>Adoptar Arbol</button>
-            <button>Mapear Arbol</button>
-            <button onClick={() => setClickPosition(null)}><X /></button>
+            {/* <button onClick={dispatch(setShowTreeMappingForm(true))}>Adoptar Arbol</button> */}
+            <button onClick={() => dispatch(setModalState("OPEN"))} >Mapear Arbol</button>
+            <button onClick={() => dispatch(setSelectedCoords(null))}><X /></button>
           </div>
         )
       }
@@ -141,20 +135,18 @@ export const MapWrapper = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
 
-        <MapEvents setMarkerCoords={setClickPosition} markerCoords={clickPosition} />
-        <ClickableMarker position={clickPosition} icon={customIcon} />
+        <MapEvents />
+        <ClickableMarker position={selectedCoords} icon={customIcon} />
 
         {geoMode === "scouts" && <GeoJSON data={geoScouts} onEachFeature={onEachFeature} />}
 
         <ClusterArbolesPlantados
           arbolesPlantados={arbolesPlantados}
           customIcon={customIcon}
-          setClickPosition={setClickPosition}
         />
         <ClusterArbolesMapeados
           arbolesMapeados={arbolesMapeados}
           customIcon={customIcon}
-          setClickPosition={setClickPosition}
         />
       </MapContainer>
     </div>

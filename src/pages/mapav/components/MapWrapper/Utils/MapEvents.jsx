@@ -1,24 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { useMap, useMapEvents } from "react-leaflet";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedCoords } from "../../../../../actions/mapaActions";
 
-export const MapEvents = ({ setMarkerCoords, markerCoords }) => {
+export const MapEvents = () => {
+  const dispatch = useDispatch();
+  const { selectedCoords, zoom, duration } = useSelector((state) => state.mapa)
   const map = useMap();
   useMapEvents({
     click(e) {
       const { lat, lng } = e.latlng;
-      setMarkerCoords([lat, lng]);
-      map.flyTo([lat, lng], map.getZoom(), { duration: 1.5 });
+      dispatch(setSelectedCoords([lat, lng]));
     },
   })
 
   useEffect(() => {
-    if (markerCoords) {
+    if (selectedCoords) {
       setTimeout(() => {
         map.invalidateSize();
-        map.flyTo(markerCoords, map.getZoom(), { duration: .5 });
-      }, 100);
+        map.flyTo(selectedCoords, zoom === 18 ? zoom : map.getZoom(), { duration: duration });
+      }, 200);
     }
-  }, [markerCoords, map]);
+  }, [selectedCoords, map]);
 
   return null
 }
