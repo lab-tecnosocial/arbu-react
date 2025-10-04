@@ -1,11 +1,17 @@
+.formContainer {
+  padding: 32px;
+  background-color: lightblue;
+}
+
 .form {
   max-width: 450px;
   min-width: 450px;
   width: 100%;
-  margin: 0 auto;
-  overflow: hidden;
-  overflow-y: auto;
+  /* margin: 0 auto; */
+  /* overflow-x: hidden; */
+  /* overflow-y: scroll; */
   position: relative;
+  /* height: fit-content; */
 }
 
 .title {
@@ -14,6 +20,7 @@
 
 .field {
   margin-bottom: 24px;
+  background-color: lightblue;
 }
 
 .field label {
@@ -24,6 +31,7 @@
 
 .field input[type="file"] {
   margin-bottom: 10px;
+  background-color: lightblue;
 }
 
 .submitActions {
@@ -94,4 +102,3 @@
   align-items: start;
   gap: 5px;
 }
-
