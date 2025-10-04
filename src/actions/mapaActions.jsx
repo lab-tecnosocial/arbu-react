@@ -4,15 +4,38 @@ import { types } from "../types/types"
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const setModalState = (modalState, selectedTree = {}) => {
+export const setPanelState = (panelState) => {
+  return {
+    type: types.SET_PANEL_STATE,
+    payload: panelState,
+  }
+}
+
+export const setModalState = (modalState) => {
   return {
     type: types.SET_MODAL_STATE,
+    payload: modalState,
+  }
+}
+
+export const setSelectedTree = (index, selectedTree) => {
+  return {
+    type: types.SET_SELECTED_TREE,
     payload: {
-      modalState,
+      index,
       selectedTree
     }
   }
 }
+
+export const setSelectedCoords = (coords = [-17.3917, -66.1448], zoom = 16, duration = 1.5) => ({
+  type: types.SET_SELECTED_COORDS,
+  payload: {
+    coords,
+    zoom,
+    duration
+  }
+})
 
 export const setActiveGeoScouts = (value) => ({
   type: types.SET_ACTIVE_GEO_SCOUTS,
@@ -81,12 +104,12 @@ export const setShowTreeMappingForm = (value) => {
   }
 }
 
-export const setShowTreeAdoptForm = (value) => {
-  return {
-    type: types.MAPA_SHOW_TREE_ADOPT_FORM,
-    payload: value
-  }
-}
+// export const setShowTreeAdoptForm = (value) => {
+//   return {
+//     type: types.MAPA_SHOW_TREE_ADOPT_FORM,
+//     payload: value
+//   }
+// }
 
 export const activeArbol = (id, arbol) => {
   return {
