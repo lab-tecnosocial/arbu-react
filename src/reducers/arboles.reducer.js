@@ -101,6 +101,8 @@ const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
         return matchesText && matchesSpecies && matchesWatering && matchesMonitoring;
       });
 
+      console.log("filteredData", filteredData);
+
       return {
         ...state,
         filteredData,

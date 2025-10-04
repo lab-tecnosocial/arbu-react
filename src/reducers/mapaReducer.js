@@ -17,6 +17,8 @@ const initialState = {
 
   // Modal
   modalState: "CLOSE",
+  panelState: "CLOSE",
+
   selectedTree: {},
 
   geoScouts: null,
@@ -25,10 +27,28 @@ const initialState = {
   geoOtbs: null,
   isActiveGeoOtbs: false,
   geoMode: "normal",
+  index: null,
+
+  selectedCoords: null,
+  zoom: 15,
+  duration: 1.5,
+  showTreeMappingForm: false,
 }
 
 export const mapaReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.MAPA_SHOW_TREE_MAPPING_FORM:
+      return {
+        ...state,
+        showTreeMappingForm: action.payload
+      }
+    case types.SET_SELECTED_COORDS:
+      return {
+        ...state,
+        selectedCoords: action.payload.coords,
+        zoom: action.payload.zoom,
+        duration: action.payload.duration
+      }
     case types.SET_GEO_MODE:
       return {
         ...state,
@@ -63,8 +83,18 @@ export const mapaReducer = (state = initialState, action) => {
       return {
         ...state,
         // NOTE: Analize whether a modalState and selectedTree should be in a separate reducer
-        modalState: action.payload.modalState,
+        modalState: action.payload,
+      }
+    case types.SET_PANEL_STATE:
+      return {
+        ...state,
+        panelState: action.payload
+      }
+    case types.SET_SELECTED_TREE:
+      return {
+        ...state,
         selectedTree: action.payload.selectedTree,
+        index: action.payload.index
       }
     case types.mapaArbolSeleccionado:
       return {
