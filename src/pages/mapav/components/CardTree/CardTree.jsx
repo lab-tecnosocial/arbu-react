@@ -1,5 +1,5 @@
 import styles from "./CardTree.module.css"
-import { animate } from "animejs";
+import { animate, createScope } from "animejs";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowDown01, Calendar, Check, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
@@ -14,6 +14,9 @@ export const CardTree = () => {
   const { arbolesPlantados } = useSelector((state) => state.arboles)
   const [monitoreos, setMonitoreos] = useState([])
   const [riegos, setRiegos] = useState([])
+  const [isLargeScreen, setIsLargeScreen] = useState(
+    window.matchMedia('(min-width: 768px)').matches
+  );
 
   const getFullNameUser = (id) => {
     if (selectedTree && usuarios) {
@@ -54,12 +57,25 @@ export const CardTree = () => {
     }
   }, [selectedTree])
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+    const handleMediaQueryChange = (e) => {
+      setIsLargeScreen(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleMediaQueryChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleMediaQueryChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (panelState === "OPEN") {
       animate(contentRef.current, {
-        minWidth: "500px",
-        width: "500px",
+        minWidth: isLargeScreen ? "500px" : "100%",
+        width: isLargeScreen ? "500px" : "100%",
         opacity: 1,
         duration: 300,
         ease: 'outQuad',
@@ -69,7 +85,7 @@ export const CardTree = () => {
       animate(contentRef.current, {
         minWidth: "0px",
         width: "0px",
-        opacity: 0,
+        opacity: isLargeScreen ? 1 : 0,
         duration: 300,
         ease: 'linear',
         onComplete: () => {
@@ -80,12 +96,12 @@ export const CardTree = () => {
         }
       })
     }
-  }, [panelState, selectedTree])
+  }, [panelState, selectedTree, isLargeScreen])
 
   return (
     <div
       ref={contentRef}
-      className={styles.cardTree}
+      className={isLargeScreen ? styles.cardTree : styles.cardTreeMobile}
     >
       <div className={styles.cardInner}>
         <div className={styles.topBar}>

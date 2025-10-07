@@ -1,4 +1,5 @@
 .sidebar {
+  /* position: relative; */
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
@@ -6,12 +7,17 @@
   max-height: calc(100vh - 124px);
   width: 100%;
   max-width: 320px;
+  transition: .3s ease;
+}
+
+.sidebar.collapsed {
+  max-height: 56px;
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 
   .withResult {
     display: flex;
@@ -91,4 +97,37 @@
 
 .disabled {
   color: var(--persian-red-500);
+}
+
+.headerActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-width: 50px;
+  border: 1px solid var(--geyser-200);
+  border-radius: 12px;
+  color: var(--green2);
+}
+
+.toggleBtn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.content.collapsed {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Trash2 } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
 import { Radio } from "../../../../components/Radio/Radio";
@@ -25,6 +25,7 @@ export const Sidebar = () => {
   const [selectedEspecies, setSelectedEspecies] = useState([])
   const [fechaDesde, setDesde] = useState("");
   const [fechaHasta, setHasta] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const { arbolesPlantados } = useSelector((state) => state.arboles)
 
@@ -112,19 +113,30 @@ export const Sidebar = () => {
   }
 
   return (
-    <div className={styles.sidebar}>
+    <div
+      className={`${styles.sidebar} 
+        ${isCollapsed ? styles.collapsed : ""}`}
+    >
       <div className={styles.header}>
-        <Input
-          placeholder="Buscar..."
-          size="larger"
-          fullWidth
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          searchIcon
-          searchOnClick={handleAplicar}
-          closeIcon={search ? true : false}
-          closeOnClick={() => setSearch("")}
-        />
+        <div className={styles.headerActions}>
+          <Input
+            placeholder="Buscar..."
+            size="larger"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            searchIcon
+            searchOnClick={handleAplicar}
+            closeIcon={search ? true : false}
+            closeOnClick={() => setSearch("")}
+            fullWidth
+          />
+          <button className={styles.toggleBtn}
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          >
+            {isCollapsed ? <ChevronDown size={24} strokeWidth={1.75} /> : <ChevronUp size={24} strokeWidth={1.75} />}
+          </button>
+        </div>
+
         {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 &&
           <div className={styles.withResult}>
             <ArrowLeft size={22} strokeWidth={1.75} />

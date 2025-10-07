@@ -7,6 +7,21 @@
   max-width: 0px;
 }
 
+.cardTreeMobile {
+  border: 1px solid var(--geyser-200);
+  border-radius: 16px;
+  overflow: hidden;
+  display: none;
+  width: 0px;
+  max-width: 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--white);
+  z-index: 9999;
+}
+
 .cardInner {
   min-width: 500px;
   max-width: 500px;
@@ -260,5 +275,17 @@
         }
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .cardTree {
+    display: none;
+    height: 100vh;
+  }
+
+  .cardInner {
+    min-width: 100vw;
+    min-height: 100vh;
   }
 }
