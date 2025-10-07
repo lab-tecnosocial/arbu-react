@@ -2,8 +2,10 @@ import React, { useMemo, useState } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { Box, Button, Chip } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import TreeCardPopup from "./TreeCardPopup";
+import * as XLSX from "xlsx";
 
 const TablaMapeo = () => {
   const { mapeadores } = useMapeoScout();
@@ -18,6 +20,27 @@ const TablaMapeo = () => {
   const handleClosePopup = () => {
     setTreePopupOpen(false);
     setSelectedMapper(null);
+  };
+
+  const handleExportToExcel = () => {
+    // Preparar datos para exportar
+    const dataToExport = mapeadores.map((mapper) => ({
+      Nombre: mapper.nombre,
+      Email: mapper.email,
+      Estado: mapper.estado,
+      Grupo: mapper.grupo,
+      Rama: mapper.rama,
+      "Árboles Mapeados": mapper.cantidadArbolesMapeados || 0,
+    }));
+
+    // Crear workbook y worksheet
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Participantes");
+
+    // Generar archivo
+    const fecha = new Date().toISOString().split("T")[0];
+    XLSX.writeFile(wb, `Mapeo_Participantes_${fecha}.xlsx`);
   };
 
   const columns = useMemo(
@@ -43,8 +66,8 @@ const TablaMapeo = () => {
               cell.getValue() === "Aceptado"
                 ? "success"
                 : cell.getValue() === "Pendiente"
-                ? "warning"
-                : "default"
+                  ? "warning"
+                  : "default"
             }
             size="small"
           />
@@ -105,6 +128,22 @@ const TablaMapeo = () => {
 
   return (
     <Box sx={{ maxWidth: "100%", overflow: "auto" }}>
+      <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          variant="contained"
+          startIcon={<FileDownloadIcon />}
+          onClick={handleExportToExcel}
+          sx={{
+            fontFamily: "Poppins",
+            backgroundColor: "#268576",
+            "&:hover": {
+              backgroundColor: "#1f6b5f",
+            },
+          }}
+        >
+          Exportar a Excel
+        </Button>
+      </Box>
       <MaterialReactTable
         columns={columns}
         data={mapeadores}

@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import L from "leaflet";
 import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { Box, FormControl, InputLabel, Select, MenuItem, Chip } from "@mui/material";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import locationIcon from "../mapa/location.svg";
 import "../mapa/MarkerCluster.Default.css";
@@ -14,6 +15,8 @@ const customIcon = new L.Icon({
 
 const MapaMapeo = () => {
   const { arbolesMapeados, mapeadores } = useMapeoScout();
+  const [filtroGrupo, setFiltroGrupo] = useState("todos");
+  const [filtroRama, setFiltroRama] = useState("todos");
 
   // Create a map of mapeadoPor ID to mapper info
   const mapeadoresMap = useMemo(() => {
@@ -22,6 +25,17 @@ const MapaMapeo = () => {
       map[mapper.id] = mapper;
     });
     return map;
+  }, [mapeadores]);
+
+  // Obtener lista única de grupos y ramas
+  const grupos = useMemo(() => {
+    const uniqueGrupos = [...new Set(mapeadores.map((m) => m.grupo).filter(Boolean))];
+    return uniqueGrupos.sort();
+  }, [mapeadores]);
+
+  const ramas = useMemo(() => {
+    const uniqueRamas = [...new Set(mapeadores.map((m) => m.rama).filter(Boolean))];
+    return uniqueRamas.sort();
   }, [mapeadores]);
 
   const formatDate = (timestamp) => {
@@ -38,9 +52,22 @@ const MapaMapeo = () => {
 
   const markers = useMemo(() => {
     // Filter trees that have valid coordinates
-    const validTrees = arbolesMapeados.filter(
+    let validTrees = arbolesMapeados.filter(
       (tree) => tree.latitud && tree.longitud
     );
+
+    // Aplicar filtros
+    if (filtroGrupo !== "todos" || filtroRama !== "todos") {
+      validTrees = validTrees.filter((tree) => {
+        const mapper = mapeadoresMap[tree.mapeadoPor];
+        if (!mapper) return false;
+
+        const cumpleGrupo = filtroGrupo === "todos" || mapper.grupo === filtroGrupo;
+        const cumpleRama = filtroRama === "todos" || mapper.rama === filtroRama;
+
+        return cumpleGrupo && cumpleRama;
+      });
+    }
 
     return validTrees.map((tree) => {
       const mapper = mapeadoresMap[tree.mapeadoPor];
@@ -154,10 +181,76 @@ const MapaMapeo = () => {
         </Marker>
       );
     });
-  }, [arbolesMapeados, mapeadoresMap]);
+  }, [arbolesMapeados, mapeadoresMap, filtroGrupo, filtroRama]);
+
+  const totalFiltrado = markers.length;
 
   return (
-    <div style={{ width: "100%", height: "70vh" }}>
+    <div style={{ width: "100%", height: "80vh" }}>
+      {/* Filtros */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 2,
+          flexWrap: "wrap",
+          alignItems: "center",
+          backgroundColor: "#f5f5f5",
+          padding: 2,
+          borderRadius: 2,
+        }}
+      >
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel id="filtro-grupo-label" sx={{ fontFamily: "Poppins" }}>
+            Filtrar por Grupo
+          </InputLabel>
+          <Select
+            labelId="filtro-grupo-label"
+            value={filtroGrupo}
+            label="Filtrar por Grupo"
+            onChange={(e) => setFiltroGrupo(e.target.value)}
+            sx={{ fontFamily: "Poppins", backgroundColor: "#fff" }}
+          >
+            <MenuItem value="todos" sx={{ fontFamily: "Poppins" }}>
+              Todos los grupos
+            </MenuItem>
+            {grupos.map((grupo) => (
+              <MenuItem key={grupo} value={grupo} sx={{ fontFamily: "Poppins" }}>
+                {grupo}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel id="filtro-rama-label" sx={{ fontFamily: "Poppins" }}>
+            Filtrar por Rama
+          </InputLabel>
+          <Select
+            labelId="filtro-rama-label"
+            value={filtroRama}
+            label="Filtrar por Rama"
+            onChange={(e) => setFiltroRama(e.target.value)}
+            sx={{ fontFamily: "Poppins", backgroundColor: "#fff" }}
+          >
+            <MenuItem value="todos" sx={{ fontFamily: "Poppins" }}>
+              Todas las ramas
+            </MenuItem>
+            {ramas.map((rama) => (
+              <MenuItem key={rama} value={rama} sx={{ fontFamily: "Poppins" }}>
+                {rama}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Chip
+          label={`Mostrando ${totalFiltrado} árbol${totalFiltrado !== 1 ? "es" : ""}`}
+          color="primary"
+          sx={{ fontFamily: "Poppins", fontWeight: "bold", ml: "auto" }}
+        />
+      </Box>
+
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
