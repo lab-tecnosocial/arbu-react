@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import MapaComponent from './components/mapa/MapaComponent';
 import Acerca from './components/acerca/Acerca';
+import MapeoScoutComponent from './components/mapeo-scout/MapeoScoutComponent';
 import {
   ComoEmpezar,
   ReferenciaEndpoints,
@@ -37,6 +38,7 @@ root.render(
         <Route path="mapa" element={<MapaComponent />} />
         <Route path="ranking" element={<RankingComponent />} />
         <Route path="aprende" element={<CatalogoComponent />} />
+        <Route path="mapeo-scout" element={<MapeoScoutComponent />} />
         <Route path="api" element={<APIComponent />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
           <Route path='referencia-endpoints' element={<ReferenciaEndpoints />} />
