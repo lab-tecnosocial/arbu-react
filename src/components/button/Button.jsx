@@ -7,6 +7,7 @@ export const Button = ({
   disabled,
   fullWidth,
   icon,
+  className,
   ...props
 }) => {
   return (
@@ -17,6 +18,7 @@ export const Button = ({
         ${isLoading ? styles.loading : ""} 
         ${icon ? styles.spaceIcon : ""}
         ${fullWidth ? styles.fullWidth : ""}
+        ${className ? className : ""}
       `}
       disabled={isLoading || disabled}
       {...props}

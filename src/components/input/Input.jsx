@@ -81,7 +81,12 @@ export const Input = ({
   }
 
   return (
-    <div className={styles.inputWrapper} style={{ opacity: disabled ? 0.5 : 1 }}>
+    <div className={
+      `
+        ${styles.inputWrapper}
+        ${fullWidth ? styles.fullWidth : ""}
+      `
+    } style={{ opacity: disabled ? 0.5 : 1 }}>
       {label && (
         <label className={styles.label}>
           {label}
