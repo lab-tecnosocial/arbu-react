@@ -25,6 +25,7 @@ import {
 import IniciarSesion from './components/autenticacion/IniciarSesion.jsx';
 import ProtectedRoute from './components/autenticacion/ProtectedRoute.jsx';
 import PublicRoute from './components/autenticacion/PublicRoute.jsx';
+import NoAutorizado from './components/autenticacion/NoAutorizado.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 import Tabla from './components/tabla/Tabla.jsx';
 
@@ -38,7 +39,6 @@ root.render(
         <Route path="mapa" element={<MapaComponent />} />
         <Route path="ranking" element={<RankingComponent />} />
         <Route path="aprende" element={<CatalogoComponent />} />
-        <Route path="mapeo-scout" element={<MapeoScoutComponent />} />
         <Route path="api" element={<APIComponent />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
           <Route path='referencia-endpoints' element={<ReferenciaEndpoints />} />
@@ -51,7 +51,10 @@ root.render(
         <Route path="iniciar-sesion" element={<PublicRoute element={<IniciarSesion />} />} />
 
         <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-        <Route path="tabla" element={<ProtectedRoute element={<Tabla />} />} />
+        <Route path="tabla" element={<ProtectedRoute element={<Tabla />} requiresAuthorization={true} />} />
+        <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} requiresAuthorization={true} />} />
+
+        <Route path="no-autorizado" element={<NoAutorizado />} />
 
         <Route path="*" element={<main style={{ padding: "1rem" }}><h2>Ho hay nada aquí!</h2></main>} />
       </Routes>
