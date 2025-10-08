@@ -5,12 +5,64 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import TreeCardPopup from "./TreeCardPopup";
+import FiltroFechas from "./FiltroFechas";
 import * as XLSX from "xlsx";
 
 const TablaMapeo = () => {
-  const { mapeadores } = useMapeoScout();
+  const { mapeadores, arbolesMapeados } = useMapeoScout();
   const [treePopupOpen, setTreePopupOpen] = useState(false);
   const [selectedMapper, setSelectedMapper] = useState(null);
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+
+  // Función para convertir timestamp de Firebase a Date
+  const convertTimestamp = (timestamp) => {
+    if (!timestamp) return null;
+    if (timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000);
+    }
+    return new Date(timestamp);
+  };
+
+  // Función para obtener el timestamp del árbol (está dentro del primer monitoreo)
+  const getArbolTimestamp = (arbol) => {
+    if (!arbol.monitoreos || typeof arbol.monitoreos !== 'object') return null;
+    const monitoreoKeys = Object.keys(arbol.monitoreos);
+    if (monitoreoKeys.length === 0) return null;
+    return arbol.monitoreos[monitoreoKeys[0]].timestamp;
+  };
+
+  // Filtrar árboles por fecha si se aplican filtros
+  const arbolesFiltrados = useMemo(() => {
+    if (!fechaInicio && !fechaFin) return arbolesMapeados;
+
+    return arbolesMapeados.filter((arbol) => {
+      const timestamp = getArbolTimestamp(arbol);
+      const fecha = convertTimestamp(timestamp);
+      if (!fecha) return false;
+
+      const inicio = fechaInicio ? new Date(fechaInicio) : null;
+      const fin = fechaFin ? new Date(fechaFin + "T23:59:59") : null;
+
+      if (inicio && fecha < inicio) return false;
+      if (fin && fecha > fin) return false;
+      return true;
+    });
+  }, [arbolesMapeados, fechaInicio, fechaFin]);
+
+  // Recalcular mapeadores con árboles filtrados
+  const mapeadoresFiltrados = useMemo(() => {
+    return mapeadores.map((mapper) => {
+      const arbolesDeMapeador = arbolesFiltrados.filter(
+        (arbol) => arbol.mapeadoPor === mapper.id
+      );
+      return {
+        ...mapper,
+        cantidadArbolesMapeadosFiltrados: arbolesDeMapeador.length,
+        arbolesMapeadosFiltrados: arbolesDeMapeador,
+      };
+    });
+  }, [mapeadores, arbolesFiltrados]);
 
   const handleViewTrees = (mapper) => {
     setSelectedMapper(mapper);
@@ -22,15 +74,23 @@ const TablaMapeo = () => {
     setSelectedMapper(null);
   };
 
-  const handleExportToExcel = () => {
-    // Preparar datos para exportar
-    const dataToExport = mapeadores.map((mapper) => ({
-      Nombre: mapper.nombre,
-      Email: mapper.email,
-      Estado: mapper.estado,
-      Grupo: mapper.grupo,
-      Rama: mapper.rama,
-      "Árboles Mapeados": mapper.cantidadArbolesMapeados || 0,
+  const handleLimpiarFiltros = () => {
+    setFechaInicio("");
+    setFechaFin("");
+  };
+
+  const handleExportToExcel = (table) => {
+    // Exportar TODAS las filas (pre-paginadas) con filtros y ordenamiento aplicados
+    const rows = table.getPrePaginationRowModel().rows;
+    const dataToExport = rows.map((row) => ({
+      Nombre: row.original.nombre,
+      Email: row.original.email,
+      Estado: row.original.estado,
+      Grupo: row.original.grupo,
+      Rama: row.original.rama,
+      "Árboles Mapeados": fechaInicio || fechaFin
+        ? row.original.cantidadArbolesMapeadosFiltrados
+        : row.original.cantidadArbolesMapeados || 0,
     }));
 
     // Crear workbook y worksheet
@@ -87,22 +147,34 @@ const TablaMapeo = () => {
         accessorKey: "cantidadArbolesMapeados",
         header: "Árboles Mapeados",
         size: 150,
-        Cell: ({ cell }) => (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Chip
-              label={cell.getValue() || 0}
-              color="primary"
-              size="small"
-              sx={{ fontWeight: "bold" }}
-            />
-          </Box>
-        ),
+        Cell: ({ row }) => {
+          const cantidadFiltrada = row.original.cantidadArbolesMapeadosFiltrados;
+          const cantidadTotal = row.original.cantidadArbolesMapeados || 0;
+          const hayFiltro = fechaInicio || fechaFin;
+
+          return (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+              }}
+            >
+              <Chip
+                label={hayFiltro ? cantidadFiltrada : cantidadTotal}
+                color="primary"
+                size="small"
+                sx={{ fontWeight: "bold" }}
+              />
+              {hayFiltro && cantidadFiltrada !== cantidadTotal && (
+                <span style={{ fontSize: "12px", color: "#666" }}>
+                  de {cantidadTotal}
+                </span>
+              )}
+            </Box>
+          );
+        },
       },
       {
         accessorKey: "actions",
@@ -123,30 +195,22 @@ const TablaMapeo = () => {
         ),
       },
     ],
-    []
+    [fechaInicio, fechaFin]
   );
 
   return (
     <Box sx={{ maxWidth: "100%", overflow: "auto" }}>
-      <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          variant="contained"
-          startIcon={<FileDownloadIcon />}
-          onClick={handleExportToExcel}
-          sx={{
-            fontFamily: "Poppins",
-            backgroundColor: "#268576",
-            "&:hover": {
-              backgroundColor: "#1f6b5f",
-            },
-          }}
-        >
-          Exportar a Excel
-        </Button>
-      </Box>
-      <MaterialReactTable
+      <FiltroFechas
+        fechaInicio={fechaInicio}
+        fechaFin={fechaFin}
+        onFechaInicioChange={setFechaInicio}
+        onFechaFinChange={setFechaFin}
+        onLimpiar={handleLimpiarFiltros}
+        totalFiltrado={mapeadoresFiltrados.length}
+        totalSinFiltrar={mapeadores.length}
+      />      <MaterialReactTable
         columns={columns}
-        data={mapeadores}
+        data={mapeadoresFiltrados}
         enableColumnResizing
         enableSorting
         enablePagination
@@ -155,6 +219,22 @@ const TablaMapeo = () => {
           density: "comfortable",
           sorting: [{ id: "cantidadArbolesMapeados", desc: true }],
         }}
+        renderTopToolbarCustomActions={({ table }) => (
+          <Button
+            variant="contained"
+            startIcon={<FileDownloadIcon />}
+            onClick={() => handleExportToExcel(table)}
+            sx={{
+              fontFamily: "Poppins",
+              backgroundColor: "#268576",
+              "&:hover": {
+                backgroundColor: "#1f6b5f",
+              },
+            }}
+          >
+            Exportar a Excel
+          </Button>
+        )}
         muiTableHeadCellProps={{
           sx: {
             fontFamily: "Poppins",

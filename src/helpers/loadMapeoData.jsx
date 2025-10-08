@@ -10,14 +10,20 @@ export const loadMapeoData = async () => {
     const inscripcionesSnapshot = await db.collection("inscripcionesMapeo").get();
     const inscripciones = [];
     inscripcionesSnapshot.forEach((doc) => {
-      inscripciones.push({ ...doc.data() });
+      inscripciones.push({
+        id: doc.id,  // Agregar el ID del documento de Firestore
+        ...doc.data()
+      });
     });
 
     // Fetch arbolesMapeados collection
     const arbolesSnapshot = await db.collection("arbolesMapeados").get();
     const arbolesMapeados = [];
     arbolesSnapshot.forEach((doc) => {
-      arbolesMapeados.push({ ...doc.data() });
+      arbolesMapeados.push({
+        id: doc.id,  // Agregar el ID del documento de Firestore
+        ...doc.data()
+      });
     });
 
     // Join data: match inscripcion.id with arbol.mapeadoPor

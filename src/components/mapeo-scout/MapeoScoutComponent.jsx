@@ -6,11 +6,13 @@ import Box from "@mui/material/Box";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import MapIcon from "@mui/icons-material/Map";
 import GroupsIcon from "@mui/icons-material/Groups";
+import NatureIcon from "@mui/icons-material/Nature";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import { MapeoScoutProvider, useMapeoScout } from "../../context/MapeoScoutContext";
 import TablaMapeo from "./TablaMapeo";
 import TablaGrupos from "./TablaGrupos";
+import TablaArboles from "./TablaArboles";
 import MapaMapeo from "./MapaMapeo";
 import "./MapeoScoutComponent.css";
 
@@ -96,13 +98,20 @@ const MapeoScoutContent = () => {
             {...a11yProps(1)}
           />
           <Tab
+            icon={<NatureIcon />}
+            sx={{ fontFamily: "Poppins" }}
+            label="ÁRBOLES"
+            {...a11yProps(2)}
+          />
+          <Tab
             icon={<MapIcon />}
             sx={{ fontFamily: "Poppins" }}
             label="MAPA"
-            {...a11yProps(2)}
+            {...a11yProps(3)}
           />
         </Tabs>
       </Box>
+
       <TabPanel value={value} index={0}>
         <TablaMapeo />
       </TabPanel>
@@ -110,6 +119,9 @@ const MapeoScoutContent = () => {
         <TablaGrupos />
       </TabPanel>
       <TabPanel value={value} index={2}>
+        <TablaArboles />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
         <MapaMapeo />
       </TabPanel>
     </div>
