@@ -10,19 +10,19 @@ const AdminDashboard = () => {
   const adminTools = [
     {
       title: 'Tabla',
-      description: 'Dashboard de visualización de resultados de mapeos. Edición y validación de datos.',
+      description: 'Edición y validación de datos.',
       icon: <TableChartIcon sx={{ fontSize: 60, color: '#268576' }} />,
       path: '/tabla'
     },
     {
       title: 'Mapeo Scout',
-      description: 'Gestión de campañas de mapeo, metas y mapeadores. Visualización del mapa de árboles.',
+      description: 'Gestión de campañas de mapeo, metas y mapeadores.',
       icon: <MapIcon sx={{ fontSize: 60, color: '#268576' }} />,
       path: '/mapeo-scout'
     },
     {
       title: 'API',
-      description: 'Documentación y acceso a las APIs de Arbu. Exportación de datos en múltiples formatos.',
+      description: 'Documentación y acceso a las APIs de Arbu.',
       icon: <ApiIcon sx={{ fontSize: 60, color: '#268576' }} />,
       path: '/api'
     }

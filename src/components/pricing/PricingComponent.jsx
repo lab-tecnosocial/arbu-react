@@ -222,6 +222,16 @@ const PricingComponent = () => {
                 >
                   Contactar
                 </Button>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: 'Open Sans',
+                    color: '#666',
+                    mt: 2
+                  }}
+                >
+                  contacto@labtecnosocial.org
+                </Typography>
               </Box>
             </CardContent>
           </Card>
