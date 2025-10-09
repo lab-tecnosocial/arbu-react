@@ -16,7 +16,7 @@ const IniciarSesion = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const from = location.state?.from?.pathname || '/tabla';
+  const from = location.state?.from?.pathname || '/admin';
 
   const handleLogin = async () => {
     try {

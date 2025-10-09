@@ -2,7 +2,7 @@ import './App.css';
 import { Link, Outlet } from "react-router-dom";
 import { startLoadingArboles, startLoadingArbolesMapeados, startLoadingUsuarios } from './actions/mapaActions';
 import { useEffect, useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { startLoadEspeciesCatalogo } from './actions/catalogoActions';
 //
 import AppBar from '@mui/material/AppBar';
@@ -14,6 +14,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -24,9 +25,17 @@ import adoptaIcon from './components/mapa/arbol_icon_navigation.svg'
 import catalogoIcon from './components/mapa/catalogo_icon_navigation.svg'
 import arbuAppIcon from './components/mapa/logo_arbu_app.svg'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import ApiIcon from '@mui/icons-material/Api';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { loadScoresGlobal, loadScoresMes } from './actions/leaderboardActions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { clearUser } from './actions/authActions';
+import { getAuth, signOut } from 'firebase/auth';
+import { app } from './firebase/firebase-config';
 const drawerWidth = 240;
 const navItems = [
   // {
@@ -49,9 +58,9 @@ const navItems = [
     path: '/aprende'
   },
   {
-    section: 'API',
-    icon: <ApiIcon sx={{ color: '#EBF5EE' }} />,
-    path: '/api'
+    section: 'Admin',
+    icon: <AdminPanelSettingsIcon sx={{ color: '#EBF5EE' }} />,
+    path: '/admin'
   }
 ];
 
@@ -59,8 +68,20 @@ const navItems = [
 function App(props) {
   const { window } = props
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const user = useSelector((state) => state.auth.user);
+  const auth = getAuth(app);
+
+  // Determinar si estamos en una ruta de admin
+  const isAdminRoute = location.pathname.startsWith('/admin') ||
+                       location.pathname.startsWith('/tabla') ||
+                       location.pathname.startsWith('/mapeo-scout') ||
+                       location.pathname.startsWith('/api');
+
+  const appName = isAdminRoute && user ? 'Arbu Pro' : 'Arbu';
   useEffect(() => {
     dispatch(startLoadingArboles());
     dispatch(startLoadingArbolesMapeados());
@@ -77,12 +98,31 @@ function App(props) {
   const handleHome = () => {
     navigate('/');
   }
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      dispatch(clearUser());
+      handleCloseUserMenu();
+      navigate('/');
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', backgroundColor: '#268576' }}>
       <Typography variant="h6" sx={{ my: 2, color: '#EBF5EE', fontFamily: 'Poppins' }}>
         <div onClick={handleHome} className="home">
           <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{ verticalAlign: 'middle', borderRadius: '5px', backgroundColor: '#EBF5EE', paddingTop: '2px' }} />
-          &nbsp;Arbu
+          &nbsp;{appName}
         </div>
       </Typography>
       <Divider />
@@ -91,12 +131,64 @@ function App(props) {
           <Link key={item.section} to={item.path} style={{ textDecoration: 'none', color: '#EBF5EE' }}>
             <ListItem disablePadding>
               <ListItemButton sx={{ textAlign: 'center' }}>
-                {item.icon}
+                <ListItemIcon sx={{ color: '#EBF5EE', minWidth: 'auto', mr: 1, display: 'flex', justifyContent: 'center' }}>
+                  {item.icon}
+                </ListItemIcon>
                 <ListItemText sx={{ fontFamily: 'Poppins' }} primary={item.section} />
               </ListItemButton>
             </ListItem>
           </Link>
         ))}
+        {isAdminRoute && user && (
+          <>
+            <Divider sx={{ backgroundColor: '#EBF5EE', opacity: 0.3, my: 1 }} />
+            <ListItem disablePadding>
+              <ListItemButton sx={{ textAlign: 'center' }} onClick={(e) => {
+                e.stopPropagation();
+                navigate('/tabla');
+              }}>
+                <ListItemIcon sx={{ color: '#EBF5EE', minWidth: 'auto', mr: 1, display: 'flex', justifyContent: 'center' }}>
+                  <TableChartIcon />
+                </ListItemIcon>
+                <ListItemText sx={{ fontFamily: 'Poppins' }} primary="Tabla" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton sx={{ textAlign: 'center' }} onClick={(e) => {
+                e.stopPropagation();
+                navigate('/mapeo-scout');
+              }}>
+                <ListItemIcon sx={{ color: '#EBF5EE', minWidth: 'auto', mr: 1, display: 'flex', justifyContent: 'center' }}>
+                  <MapIcon />
+                </ListItemIcon>
+                <ListItemText sx={{ fontFamily: 'Poppins' }} primary="Mapeo Scout" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton sx={{ textAlign: 'center' }} onClick={(e) => {
+                e.stopPropagation();
+                navigate('/api');
+              }}>
+                <ListItemIcon sx={{ color: '#EBF5EE', minWidth: 'auto', mr: 1, display: 'flex', justifyContent: 'center' }}>
+                  <ApiIcon />
+                </ListItemIcon>
+                <ListItemText sx={{ fontFamily: 'Poppins' }} primary="API" />
+              </ListItemButton>
+            </ListItem>
+            <Divider sx={{ backgroundColor: '#EBF5EE', opacity: 0.3, my: 1 }} />
+            <ListItem disablePadding>
+              <ListItemButton sx={{ textAlign: 'center' }} onClick={(e) => {
+                e.stopPropagation();
+                handleLogout();
+              }}>
+                <ListItemIcon sx={{ color: '#EBF5EE', minWidth: 'auto', mr: 1, display: 'flex', justifyContent: 'center' }}>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText sx={{ fontFamily: 'Poppins' }} primary="Cerrar sesión" />
+              </ListItemButton>
+            </ListItem>
+          </>
+        )}
       </List>
     </Box>
   );
@@ -135,7 +227,7 @@ function App(props) {
               <div onClick={handleHome} className="home-typography">
                 <img src={arbuAppIcon} alt="" width="30px" height="30px" style={{ verticalAlign: 'middle', borderRadius: '5px', backgroundColor: '#EBF5EE', paddingTop: '2px' }} />
                 &nbsp;
-                Arbu
+                {appName}
               </div>
 
             </Typography>
@@ -155,6 +247,50 @@ function App(props) {
                 </Link>
 
               ))}
+              {isAdminRoute && user && (
+                <>
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ ml: 1, color: '#EBF5EE' }}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={() => { handleCloseUserMenu(); navigate('/tabla'); }}>
+                      <TableChartIcon sx={{ mr: 1 }} />
+                      <Typography textAlign="center">Tabla</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleCloseUserMenu(); navigate('/mapeo-scout'); }}>
+                      <MapIcon sx={{ mr: 1 }} />
+                      <Typography textAlign="center">Mapeo Scout</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleCloseUserMenu(); navigate('/api'); }}>
+                      <ApiIcon sx={{ mr: 1 }} />
+                      <Typography textAlign="center">API</Typography>
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleLogout}>
+                      <LogoutIcon sx={{ mr: 1 }} />
+                      <Typography textAlign="center">Cerrar sesión</Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
             </Box>
           </Toolbar>
         </AppBar>

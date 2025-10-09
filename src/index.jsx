@@ -28,6 +28,7 @@ import PublicRoute from './components/autenticacion/PublicRoute.jsx';
 import NoAutorizado from './components/autenticacion/NoAutorizado.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 import Tabla from './components/tabla/Tabla.jsx';
+import AdminDashboard from './components/admin/AdminDashboard.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -39,7 +40,16 @@ root.render(
         <Route path="mapa" element={<MapaComponent />} />
         <Route path="ranking" element={<RankingComponent />} />
         <Route path="aprende" element={<CatalogoComponent />} />
-        <Route path="api" element={<APIComponent />}>
+        <Route path="acerca" element={<Acerca />} />
+        <Route path="login" element={<PublicRoute element={<IniciarSesion />} />} />
+        <Route path="iniciar-sesion" element={<PublicRoute element={<IniciarSesion />} />} />
+
+        <Route path="admin" element={<ProtectedRoute element={<AdminDashboard />} requiresAuthorization={true} />} />
+        <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route path="tabla" element={<ProtectedRoute element={<Tabla />} requiresAuthorization={true} />} />
+        <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} requiresAuthorization={true} />} />
+
+        <Route path="api" element={<ProtectedRoute element={<APIComponent />} requiresAuthorization={true} />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
           <Route path='referencia-endpoints' element={<ReferenciaEndpoints />} />
           <Route path='probar-api' element={<ProbarApi />} />
@@ -47,12 +57,6 @@ root.render(
           <Route path='contacto-soporte' element={<ContactoSoporte />} />
           <Route path='licencias-limitaciones' element={<Licencias />} />
         </Route>
-        <Route path="acerca" element={<Acerca />} />
-        <Route path="iniciar-sesion" element={<PublicRoute element={<IniciarSesion />} />} />
-
-        <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-        <Route path="tabla" element={<ProtectedRoute element={<Tabla />} requiresAuthorization={true} />} />
-        <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} requiresAuthorization={true} />} />
 
         <Route path="no-autorizado" element={<NoAutorizado />} />
 

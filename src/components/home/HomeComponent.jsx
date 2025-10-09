@@ -10,10 +10,9 @@ import googleplaybutton from "./googleplaybutton.png";
 import adoptalogo from "./adoptalogo.png";
 import cuidalogo from "./cuidalogo.png";
 import aprendelogo from "./aprendelogo.png";
-import iconoarbu from "./iconoarbu.png";
 import arbolitos1 from "./arbolitos1.png";
-import arbolitos2 from "./arbolitos2.png";
 import Footer from "../footer/Footer";
+import PricingComponent from "../pricing/PricingComponent";
 const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
@@ -129,22 +128,7 @@ const HomeComponent = () => {
         </div>
         <br />
         <br />
-        <div>
-          <img src={arbolitos2} alt="" className="arbolitos2" />
-          <center>
-            <br />
-            <img src={iconoarbu} alt="" />
-            <br />
-            <center>
-            <div style={{fontFamily:'Poppins', fontSize:'1.2rem'}}>¡Participa tú también!</div>
-            </center>
-            <br />
-            <div className="visita-el-mapa" >
-              <div className="titulos" >Visita el mapa de árboles en la App</div>
-              <div className="parrafos">Adopta árboles y monitorea sus estados</div>
-            </div>
-          </center>
-        </div>
+        <PricingComponent />
         <br />
         <br />
         <Footer />
