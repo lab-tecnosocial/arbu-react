@@ -5,9 +5,16 @@ import { Card, CardContent, CardActionArea, Typography, Grid, Box, Container } f
 import TableChartIcon from '@mui/icons-material/TableChart';
 import MapIcon from '@mui/icons-material/Map';
 import ApiIcon from '@mui/icons-material/Api';
+import FolderIcon from '@mui/icons-material/Folder';
 
 const AdminDashboard = () => {
   const adminTools = [
+    {
+      title: 'Gestión de Proyectos',
+      description: 'Gestión de proyectos, mapeadores y árboles.',
+      icon: <FolderIcon sx={{ fontSize: 60, color: '#268576' }} />,
+      path: '/proyectos'
+    },
     {
       title: 'Tabla',
       description: 'Edición y validación de datos.',

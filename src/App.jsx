@@ -29,6 +29,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import ApiIcon from '@mui/icons-material/Api';
+import FolderIcon from '@mui/icons-material/Folder';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { loadScoresGlobal, loadScoresMes } from './actions/leaderboardActions';
@@ -175,6 +176,17 @@ function App(props) {
                 <ListItemText sx={{ fontFamily: 'Poppins' }} primary="API" />
               </ListItemButton>
             </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton sx={{ textAlign: 'center' }} onClick={(e) => {
+                e.stopPropagation();
+                navigate('/proyectos');
+              }}>
+                <ListItemIcon sx={{ color: '#EBF5EE', minWidth: 'auto', mr: 1, display: 'flex', justifyContent: 'center' }}>
+                  <FolderIcon />
+                </ListItemIcon>
+                <ListItemText sx={{ fontFamily: 'Poppins' }} primary="Gestión de Proyectos" />
+              </ListItemButton>
+            </ListItem>
             <Divider sx={{ backgroundColor: '#EBF5EE', opacity: 0.3, my: 1 }} />
             <ListItem disablePadding>
               <ListItemButton sx={{ textAlign: 'center' }} onClick={(e) => {
@@ -282,6 +294,10 @@ function App(props) {
                     <MenuItem onClick={() => { handleCloseUserMenu(); navigate('/api'); }}>
                       <ApiIcon sx={{ mr: 1 }} />
                       <Typography textAlign="center">API</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleCloseUserMenu(); navigate('/proyectos'); }}>
+                      <FolderIcon sx={{ mr: 1 }} />
+                      <Typography textAlign="center">Gestión de Proyectos</Typography>
                     </MenuItem>
                     <Divider />
                     <MenuItem onClick={handleLogout}>

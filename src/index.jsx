@@ -29,6 +29,9 @@ import NoAutorizado from './components/autenticacion/NoAutorizado.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 import Tabla from './components/tabla/Tabla.jsx';
 import AdminDashboard from './components/admin/AdminDashboard.jsx';
+import ProyectosComponent from './components/proyectos/ProyectosComponent.jsx';
+import DetalleProyecto from './components/proyectos/DetalleProyecto.jsx';
+import ProyectosLayout from './components/proyectos/ProyectosLayout.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -48,6 +51,12 @@ root.render(
         <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="tabla" element={<ProtectedRoute element={<Tabla />} requiresAuthorization={true} />} />
         <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} requiresAuthorization={true} />} />
+
+        {/* Rutas de proyectos con layout compartido */}
+        <Route path="proyectos" element={<ProtectedRoute element={<ProyectosLayout />} requiresAuthorization={true} />}>
+          <Route index element={<ProyectosComponent />} />
+          <Route path=":id" element={<DetalleProyecto />} />
+        </Route>
 
         <Route path="api" element={<ProtectedRoute element={<APIComponent />} requiresAuthorization={true} />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
