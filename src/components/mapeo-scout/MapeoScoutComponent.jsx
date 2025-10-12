@@ -49,8 +49,17 @@ const MapeoScoutContent = () => {
   const [value, setValue] = useState(0);
   const { loading, error } = useMapeoScout();
 
+  // Estado global del filtro de fechas compartido entre todas las pestañas
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleLimpiarFiltros = () => {
+    setFechaInicio("");
+    setFechaFin("");
   };
 
   if (loading) {
@@ -113,16 +122,39 @@ const MapeoScoutContent = () => {
       </Box>
 
       <TabPanel value={value} index={0}>
-        <TablaMapeo />
+        <TablaMapeo
+          fechaInicio={fechaInicio}
+          fechaFin={fechaFin}
+          setFechaInicio={setFechaInicio}
+          setFechaFin={setFechaFin}
+          onLimpiarFiltros={handleLimpiarFiltros}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <TablaGrupos />
+        <TablaGrupos
+          fechaInicio={fechaInicio}
+          fechaFin={fechaFin}
+          setFechaInicio={setFechaInicio}
+          setFechaFin={setFechaFin}
+          onLimpiarFiltros={handleLimpiarFiltros}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <TablaArboles />
+        <TablaArboles
+          fechaInicio={fechaInicio}
+          fechaFin={fechaFin}
+          setFechaInicio={setFechaInicio}
+          setFechaFin={setFechaFin}
+          onLimpiarFiltros={handleLimpiarFiltros}
+        />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <MapaMapeo />
+        <MapaMapeo
+          fechaInicio={fechaInicio}
+          fechaFin={fechaFin}
+          setFechaInicio={setFechaInicio}
+          setFechaFin={setFechaFin}
+        />
       </TabPanel>
     </div>
   );

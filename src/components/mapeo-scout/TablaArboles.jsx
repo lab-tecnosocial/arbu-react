@@ -4,6 +4,7 @@ import { Box, Button, Link, Chip } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
+import FiltroFechas from "./FiltroFechas";
 import * as XLSX from "xlsx";
 
 // Funciones helper fuera del componente para evitar re-creación
@@ -28,7 +29,7 @@ const formatDate = (timestamp) => {
     });
 };
 
-const TablaArboles = () => {
+const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimpiarFiltros }) => {
     const { arbolesMapeados, mapeadores } = useMapeoScout();
 
     // Crear un mapa de mapeadores por ID
@@ -40,12 +41,39 @@ const TablaArboles = () => {
         return map;
     }, [mapeadores]);
 
-    // Preparar datos (sin filtros - siempre muestra todos los árboles)
+    // Función para obtener el timestamp del árbol (está dentro del primer monitoreo)
+    const getArbolTimestamp = (arbol) => {
+        if (!arbol.monitoreos || typeof arbol.monitoreos !== 'object') return null;
+        const monitoreoKeys = Object.keys(arbol.monitoreos);
+        if (monitoreoKeys.length === 0) return null;
+        return arbol.monitoreos[monitoreoKeys[0]].timestamp;
+    };
+
+    // Filtrar árboles por fecha si se aplican filtros
+    const arbolesFiltrados = useMemo(() => {
+        if (!fechaInicio && !fechaFin) return arbolesMapeados;
+
+        return arbolesMapeados.filter((arbol) => {
+            const timestamp = getArbolTimestamp(arbol);
+            const fecha = convertTimestamp(timestamp);
+            if (!fecha) return false;
+
+            const inicio = fechaInicio ? new Date(fechaInicio) : null;
+            const fin = fechaFin ? new Date(fechaFin + "T23:59:59") : null;
+
+            if (inicio && fecha < inicio) return false;
+            if (fin && fecha > fin) return false;
+            return true;
+        });
+    }, [arbolesMapeados, fechaInicio, fechaFin]);
+
+    // Preparar datos con filtros aplicados
     const arbolesData = useMemo(() => {
         console.log("TablaArboles - arbolesMapeados:", arbolesMapeados.length);
+        console.log("TablaArboles - arbolesFiltrados:", arbolesFiltrados.length);
         console.log("TablaArboles - primer árbol:", arbolesMapeados[0]);
 
-        const processedData = arbolesMapeados.map((arbol) => {
+        const processedData = arbolesFiltrados.map((arbol) => {
             const mapper = mapeadoresMap[arbol.mapeadoPor] || {};
 
             // Obtener el primer monitoreo para extraer timestamp, altura y DAP
@@ -78,7 +106,7 @@ const TablaArboles = () => {
 
 
         return processedData;
-    }, [arbolesMapeados, mapeadoresMap]);
+    }, [arbolesFiltrados, mapeadoresMap]);
 
     const handleExportToExcel = (table) => {
         // Exportar TODAS las filas (pre-paginadas) con ordenamiento aplicado
@@ -303,21 +331,15 @@ const TablaArboles = () => {
 
     return (
         <Box sx={{ maxWidth: "100%", overflow: "auto" }}>
-            {/* Chip de total de árboles */}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    mb: 2,
-                }}
-            >
-                <Chip
-                    label={`${arbolesData.length} árbol${arbolesData.length !== 1 ? "es" : ""} registrado${arbolesData.length !== 1 ? "s" : ""}`}
-                    color="primary"
-                    sx={{ fontFamily: "Poppins", fontWeight: "bold" }}
-                />
-            </Box>
+            <FiltroFechas
+                fechaInicio={fechaInicio}
+                fechaFin={fechaFin}
+                onFechaInicioChange={setFechaInicio}
+                onFechaFinChange={setFechaFin}
+                onLimpiar={onLimpiarFiltros}
+                totalFiltrado={arbolesData.length}
+                totalSinFiltrar={arbolesMapeados.length}
+            />
             <MaterialReactTable
                 columns={columns}
                 data={arbolesData}

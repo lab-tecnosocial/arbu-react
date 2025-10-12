@@ -6,15 +6,8 @@ import { useMapeoScout } from "../../context/MapeoScoutContext";
 import FiltroFechas from "./FiltroFechas";
 import * as XLSX from "xlsx";
 
-const TablaGrupos = () => {
+const TablaGrupos = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimpiarFiltros }) => {
     const { mapeadores, arbolesMapeados } = useMapeoScout();
-    const [fechaInicio, setFechaInicio] = useState("");
-    const [fechaFin, setFechaFin] = useState("");
-
-    const handleLimpiarFiltros = () => {
-        setFechaInicio("");
-        setFechaFin("");
-    };
 
     // Función para convertir timestamp de Firebase a Date
     const convertTimestamp = (timestamp) => {
@@ -195,7 +188,7 @@ const TablaGrupos = () => {
                 fechaFin={fechaFin}
                 onFechaInicioChange={setFechaInicio}
                 onFechaFinChange={setFechaFin}
-                onLimpiar={handleLimpiarFiltros}
+                onLimpiar={onLimpiarFiltros}
                 totalFiltrado={gruposData.length}
                 totalSinFiltrar={totalGrupos}
             />

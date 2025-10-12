@@ -15,12 +15,10 @@ const customIcon = new L.Icon({
   iconSize: new L.Point(40, 47),
 });
 
-const MapaMapeo = () => {
+const MapaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin }) => {
   const { arbolesMapeados, mapeadores } = useMapeoScout();
   const [filtroGrupo, setFiltroGrupo] = useState("todos");
   const [filtroRama, setFiltroRama] = useState("todos");
-  const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
 
   const handleLimpiarFiltros = () => {
     setFiltroGrupo("todos");

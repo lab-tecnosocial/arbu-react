@@ -8,12 +8,10 @@ import TreeCardPopup from "./TreeCardPopup";
 import FiltroFechas from "./FiltroFechas";
 import * as XLSX from "xlsx";
 
-const TablaMapeo = () => {
+const TablaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimpiarFiltros }) => {
   const { mapeadores, arbolesMapeados } = useMapeoScout();
   const [treePopupOpen, setTreePopupOpen] = useState(false);
   const [selectedMapper, setSelectedMapper] = useState(null);
-  const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
 
   // Función para convertir timestamp de Firebase a Date
   const convertTimestamp = (timestamp) => {
@@ -72,11 +70,6 @@ const TablaMapeo = () => {
   const handleClosePopup = () => {
     setTreePopupOpen(false);
     setSelectedMapper(null);
-  };
-
-  const handleLimpiarFiltros = () => {
-    setFechaInicio("");
-    setFechaFin("");
   };
 
   const handleExportToExcel = (table) => {
@@ -205,10 +198,11 @@ const TablaMapeo = () => {
         fechaFin={fechaFin}
         onFechaInicioChange={setFechaInicio}
         onFechaFinChange={setFechaFin}
-        onLimpiar={handleLimpiarFiltros}
+        onLimpiar={onLimpiarFiltros}
         totalFiltrado={mapeadoresFiltrados.length}
         totalSinFiltrar={mapeadores.length}
-      />      <MaterialReactTable
+      />
+      <MaterialReactTable
         columns={columns}
         data={mapeadoresFiltrados}
         enableColumnResizing
