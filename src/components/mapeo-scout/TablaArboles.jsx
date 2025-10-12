@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { MaterialReactTable } from "material-react-table";
-import { Box, Button, Link, Chip } from "@mui/material";
+import { Box, Button, Link, Chip, Select, MenuItem } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import FiltroFechas from "./FiltroFechas";
+import { db } from "../../firebase/firebase-config";
 import * as XLSX from "xlsx";
 
 // Funciones helper fuera del componente para evitar re-creación
@@ -30,7 +31,13 @@ const formatDate = (timestamp) => {
 };
 
 const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimpiarFiltros }) => {
-    const { arbolesMapeados, mapeadores } = useMapeoScout();
+    const { arbolesMapeados: arbolesMapeadosOriginal, mapeadores } = useMapeoScout();
+    const [arbolesMapeados, setArbolesMapeados] = useState(arbolesMapeadosOriginal);
+
+    // Actualizar arbolesMapeados cuando cambie arbolesMapeadosOriginal
+    useEffect(() => {
+        setArbolesMapeados(arbolesMapeadosOriginal);
+    }, [arbolesMapeadosOriginal]);
 
     // Crear un mapa de mapeadores por ID
     const mapeadoresMap = useMemo(() => {
@@ -107,6 +114,31 @@ const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLi
 
         return processedData;
     }, [arbolesFiltrados, mapeadoresMap]);
+
+    const handleValidadoChange = async (arbolId, newValue) => {
+        try {
+            const validadoBoolean = newValue === "si";
+
+            // Actualizar estado local inmediatamente para mejor UX
+            setArbolesMapeados(prevArboles =>
+                prevArboles.map(arbol =>
+                    arbol.id === arbolId
+                        ? { ...arbol, validado: validadoBoolean }
+                        : arbol
+                )
+            );
+
+            // Actualizar en Firestore en segundo plano
+            await db.collection("arbolesMapeados").doc(arbolId).update({
+                validado: validadoBoolean
+            });
+        } catch (error) {
+            console.error("Error actualizando campo validado:", error);
+            alert("Error al actualizar el campo. Por favor, intenta nuevamente.");
+            // Revertir cambio local en caso de error
+            setArbolesMapeados(arbolesMapeadosOriginal);
+        }
+    };
 
     const handleExportToExcel = (table) => {
         // Exportar TODAS las filas (pre-paginadas) con ordenamiento aplicado
@@ -231,6 +263,45 @@ const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLi
                 accessorKey: "mapperRama",
                 header: "Rama",
                 size: 120,
+            },
+            {
+                accessorKey: "validado",
+                header: "Validado",
+                size: 130,
+                Cell: ({ row }) => {
+                    const validadoValue = row.original.validado;
+                    let displayValue = "";
+
+                    if (validadoValue === true) {
+                        displayValue = "si";
+                    } else if (validadoValue === false) {
+                        displayValue = "no";
+                    }
+
+                    return (
+                        <Select
+                            value={displayValue}
+                            onChange={(e) => handleValidadoChange(row.original.id, e.target.value)}
+                            size="small"
+                            displayEmpty
+                            sx={{
+                                fontFamily: "Poppins",
+                                minWidth: 100,
+                                fontSize: "0.875rem"
+                            }}
+                        >
+                            <MenuItem value="" disabled sx={{ fontFamily: "Poppins", fontStyle: "italic", color: "#999" }}>
+                                Seleccionar...
+                            </MenuItem>
+                            <MenuItem value="si" sx={{ fontFamily: "Poppins" }}>
+                                Sí
+                            </MenuItem>
+                            <MenuItem value="no" sx={{ fontFamily: "Poppins" }}>
+                                No
+                            </MenuItem>
+                        </Select>
+                    );
+                },
             },
             {
                 accessorKey: "fotos",

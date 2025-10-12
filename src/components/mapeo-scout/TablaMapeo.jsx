@@ -1,17 +1,24 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { MaterialReactTable } from "material-react-table";
-import { Box, Button, Chip } from "@mui/material";
+import { Box, Button, Chip, Select, MenuItem } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import TreeCardPopup from "./TreeCardPopup";
 import FiltroFechas from "./FiltroFechas";
+import { db } from "../../firebase/firebase-config";
 import * as XLSX from "xlsx";
 
 const TablaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimpiarFiltros }) => {
-  const { mapeadores, arbolesMapeados } = useMapeoScout();
+  const { mapeadores: mapeadoresOriginal, arbolesMapeados } = useMapeoScout();
   const [treePopupOpen, setTreePopupOpen] = useState(false);
   const [selectedMapper, setSelectedMapper] = useState(null);
+  const [mapeadores, setMapeadores] = useState(mapeadoresOriginal);
+
+  // Actualizar mapeadores cuando cambie mapeadoresOriginal
+  useEffect(() => {
+    setMapeadores(mapeadoresOriginal);
+  }, [mapeadoresOriginal]);
 
   // Función para convertir timestamp de Firebase a Date
   const convertTimestamp = (timestamp) => {
@@ -70,6 +77,31 @@ const TablaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimp
   const handleClosePopup = () => {
     setTreePopupOpen(false);
     setSelectedMapper(null);
+  };
+
+  const handlePagadoChange = async (mapperId, newValue) => {
+    try {
+      const pagadoBoolean = newValue === "si";
+
+      // Actualizar estado local inmediatamente para mejor UX
+      setMapeadores(prevMapeadores =>
+        prevMapeadores.map(mapper =>
+          mapper.id === mapperId
+            ? { ...mapper, pagado: pagadoBoolean }
+            : mapper
+        )
+      );
+
+      // Actualizar en Firestore en segundo plano
+      await db.collection("inscripcionesMapeo").doc(mapperId).update({
+        pagado: pagadoBoolean
+      });
+    } catch (error) {
+      console.error("Error actualizando campo pagado:", error);
+      alert("Error al actualizar el campo. Por favor, intenta nuevamente.");
+      // Revertir cambio local en caso de error
+      setMapeadores(mapeadoresOriginal);
+    }
   };
 
   const handleExportToExcel = (table) => {
@@ -135,6 +167,45 @@ const TablaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimp
         accessorKey: "rama",
         header: "Rama",
         size: 120,
+      },
+      {
+        accessorKey: "pagado",
+        header: "Pagado",
+        size: 130,
+        Cell: ({ row }) => {
+          const pagadoValue = row.original.pagado;
+          let displayValue = "";
+
+          if (pagadoValue === true) {
+            displayValue = "si";
+          } else if (pagadoValue === false) {
+            displayValue = "no";
+          }
+
+          return (
+            <Select
+              value={displayValue}
+              onChange={(e) => handlePagadoChange(row.original.id, e.target.value)}
+              size="small"
+              displayEmpty
+              sx={{
+                fontFamily: "Poppins",
+                minWidth: 100,
+                fontSize: "0.875rem"
+              }}
+            >
+              <MenuItem value="" disabled sx={{ fontFamily: "Poppins", fontStyle: "italic", color: "#999" }}>
+                Seleccionar...
+              </MenuItem>
+              <MenuItem value="si" sx={{ fontFamily: "Poppins" }}>
+                Sí
+              </MenuItem>
+              <MenuItem value="no" sx={{ fontFamily: "Poppins" }}>
+                No
+              </MenuItem>
+            </Select>
+          );
+        },
       },
       {
         accessorKey: "cantidadArbolesMapeados",
