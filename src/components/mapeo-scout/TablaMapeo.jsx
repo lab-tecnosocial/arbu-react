@@ -107,16 +107,24 @@ const TablaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimp
   const handleExportToExcel = (table) => {
     // Exportar TODAS las filas (pre-paginadas) con filtros y ordenamiento aplicados
     const rows = table.getPrePaginationRowModel().rows;
-    const dataToExport = rows.map((row) => ({
-      Nombre: row.original.nombre,
-      Email: row.original.email,
-      Estado: row.original.estado,
-      Grupo: row.original.grupo,
-      Rama: row.original.rama,
-      "Árboles Mapeados": fechaInicio || fechaFin
-        ? row.original.cantidadArbolesMapeadosFiltrados
-        : row.original.cantidadArbolesMapeados || 0,
-    }));
+    const dataToExport = rows.map((row) => {
+      const pagadoValue = row.original.pagado;
+      let pagadoText = "";
+      if (pagadoValue === true) pagadoText = "Sí";
+      else if (pagadoValue === false) pagadoText = "No";
+
+      return {
+        Nombre: row.original.nombre,
+        Email: row.original.email,
+        Estado: row.original.estado,
+        Grupo: row.original.grupo,
+        Rama: row.original.rama,
+        Pagado: pagadoText,
+        "Árboles Mapeados": fechaInicio || fechaFin
+          ? row.original.cantidadArbolesMapeadosFiltrados
+          : row.original.cantidadArbolesMapeados || 0,
+      };
+    });
 
     // Crear workbook y worksheet
     const ws = XLSX.utils.json_to_sheet(dataToExport);

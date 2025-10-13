@@ -155,6 +155,12 @@ const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLi
                 }
             }
 
+            // Obtener valor de validado
+            const validadoValue = arbol.validado;
+            let validadoText = "";
+            if (validadoValue === true) validadoText = "Sí";
+            else if (validadoValue === false) validadoText = "No";
+
             return {
                 "Nombre del Árbol": arbol.nombrePropio || "",
                 "Nombre Común": arbol.nombreComun || "",
@@ -170,6 +176,7 @@ const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLi
                 "Mapeador - Email": arbol.mapperEmail,
                 "Mapeador - Grupo": arbol.mapperGrupo,
                 "Mapeador - Rama": arbol.mapperRama,
+                Validado: validadoText,
                 "Foto Árbol Completo": monitoreo?.fotoArbolCompleto || "",
                 "Foto Corteza": monitoreo?.fotoCorteza || "",
                 "Foto Flor": monitoreo?.fotoFlor || "",
