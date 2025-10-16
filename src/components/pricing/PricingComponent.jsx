@@ -169,7 +169,7 @@ const PricingComponent = () => {
                   textAlign: 'center'
                 }}
               >
-                Dirigido a empresas, gobiernos y ciudadanos que deseen funcionalidades avanzadas
+                Dirigido a especialistas, empresas, gobiernos y ciudadanos que deseen funcionalidades avanzadas
               </Typography>
 
               <List>
