@@ -21,6 +21,11 @@ const customIcon = new L.Icon({
   iconSize: new L.Point(40, 47),
 });
 
+const jacarandaIcon = new L.Icon({
+  iconUrl: "/jacaranda.png",
+  iconSize: new L.Point(40, 47),
+});
+
 // const createClusterCustomIcon = function (cluster: MarkerCluster) {
 //   return L.divIcon({
 //     html: `<span>${cluster.getChildCount()}</span>`,
@@ -29,6 +34,17 @@ const customIcon = new L.Icon({
 //   });
 // };
 
+// Función para determinar qué icono usar
+const getIcon = (item) => {
+  const nombreComun = item.nombreComun?.toLowerCase() || "";
+  const nombreCientifico = item.nombreCientifico || "";
+
+  if (nombreComun.includes("jacaranda") || nombreCientifico === "Jacarandá mimosifolia D. Don") {
+    return jacarandaIcon;
+  }
+
+  return customIcon;
+};
 
 const MapaComponent = () => {
   // const [usuarios, setUsuarios] = useState(users);
@@ -49,7 +65,7 @@ const MapaComponent = () => {
         key={item.id}
         position={[item.latitud, item.longitud]}
         title={item.nombrePropio}
-        icon={customIcon}
+        icon={getIcon(item)}
         eventHandlers={{
           click: () => {
             if (active?.id !== item?.id) {
@@ -105,7 +121,7 @@ const MapaComponent = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-      <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
+        <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
       </MapContainer>
     </main>
   );
