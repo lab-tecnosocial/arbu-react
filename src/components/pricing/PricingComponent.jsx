@@ -13,8 +13,9 @@ const PricingComponent = () => {
   ];
 
   const arbuProFeatures = [
-    'Dashboard de visualización de resultados de mapeos',
+    'Formularios y campos personalizados',
     'Gestión de campañas de mapeo, metas y mapeadores',
+    'Dashboard de visualización de resultados de mapeos',
     'Edición y validación de datos',
     'Exportación de datos (Excel, Shapefile, GeoJSON)',
     'Cálculo de captura de carbono',
