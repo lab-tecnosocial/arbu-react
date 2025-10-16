@@ -138,7 +138,7 @@ const MapaComponent = () => {
     return null
   }
   return (
-    <main>
+    <main className="mapa-main">
       {/* <Navbar /> */}
       <DetailArbol />
 
@@ -176,12 +176,14 @@ const MapaComponent = () => {
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
+        maxZoom={20}
         scrollWheelZoom={true}
       >
         <MyComponent />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          maxZoom={20}
         />
         <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
       </MapContainer>
