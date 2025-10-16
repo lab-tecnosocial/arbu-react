@@ -5,6 +5,9 @@ import { useMapEvents } from 'react-leaflet/hooks'
 import L, { MarkerCluster } from "leaflet";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 
 import "./MarkerCluster.Default.css";
 import "./MapaComponent.css";
@@ -56,10 +59,39 @@ const MapaComponent = () => {
     filtroAplied,
   } = useSelector((state) => state.mapa);
   const dispatch = useDispatch();
+  const [tipoArbol, setTipoArbol] = useState('todos');
+
+  const handleTipoArbolChange = (event) => {
+    setTipoArbol(event.target.value);
+  };
 
   const markers = useMemo(() => {
-    const arbolesMezclados = [...arbolesPlantados, ...arbolesMapeados];
-    const items = filtroAplied ? filtro : arbolesMezclados;
+    let arbolesMezclados;
+
+    // Filtrar por tipo (Todos, Adoptados, Mapeados)
+    if (tipoArbol === 'adoptados') {
+      arbolesMezclados = arbolesPlantados;
+    } else if (tipoArbol === 'mapeados') {
+      arbolesMezclados = arbolesMapeados;
+    } else {
+      arbolesMezclados = [...arbolesPlantados, ...arbolesMapeados];
+    }
+
+    // Si hay filtro de especies aplicado, filtrar el resultado por tipo
+    let items;
+    if (filtroAplied) {
+      // Aplicar el filtro de especies sobre los datos ya filtrados por tipo
+      items = filtro.filter(arbol => {
+        if (tipoArbol === 'adoptados') {
+          return arbolesPlantados.some(a => a.id === arbol.id);
+        } else if (tipoArbol === 'mapeados') {
+          return arbolesMapeados.some(a => a.id === arbol.id);
+        }
+        return true; // para "todos"
+      });
+    } else {
+      items = arbolesMezclados;
+    }
     return items.map((item) => (
       <Marker
         key={item.id}
@@ -77,7 +109,7 @@ const MapaComponent = () => {
         }}
       />
     ));
-  }, [filtroAplied, filtro, arbolesPlantados, arbolesMapeados, active, dispatch]);
+  }, [filtroAplied, filtro, arbolesPlantados, arbolesMapeados, active, dispatch, tipoArbol]);
   // const MyComponent = React.memo(() => {
   //   const map = useMapEvents({
   //     click: () => {
@@ -111,6 +143,36 @@ const MapaComponent = () => {
       <DetailArbol />
 
       <FiltroComponent />
+
+      <div className="tipo-arbol-selector">
+        <FormControl size="small" sx={{ minWidth: { xs: 110, sm: 140 } }}>
+          <Select
+            value={tipoArbol}
+            onChange={handleTipoArbolChange}
+            displayEmpty
+            sx={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              fontFamily: 'Poppins',
+              fontSize: { xs: '0.85rem', sm: '1rem' },
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#268576',
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#174C44',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#268576',
+              },
+            }}
+          >
+            <MenuItem value="todos" sx={{ fontFamily: 'Poppins', fontSize: { xs: '0.85rem', sm: '1rem' } }}>Todos</MenuItem>
+            <MenuItem value="adoptados" sx={{ fontFamily: 'Poppins', fontSize: { xs: '0.85rem', sm: '1rem' } }}>Adoptados</MenuItem>
+            <MenuItem value="mapeados" sx={{ fontFamily: 'Poppins', fontSize: { xs: '0.85rem', sm: '1rem' } }}>Mapeados</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
