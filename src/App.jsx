@@ -185,5 +185,6 @@ function App(props) {
     </>
   );
 }
+<Outlet />
 
 export default App;
