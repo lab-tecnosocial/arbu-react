@@ -1,14 +1,9 @@
 import React from "react";
 import styles from './Footer.module.css';
 
-import logoLab from "./lab-fondo-oscuro.png";
-import { Link } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
-import { Link as MuiLink } from "@mui/material";
-import facebook from "./facebook.png";
-import instagram from "./instagram.png";
-import tweeter from "./tweeter.png";
 import { Facebook, Instagram, Youtube } from "lucide-react";
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <div className={styles.footer}>
@@ -24,6 +19,7 @@ const Footer = () => {
             <span><Instagram /></span>
           </div>
         </div>
+        <span><Link to={"/inscripcion"}>Formulario de Inscripción</Link></span>
         <div className={styles.tecnoLabInfo}>
           <img src="tecnolab.png" alt="tecnolab icon info" />
         </div>
@@ -36,54 +32,6 @@ const Footer = () => {
           <span>Políticas de Privacidad</span>
         </div>
       </div>
-      {/* <div className="row-footer"> */}
-      {/*   <div className="col"> */}
-      {/*     <div */}
-      {/*       className="list-unstyled" */}
-      {/*       style={{ display: "flex", flexDirection: "column", gap: "10px" }} */}
-      {/*     > */}
-      {/*       <Link to="/acerca" style={{ color: "#fff" }}> */}
-      {/*         Acerca de Arbu */}
-      {/*       </Link> */}
-      {/*       <a */}
-      {/*         href="https://labtecnosocial.org/politica-de-privacidad-de-la-app-arbu/" */}
-      {/*         target="_blank" */}
-      {/*         rel="noopener noreferrer" */}
-      {/*         style={{ color: "#fff" }} */}
-      {/*       > */}
-      {/*         Política de privacidad */}
-      {/*       </a> */}
-      {/*     </div> */}
-      {/*   </div> */}
-      {/*   <div className="col" style={{ textAlign: "center" }}> */}
-      {/*     <Typography sx={{ fontFamily: "Poppins" }}>Síguenos en</Typography> */}
-      {/**/}
-      {/*     <div className="social-media"> */}
-      {/*       <a href="https://m.facebook.com/ArbuCb/" target="_blank" rel="noopener noreferrer"> */}
-      {/*         <img className="social-button" src={facebook} alt="" width={40} /> */}
-      {/*       </a> */}
-      {/*       <a href="https://twitter.com/ArbuCbba" target="_blank" rel="noopener noreferrer"> */}
-      {/*         <img className="social-button" src={tweeter} alt="" width={40} /> */}
-      {/*       </a> */}
-      {/*       <a href="https://www.instagram.com/arbucbba/" target="_blank" rel="noopener noreferrer"> */}
-      {/*         <img */}
-      {/*           className="social-button" */}
-      {/*           src={instagram} */}
-      {/*           alt="" */}
-      {/*           width={40} */}
-      {/*         /> */}
-      {/*       </a> */}
-      {/*     </div> */}
-      {/*     <br /> */}
-      {/*     <Typography sx={{ fontFamily: "Poppins" }}> */}
-      {/*       Una iniciativa de */}
-      {/*     </Typography> */}
-      {/**/}
-      {/*     <MuiLink href="https://labtecnosocial.org/" target="_blank"> */}
-      {/*       <img src={logoLab} alt="" width="100px" /> */}
-      {/*     </MuiLink> */}
-      {/*   </div> */}
-      {/* </div> */}
     </div>
   );
 };
