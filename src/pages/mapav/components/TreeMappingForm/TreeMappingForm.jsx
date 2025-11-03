@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './TreeMappingForm.module.css';
 import { X } from 'lucide-react';
 import { Button } from '../../../../components/button/Button';
@@ -65,6 +65,15 @@ export const TreeMappingForm = ({ onSubmit }) => {
       setErrors(prev => ({ ...prev, [field]: null }));
     }
   };
+
+  useEffect(() => {
+    if (formData.nombreComun) {
+      const indexNombreComun = nombresComunes.indexOf(formData.nombreComun)
+      if (indexNombreComun >= 0) {
+        setFormData(prev => ({ ...prev, nombreCientifico: nombreCientificos[indexNombreComun] }))
+      }
+    }
+  }, [formData.nombreComun, formData.nombreCientifico])
 
   const removeImage = (field) => {
     setFormData(prev => ({ ...prev, [field]: null }));
@@ -287,11 +296,12 @@ export const TreeMappingForm = ({ onSubmit }) => {
                 <Input
                   label="Nombre común*"
                   value={formData.nombreComun}
-                  onChange={(e) => handleTextChange('nombreComun', e)}
+                  onChange={(e) => {
+                    handleTextChange('nombreComun', e)
+                  }}
                   placeholder="Ingrese nombre común"
                   error={errors.nombreComun}
                   fullWidth
-                  // suggestions={especies.map(suggestion => suggestion.nombreComun)}
                   suggestions={nombresComunes}
                 />
                 <Input
@@ -301,7 +311,6 @@ export const TreeMappingForm = ({ onSubmit }) => {
                   placeholder="Ingrese nombre científico"
                   error={errors.nombreCientifico}
                   fullWidth
-                  // suggestions={especies.map(suggestion => suggestion.nombreCientifico)}
                   suggestions={nombreCientificos}
                 />
               </>
