@@ -33,6 +33,10 @@
 .secondary {
   color: white;
   background-color: var(--green2);
+
+  a {
+    color: white;
+  }
 }
 
 .secondary:hover {
