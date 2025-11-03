@@ -40,14 +40,12 @@ export const Registro = () => {
     if (validateForm()) {
       console.log('Form submitted:', formData);
       setShowSuccess(true);
-      setTimeout(() => {
-        setFormData({
-          nombresApellidos: '',
-          grupo: '',
-        });
-        setErrors({});
-        setShowSuccess(false);
-      }, 2000);
+      setFormData({
+        nombresApellidos: '',
+        grupo: '',
+      });
+      setErrors({});
+      // setShowSuccess(false);
     }
   };
 
@@ -55,11 +53,17 @@ export const Registro = () => {
     <div className={styles.registroContainer}>
       {showSuccess ? (
         <div className={styles.successMessage}>
-          <p>Registro completado con éxito!</p>
+          <h2>Registro completado con éxito!</h2>
+          <p>Arbu revisará tu información dentro de las próximas 24 horas para confirmar tu registro.
+            Cuando el proceso finalice, podrás continuar.</p>
+          <p></p>
+          <Button type="button" variant="secondary" href={'/mapa'}>
+            Aceptar y Volver
+          </Button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className={styles.form}>
-          <h2>Registro</h2>
+          <h2>Formulario de Inscripción</h2>
           <Input
             label="Nombres y apellidos"
             value={formData.nombresApellidos}

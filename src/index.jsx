@@ -32,7 +32,7 @@ root.render(
         <Route path="mapa" element={<MapaPage />} />
         <Route path="ranking" element={<RankingComponent />} />
         <Route path="aprende" element={<CatalogoComponent />} />
-        <Route path="registro" element={<Registro />} />
+        <Route path="inscripcion" element={<Registro />} />
         <Route path="api" element={<APIComponent />}>
           <Route path='como-empezar' element={<ComoEmpezar />} />
           <Route path='referencia-endpoints' element={<ReferenciaEndpoints />} />
