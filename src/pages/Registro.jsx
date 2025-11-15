@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 import styles from './Registro.module.css'; // Assuming you create this CSS file
 import { Input } from '../components/input/Input';
 import { Button } from '../components/button/Button';
+import { db } from '../firebase/firebase-config';
+import { collection, addDoc } from 'firebase/firestore';
 
 export const Registro = () => {
   const [formData, setFormData] = useState({
-    nombresApellidos: '',
+    email: "",
+    nombres: '',
+    idAuth: '',
+
     grupo: '',
+    rama: "",
+
     scouts: '',
+    estado: "pendiente",
+
   });
   const [errors, setErrors] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -35,17 +44,25 @@ export const Registro = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
-      console.log('Form submitted:', formData);
-      setShowSuccess(true);
-      setFormData({
-        nombresApellidos: '',
-        grupo: '',
-      });
-      setErrors({});
-      // setShowSuccess(false);
+      try {
+        const coleccionRef = collection(db, 'inscripciones_test');
+        const docRef = await addDoc(coleccionRef, formData);
+        console.log("Documento escrito con ID: ", docRef.id);
+
+        setShowSuccess(true);
+        setFormData({
+          nombresApellidos: '',
+          grupo: '',
+        });
+        setErrors({});
+        console.log('Form submitted:', formData);
+      } catch (e) {
+        console.error("Error al añadir el documento: ", e);
+        alert("Hubo un error al subir los datos.");
+      }
     }
   };
 

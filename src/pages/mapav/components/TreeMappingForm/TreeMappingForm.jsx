@@ -7,6 +7,9 @@ import { Radio } from '../../../../components/Radio/Radio';
 import { setModalState } from '../../../../actions/mapaActions';
 import { Input } from '../../../../components/input/Input';
 import { especies, nombreCientificos, nombresComunes } from '../../utils/especies'
+import { db, storage } from '../../../../firebase/firebase-config';
+import { collection, addDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export const lugarPlantacion = [
   { value: "acera", label: "Acera" },
@@ -130,11 +133,6 @@ export const TreeMappingForm = ({ onSubmit }) => {
     setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = () => {
-    if (!validateStep()) return;
-    if (onSubmit) onSubmit(formData);
-    setShowSuccess(true);
-  };
 
   const handleResetAndClose = () => {
     setCurrentStep(1);
@@ -158,6 +156,73 @@ export const TreeMappingForm = ({ onSubmit }) => {
     setErrors({});
     setShowSuccess(false);
     dispatch(setModalState("CLOSE"));
+  };
+
+  const uploadFile = async (file, path) => {
+    if (!file) return null;
+
+    try {
+      const storageRef = ref(storage, path);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      return downloadURL;
+    } catch (error) {
+      console.error("Error al subir el archivo:", error);
+      throw new Error("No se pudo subir el archivo a Storage.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!validateStep()) return;
+    if (onSubmit) onSubmit(formData);
+    setShowSuccess(true);
+    try {
+      const imageUploadPromises = [
+        'arbolCompleto',
+        'raizBase',
+        'corteza',
+        'hoja',
+        'flor'
+      ].map(async (key) => {
+        const file = formData[key];
+        // Genera una ruta única para cada archivo (ej: 'arboles/hoja-1678886400000')
+        const path = `arboles/${key}-${Date.now()}`;
+        return uploadFile(file, path);
+      });
+
+      const [
+        arbolCompletoURL,
+        raizBaseURL,
+        cortezaURL,
+        hojaURL,
+        florURL
+      ] = await Promise.all(imageUploadPromises);
+
+      const firestoreData = {
+        proyecto: formData.proyecto,
+        nombrePropio: formData.nombrePropio,
+        nombreComun: formData.nombreComun,
+        nombreCientifico: formData.nombreCientifico,
+        lugarPlantacion: formData.lugarPlantacion,
+        otro: formData.otro,
+        altura: formData.altura,
+        diametro: formData.diametro,
+        arbolCompletoURL: arbolCompletoURL,
+        raizBaseURL: raizBaseURL,
+        cortezaURL: cortezaURL,
+        hojaURL: hojaURL,
+        florURL: florURL,
+        fechaCreacion: new Date(),
+      };
+
+      const coleccionRef = collection(db, 'mapeos_test');
+      const docRef = await addDoc(coleccionRef, firestoreData);
+
+      console.log("Datos y URLs guardados con ID:", docRef.id);
+      alert("Registro de árbol completado y subido.");
+    } catch (e) {
+    }
   };
 
   const renderRadioInput = (label, field, options, selected, setSelected, conditionalField, conditionalValue, conditionalPlaceholder) => (

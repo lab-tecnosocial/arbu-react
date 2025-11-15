@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Trash2 } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
@@ -28,6 +28,25 @@ export const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const { arbolesPlantados } = useSelector((state) => state.arboles)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsCollapsed(true);
+      }
+      else {
+        setIsCollapsed(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleToggleGeo = (value) => {
     setGeoValues(value)
