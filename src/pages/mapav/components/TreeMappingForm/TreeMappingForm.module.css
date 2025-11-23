@@ -6,6 +6,10 @@
   grid-template-rows: auto 1fr auto;
 }
 
+.fitHeight {
+  height: auto;
+}
+
 .header {
   border-bottom: 1px solid var(--geyser-200);
   padding: 16px 24px;
@@ -24,15 +28,18 @@
   }
 }
 
-.form {
+.formBody {
   width: 100%;
   overflow-y: auto;
   height: 100%;
+  position: relative;
+  padding: 24px;
+}
+
+.formInner {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  position: relative;
-  padding: 24px;
 }
 
 

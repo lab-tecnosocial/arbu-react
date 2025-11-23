@@ -10,6 +10,8 @@ import { especies, nombreCientificos, nombresComunes } from '../../utils/especie
 import { db, storage } from '../../../../firebase/firebase-config';
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { InscriptionForm } from '../../../inscripcion/components/InscriptionForm/InscriptionForm';
+import { LoginForm } from '../../../inscripcion/components/LoginForm/LoginForm';
 
 export const lugarPlantacion = [
   { value: "acera", label: "Acera" },
@@ -22,6 +24,7 @@ export const lugarPlantacion = [
 
 export const TreeMappingForm = ({ onSubmit }) => {
   const dispatch = useDispatch();
+  const { uid, checking } = useSelector(state => state.auth)
   const [selectedLugarPlantacion, setSelectedLugarPlantacion] = useState("acera");
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
   const [currentStep, setCurrentStep] = useState(1);
@@ -178,6 +181,7 @@ export const TreeMappingForm = ({ onSubmit }) => {
     if (onSubmit) onSubmit(formData);
     setShowSuccess(true);
     try {
+      console.log("start submit")
       const imageUploadPromises = [
         'arbolCompleto',
         'raizBase',
@@ -186,7 +190,6 @@ export const TreeMappingForm = ({ onSubmit }) => {
         'flor'
       ].map(async (key) => {
         const file = formData[key];
-        // Genera una ruta única para cada archivo (ej: 'arboles/hoja-1678886400000')
         const path = `arboles/${key}-${Date.now()}`;
         return uploadFile(file, path);
       });
@@ -263,157 +266,163 @@ export const TreeMappingForm = ({ onSubmit }) => {
   );
 
   return (
-    <div className={styles.formContainer}>
+    <div className={`${styles.formContainer} ${uid ? '' : styles.fitHeight}`}>
       <div className={styles.header}>
         <h2 className={styles.title}>
           Formulario de Mapeo
         </h2>
         <button className={styles.closeButton} onClick={showSuccess ? handleResetAndClose : () => dispatch(setModalState("CLOSE"))}><X /></button>
       </div>
-      {showSuccess ? (
-        <div className={styles.successContainer}>
-          <h3>¡Formulario completado con éxito!</h3>
-          <p>Los datos de mapeao han sido enviados correctamente.</p>
-          <Button onClick={handleResetAndClose} variant="secondary" fullWidth>
-            Aceptar y Salir
-          </Button>
-        </div>
-      ) : (
-        <>
-          <div className={styles.form}>
+      {/* <div className={styles.successContainer}> */}
+      {/*   <h3>¡Formulario completado con éxito!</h3> */}
+      {/*   <p>Los datos de mapeao han sido enviados correctamente.</p> */}
+      {/*   <Button onClick={handleResetAndClose} variant="secondary" fullWidth> */}
+      {/*     Aceptar y Salir */}
+      {/*   </Button> */}
+      {/* </div> */}
 
-            {currentStep === 1 && (
-              <>
-                <h4 style={{ fontSize: "20px" }}>Paso 1 de 3</h4>
-                <Input
-                  type="file"
-                  label="Árbol completo"
-                  required
-                  accept="image/*"
-                  capture="environment"
-                  onFileChange={(e) => handleFileChange('arbolCompleto', e)}
-                  previewSrc={previews.arbolCompleto}
-                  onPreviewClose={() => removeImage('arbolCompleto')}
-                  error={errors.arbolCompleto}
-                />
-                <Input
-                  type="file"
-                  label="Raiz o base"
-                  accept="image/*"
-                  capture="environment"
-                  onFileChange={(e) => handleFileChange('raizBase', e)}
-                  previewSrc={previews.raizBase}
-                  onPreviewClose={() => removeImage('raizBase')}
-                  error={errors.raizBase}
-                />
-                <Input
-                  type="file"
-                  label="Corteza"
-                  accept="image/*"
-                  capture="environment"
-                  onFileChange={(e) => handleFileChange('corteza', e)}
-                  previewSrc={previews.corteza}
-                  onPreviewClose={() => removeImage('corteza')}
-                  error={errors.corteza}
-                />
-                <Input
-                  type="file"
-                  label="Hoja"
-                  accept="image/*"
-                  capture="environment"
-                  onFileChange={(e) => handleFileChange('hoja', e)}
-                  previewSrc={previews.hoja}
-                  onPreviewClose={() => removeImage('hoja')}
-                  error={errors.hoja}
-                />
-                <Input
-                  type="file"
-                  label="Flor"
-                  accept="image/*"
-                  capture="environment"
-                  onFileChange={(e) => handleFileChange('flor', e)}
-                  previewSrc={previews.flor}
-                  onPreviewClose={() => removeImage('flor')}
-                  error={errors.flor}
-                />
-              </>
-            )}
+      <div className={styles.formBody}>
+        {
+          !uid ?
+            <LoginForm />
+            :
+            <>
+              {currentStep === 1 &&
+                <div className={styles.formInner}>
+                  <h4 style={{ fontSize: "20px" }}>Paso 1 de 3</h4>
+                  <Input
+                    type="file"
+                    label="Árbol completo"
+                    required
+                    accept="image/*"
+                    capture="environment"
+                    onFileChange={(e) => handleFileChange('arbolCompleto', e)}
+                    previewSrc={previews.arbolCompleto}
+                    onPreviewClose={() => removeImage('arbolCompleto')}
+                    error={errors.arbolCompleto}
+                  />
+                  <Input
+                    type="file"
+                    label="Raiz o base"
+                    accept="image/*"
+                    capture="environment"
+                    onFileChange={(e) => handleFileChange('raizBase', e)}
+                    previewSrc={previews.raizBase}
+                    onPreviewClose={() => removeImage('raizBase')}
+                    error={errors.raizBase}
+                  />
+                  <Input
+                    type="file"
+                    label="Corteza"
+                    accept="image/*"
+                    capture="environment"
+                    onFileChange={(e) => handleFileChange('corteza', e)}
+                    previewSrc={previews.corteza}
+                    onPreviewClose={() => removeImage('corteza')}
+                    error={errors.corteza}
+                  />
+                  <Input
+                    type="file"
+                    label="Hoja"
+                    accept="image/*"
+                    capture="environment"
+                    onFileChange={(e) => handleFileChange('hoja', e)}
+                    previewSrc={previews.hoja}
+                    onPreviewClose={() => removeImage('hoja')}
+                    error={errors.hoja}
+                  />
+                  <Input
+                    type="file"
+                    label="Flor"
+                    accept="image/*"
+                    capture="environment"
+                    onFileChange={(e) => handleFileChange('flor', e)}
+                    previewSrc={previews.flor}
+                    onPreviewClose={() => removeImage('flor')}
+                    error={errors.flor}
+                  />
+                </div>
+              }
+              {currentStep === 2 &&
+                <div className={styles.formInner}>
+                  <h4 style={{ fontSize: "20px" }}>Paso 2 de 3</h4>
+                  <Input
+                    label="Proyecto"
+                    value={formData.proyecto}
+                    onChange={(e) => handleTextChange('proyecto', e)}
+                    placeholder="Ingrese el proyecto"
+                    error={errors.proyecto}
+                    fullWidth
+                  />
+                  <Input
+                    label="Nombre propio"
+                    value={formData.nombrePropio}
+                    onChange={(e) => handleTextChange('nombrePropio', e)}
+                    placeholder="Ingrese nombre propio"
+                    error={errors.nombrePropio}
+                    fullWidth
+                  />
+                  <Input
+                    label="Nombre común*"
+                    value={formData.nombreComun}
+                    onChange={(e) => {
+                      handleTextChange('nombreComun', e)
+                    }}
+                    placeholder="Ingrese nombre común"
+                    error={errors.nombreComun}
+                    fullWidth
+                    suggestions={nombresComunes}
+                  />
+                  <Input
+                    label="Nombre científico*"
+                    value={formData.nombreCientifico}
+                    onChange={(e) => handleTextChange('nombreCientifico', e)}
+                    placeholder="Ingrese nombre científico"
+                    error={errors.nombreCientifico}
+                    fullWidth
+                    suggestions={nombreCientificos}
+                  />
+                </div>
+              }
+              {currentStep === 3 &&
+                <div className={styles.formInner}>
+                  <h4 style={{ fontSize: "20px" }}>Paso 3 de 3</h4>
+                  {renderRadioInput(
+                    "Lugar de plantación",
+                    "lugarPlantacion",
+                    lugarPlantacion,
+                    selectedLugarPlantacion,
+                    setSelectedLugarPlantacion,
+                    "otro",
+                    "otro",
+                    "Especificar lugar"
+                  )}
+                  <Input
+                    label="Altura (m)"
+                    value={formData.altura}
+                    onChange={(e) => handleTextChange('altura', e)}
+                    placeholder="Ejm: 1.4"
+                    error={errors.altura}
+                    fullWidth
+                  />
+                  <Input
+                    label="Diámetro a la altura del pecho (cm)"
+                    value={formData.diametro}
+                    onChange={(e) => handleTextChange('diametro', e)}
+                    placeholder="Ejm: 12"
+                    error={errors.diametro}
+                    fullWidth
+                  />
+                </div>
+              }
+            </>
+        }
+      </div>
 
-            {currentStep === 2 && (
-              <>
-                <h4 style={{ fontSize: "20px" }}>Paso 2 de 3</h4>
-                <Input
-                  label="Proyecto"
-                  value={formData.proyecto}
-                  onChange={(e) => handleTextChange('proyecto', e)}
-                  placeholder="Ingrese el proyecto"
-                  error={errors.proyecto}
-                  fullWidth
-                />
-                <Input
-                  label="Nombre propio"
-                  value={formData.nombrePropio}
-                  onChange={(e) => handleTextChange('nombrePropio', e)}
-                  placeholder="Ingrese nombre propio"
-                  error={errors.nombrePropio}
-                  fullWidth
-                />
-                <Input
-                  label="Nombre común*"
-                  value={formData.nombreComun}
-                  onChange={(e) => {
-                    handleTextChange('nombreComun', e)
-                  }}
-                  placeholder="Ingrese nombre común"
-                  error={errors.nombreComun}
-                  fullWidth
-                  suggestions={nombresComunes}
-                />
-                <Input
-                  label="Nombre científico*"
-                  value={formData.nombreCientifico}
-                  onChange={(e) => handleTextChange('nombreCientifico', e)}
-                  placeholder="Ingrese nombre científico"
-                  error={errors.nombreCientifico}
-                  fullWidth
-                  suggestions={nombreCientificos}
-                />
-              </>
-            )}
-
-            {currentStep === 3 && (
-              <>
-                <h4 style={{ fontSize: "20px" }}>Paso 3 de 3</h4>
-                {renderRadioInput(
-                  "Lugar de plantación",
-                  "lugarPlantacion",
-                  lugarPlantacion,
-                  selectedLugarPlantacion,
-                  setSelectedLugarPlantacion,
-                  "otro",
-                  "otro",
-                  "Especificar lugar"
-                )}
-                <Input
-                  label="Altura (m)"
-                  value={formData.altura}
-                  onChange={(e) => handleTextChange('altura', e)}
-                  placeholder="Ejm: 1.4"
-                  error={errors.altura}
-                  fullWidth
-                />
-                <Input
-                  label="Diámetro a la altura del pecho (cm)"
-                  value={formData.diametro}
-                  onChange={(e) => handleTextChange('diametro', e)}
-                  placeholder="Ejm: 12"
-                  error={errors.diametro}
-                  fullWidth
-                />
-              </>
-            )}
-
-          </div>
+      {
+        !uid ?
+          null
+          :
           <div className={styles.stepActions}>
             {currentStep === 1 && (
               <Button onClick={() => dispatch(setModalState("CLOSE"))} variant="terciary" fullWidth>
@@ -435,8 +444,7 @@ export const TreeMappingForm = ({ onSubmit }) => {
               </Button>
             )}
           </div>
-        </>
-      )}
+      }
     </div>
   );
 };
