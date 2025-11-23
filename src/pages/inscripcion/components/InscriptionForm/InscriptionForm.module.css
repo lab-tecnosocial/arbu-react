@@ -1,0 +1,14 @@
+.inscriptionForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.successMessage {
+  text-align: center;
+  margin-top: 20px;
+  max-width: 400px;
+  display: grid;
+  place-content: center;
+  gap: 16px;
+}
