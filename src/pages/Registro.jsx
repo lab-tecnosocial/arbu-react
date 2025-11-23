@@ -16,7 +16,6 @@ export const Registro = () => {
 
     scouts: '',
     estado: "pendiente",
-
   });
   const [errors, setErrors] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
