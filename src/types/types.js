@@ -1,4 +1,7 @@
 export const types = {
+  AUTH_LOGIN: '[AUTH] login',
+  AUTH_LOGOUT: '[AUTH] logout',
+  AUTH_CHECKING_FINISH: '[AUTH] finish checking login state',
   FETCH_ARBOLES_PLANTADOS_REQUEST: '[ARBOL] fetch arboles plantados request',
   FETCH_ARBOLES_PLANTADOS_SUCCESS: '[ARBOL] fetch arboles plantados success',
   FETCH_ARBOLES_PLANTADOS_FAILURE: '[ARBOL] fetch arboles plantados failure',
