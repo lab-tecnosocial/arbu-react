@@ -1,0 +1,22 @@
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.loginInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loginHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  p {
+    font-size: 14px;
+    color: var(--geyser-600);
+  }
+}

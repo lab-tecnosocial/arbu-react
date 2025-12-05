@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 const ComoEmpezar = () => {
   return (
     <>
-
       <div className="apidocs__panel-row">
         <h3>Como empezar</h3>
         <p>

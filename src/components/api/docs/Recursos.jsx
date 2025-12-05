@@ -2,8 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Recursos = () => {
+  const handleDescargar = () => {
+    window.open("http://localhost:8111/arboles/descargar", "_blank");
+  };
   return (
     <>
+      <button onClick={handleDescargar}>
+        Descargar Excel
+      </button>
       <div className='apidocs__panel-row'>
         <h3 id='realizar-peticiones'>Realizar peticiones HTTP persolanizados.</h3>
         <p>Si necesitas realizar peticiones HTTP personalizadas a nuestra API de árboles urbanos, puedes hacerlo utilizando cualquier cliente HTTP compatible. A continuación, te proporcionamos un ejemplo básico utilizando la biblioteca requests en Python:</p>

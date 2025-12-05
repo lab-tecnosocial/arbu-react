@@ -1,0 +1,43 @@
+.footer {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  gap: 32px;
+}
+
+.main {
+  display: flex;
+  justify-content: space-between;
+
+  .footerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    p {
+      max-width: 335px;
+    }
+
+    .socialIcons {
+      display: flex;
+      gap: 1rem;
+      color: var(--green2);
+    }
+  }
+}
+
+.rights {
+  display: flex;
+  justify-content: space-between;
+  color: var(--geyser-600);
+
+  .rightsLinks {
+    display: flex;
+    gap: 3rem;
+  }
+}
