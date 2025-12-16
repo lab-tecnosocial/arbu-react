@@ -1,5 +1,6 @@
 .banner {
   background-color: var(--green2);
+  padding-inline: var(--inner-space);
 }
 
 .bannerInner {
@@ -90,5 +91,20 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+}
+
+@media (max-width: 1024px) {
+  .bannerInner {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .content {
+    padding: 3rem;
+    align-items: center;
   }
 }

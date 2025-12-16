@@ -15,6 +15,21 @@
   position: relative;
 }
 
+.navbarWrapperDesktop {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.navbarWrapperMobile {
+  display: none;
+}
+
 .logo img {
   height: 60px;
   width: auto;
@@ -69,7 +84,73 @@
   display: none;
 }
 
+.profileContainer {
+  position: relative;
+}
+
+.profileButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  color: inherit;
+  transition: color 0.2s ease-in-out;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.profileDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid var(--geyser-200);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 150px;
+  z-index: 1000;
+}
+
+.profileDropdown a,
+.profileDropdown button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.profileDropdown a:hover,
+.profileDropdown button:hover {
+  background-color: var(--geyser-100);
+}
+
 @media (max-width: 768px) {
+  .navbarWrapperDesktop {
+    display: none;
+  }
+
+  .navbarWrapperMobile {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1280px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+  }
+
   .hamburger {
     display: block;
   }

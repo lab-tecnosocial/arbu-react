@@ -57,10 +57,10 @@ export const LoginForm = ({
 
   return (
     <div className={styles.loginForm}>
-      <div className={styles.loginHeader}>
-        <h2>{title}</h2>
+      <div className={styles.loginHeader}><h2>{title}</h2>
         <p>{description}</p>
       </div>
+      <img src="warning.png" alt="warning image" />
       <div className="lineX"></div>
       <Button icon={<img src="icons/google-social-icon.svg" alt="Google Icon" />} variant='terciary' onClick={() => handleGoogleLogin()}>Continuar con Google</Button>
     </div>

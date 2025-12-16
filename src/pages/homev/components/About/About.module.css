@@ -18,6 +18,7 @@
 
     h2 {
       font-size: 36px;
+      text-align: center;
     }
 
     p {
@@ -42,6 +43,7 @@
     width: 100%;
     height: auto;
     transition: .2s ease;
+    min-width: 300px;
 
     h3 {
       font-size: 32px;
@@ -56,5 +58,12 @@
     p {
       color: white;
     }
+  }
+}
+
+@media (max-width: 1024px) {
+  .aboutCards {
+    /* flex-direction: column; */
+    overflow-x: auto;
   }
 }

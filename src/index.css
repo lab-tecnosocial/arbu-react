@@ -54,7 +54,7 @@
   --spacing-small-extra: 6px;
 
   /* INNER SPACE */
-  --inner-space: 2vw;
+  --inner-space: 3vw;
 }
 
 *,
@@ -184,6 +184,11 @@ img {
 
 svg {
   display: flex;
+}
+
+section,
+footer {
+  padding-inline: var(--inner-space);
 }
 
 .leaflet-container {

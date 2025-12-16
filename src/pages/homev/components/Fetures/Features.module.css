@@ -59,3 +59,29 @@
 
   }
 }
+
+@media (max-width: 1024px) {
+  .featuresCards {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .features {
+    padding-top: 32px;
+    padding-bottom: 64px;
+    gap: 2rem;
+
+    .featuresHeader {
+      h2 {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .featuresCards {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}

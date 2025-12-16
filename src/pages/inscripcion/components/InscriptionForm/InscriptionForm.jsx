@@ -10,6 +10,7 @@ import { collection, addDoc } from 'firebase/firestore';
 export const InscriptionForm = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     nombres: '',
@@ -31,8 +32,8 @@ export const InscriptionForm = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.nombresApellidos.trim()) {
-      newErrors.nombresApellidos = 'Nombres y apellidos son obligatorios.';
+    if (!formData.nombres.trim()) {
+      newErrors.nombres = 'Nombres y apellidos son obligatorios.';
     }
     if (!formData.grupo.trim()) {
       newErrors.grupo = 'Grupo es obligatorio.';
@@ -46,10 +47,15 @@ export const InscriptionForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     if (validateForm()) {
       try {
         const coleccionRef = collection(db, 'inscripciones_test');
-        const docRef = await addDoc(coleccionRef, formData);
+        const docRef = await addDoc(coleccionRef, {
+          ...formData,
+          email: auth.currentUser.email,
+          idAuth: auth.currentUser.uid,
+        });
         console.log("Documento escrito con ID: ", docRef.id);
 
         setShowSuccess(true);
@@ -59,9 +65,11 @@ export const InscriptionForm = () => {
         });
         setErrors({});
         console.log('Form submitted:', formData);
+        setLoading(false);
       } catch (e) {
         console.error("Error al añadir el documento: ", e);
         alert("Hubo un error al subir los datos.");
+        setLoading(false);
       }
     }
   };
@@ -92,7 +100,7 @@ export const InscriptionForm = () => {
         <Input
           label="Nombres y apellidos"
           value={formData.nombresApellidos}
-          onChange={(e) => handleTextChange('nombresApellidos', e)}
+          onChange={(e) => handleTextChange('nombres', e)}
           placeholder="Ingrese nombres y apellidos"
           error={errors.nombresApellidos}
           fullWidth
@@ -119,8 +127,18 @@ export const InscriptionForm = () => {
           fullWidth
           withIcon
         />
+        <Input
+          label="Rama Scouts"
+          value={formData.rama}
+          onChange={(e) => handleTextChange('rama', e)}
+          placeholder="Ingrese rama"
+          suggestions={["Lobatos", "Exploradores", "Pioneros", "Rovers"]}
+          error={errors.rama}
+          fullWidth
+        />
+
         <div className='lineX'></div>
-        <Button type="submit" variant="secondary" fullWidth>
+        <Button isLoading={loading} type="submit" variant="secondary" fullWidth>
           Registrar
         </Button>
         <button onClick={logout}>SALIR</button>
