@@ -3,6 +3,8 @@
   border-bottom: 1px solid var(--geyser-200);
   border-top: 1px solid var(--geyser-200);
   padding: 3.5rem 0;
+  padding-inline: var(--inner-space);
+  overflow-x: auto;
 }
 
 .logosWrapper {
@@ -23,5 +25,13 @@
   .logos {
     display: flex;
     gap: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .logosWrapper {
+    .logos {
+      gap: 2rem;
+    }
   }
 }

@@ -24,7 +24,8 @@ export const lugarPlantacion = [
 
 export const TreeMappingForm = ({ onSubmit }) => {
   const dispatch = useDispatch();
-  const { uid, checking } = useSelector(state => state.auth)
+  const { uid } = useSelector(state => state.auth)
+  const [loading, setLoading] = useState(false);
   const [selectedLugarPlantacion, setSelectedLugarPlantacion] = useState("acera");
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
   const [currentStep, setCurrentStep] = useState(1);
@@ -179,7 +180,8 @@ export const TreeMappingForm = ({ onSubmit }) => {
   const handleSubmit = async () => {
     if (!validateStep()) return;
     if (onSubmit) onSubmit(formData);
-    setShowSuccess(true);
+    // setShowSuccess(true);
+    setLoading(true);
     try {
       console.log("start submit")
       const imageUploadPromises = [
@@ -223,8 +225,12 @@ export const TreeMappingForm = ({ onSubmit }) => {
       const docRef = await addDoc(coleccionRef, firestoreData);
 
       console.log("Datos y URLs guardados con ID:", docRef.id);
-      alert("Registro de árbol completado y subido.");
+      setLoading(false);
+      nextStep();
     } catch (e) {
+      setLoading(false);
+      alert("Error al enviar el formulario. Intente nuevamente.");
+      console.error("Error al enviar el formulario:", e);
     }
   };
 
@@ -415,12 +421,21 @@ export const TreeMappingForm = ({ onSubmit }) => {
                   />
                 </div>
               }
+              {currentStep === 4 &&
+                <div className={styles.successContainer}>
+                  <h3>¡Formulario completado con éxito!</h3>
+                  <p>Los datos de mapeao han sido enviados correctamente.</p>
+                  <Button onClick={handleResetAndClose} variant="secondary" fullWidth>
+                    Aceptar y Salir
+                  </Button>
+                </div>
+              }
             </>
         }
       </div>
 
       {
-        !uid ?
+        !uid || currentStep === 4 ?
           null
           :
           <div className={styles.stepActions}>
@@ -439,7 +454,7 @@ export const TreeMappingForm = ({ onSubmit }) => {
                 Siguiente
               </Button>
             ) : (
-              <Button onClick={handleSubmit} type="submit" variant="secondary" fullWidth>
+              <Button isLoading={loading} onClick={handleSubmit} type="submit" variant="secondary" fullWidth>
                 Completar
               </Button>
             )}

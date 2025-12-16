@@ -88,3 +88,32 @@
     object-fit: cover;
   }
 }
+
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    gap: 3rem;
+  }
+
+  .content {
+    max-width: 100%;
+    text-align: center;
+    align-items: center;
+
+    h1 {
+      font-size: 36px;
+    }
+
+    .buttons {
+      justify-content: center;
+    }
+  }
+
+  .picture {
+    max-width: 400px;
+    max-height: none;
+  }
+}
