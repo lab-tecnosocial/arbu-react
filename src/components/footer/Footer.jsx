@@ -29,7 +29,7 @@ const Footer = () => {
         <div className={styles.rights}>
           <span>2025 ARBU, Derechos Reservados</span>
           <div className={styles.rightsLinks}>
-            <span>Acerca de Arbu</span>
+            <Link to="/acerca-de-nosotros">Acerca de Arbu</Link>
             <span>Políticas de Privacidad</span>
           </div>
         </div>
