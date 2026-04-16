@@ -12,6 +12,13 @@ export const Banner = () => {
             <Button
               variant="terciary"
               icon={<img src="icons/googleplay.png" alt="" />}
+              onClick={() =>
+                window.open(
+                  "https://play.google.com/store/apps/details?id=org.labtecnosocial.arbu.android&pcampaignid=web_share",
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
             >
               Descargar Arbu
             </Button>
