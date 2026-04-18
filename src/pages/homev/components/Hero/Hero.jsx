@@ -12,11 +12,19 @@ export const Hero = () => {
             <Button
               variant="primary"
               icon={<img src="icons/googleplay.png" alt="" />}
+              onClick={() =>
+                window.open(
+                  "https://play.google.com/store/apps/details?id=org.labtecnosocial.arbu.android&pcampaignid=web_share",
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
             >
               Descargar Arbu
             </Button>
             <Button
               variant="terciary"
+              href="/mapa"
             >
               Ver mapa
             </Button>

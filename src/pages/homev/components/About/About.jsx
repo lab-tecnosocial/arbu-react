@@ -12,14 +12,23 @@ export const About = () => {
           <div className={styles.card}>
             <h3>ADOPTA</h3>
             <p>Adopta árboles urbanos en el mapa.</p>
+            <div className={styles.cardLogoArea}>
+              <img src="/adoptalogo.png" alt="Logo Adopta" className={styles.cardLogo} />
+            </div>
           </div>
           <div className={styles.card}>
             <h3>CUIDA</h3>
-            <p>Adopta árboles urbanos en el mapa.</p>
+            <p>Programa recordatorios de regado para los árboles.</p>
+            <div className={styles.cardLogoArea}>
+              <img src="/cuidalogo.png" alt="Logo Cuida" className={styles.cardLogo} />
+            </div>
           </div>
           <div className={styles.card}>
             <h3>APRENDE</h3>
-            <p>Adopta árboles urbanos en el mapa.</p>
+            <p>Revisa y aprende sobre las especies nativas e introducidas.</p>
+            <div className={styles.cardLogoArea}>
+              <img src="/aprendelogo.png" alt="Logo Aprende" className={styles.cardLogo} />
+            </div>
           </div>
         </div>
       </div>
