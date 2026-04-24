@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./AboutUs.module.css";
-import { Heart, Target, Globe, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import erickImg from "./team/erick.png";
 import patriciaImg from "./team/patricia.png";
 import lourdesImg from "./team/lourdes.jpg";
@@ -150,15 +150,13 @@ const AboutUs = () => {
         <div className={styles.sectionContent}>
           <h2>Agradecimientos</h2>
           <p className={styles.acknowledgementsSubtitle}>Gestión 2021 - 2022</p>
-          <div className={styles.acknowledgementsGrid}>
+          <div className={styles.acknowledgementsSimple}>
             {acknowledgments.map((group, index) => (
-              <div key={index} className={styles.acknowledgementsCard}>
+              <div key={index} className={styles.acknowledgementsGroup}>
                 <h3>{group.category}</h3>
-                <ul>
-                  {group.members.map((member, idx) => (
-                    <li key={idx}>{member}</li>
-                  ))}
-                </ul>
+                {group.members.map((member, idx) => (
+                  <p key={idx}>{member}</p>
+                ))}
               </div>
             ))}
           </div>

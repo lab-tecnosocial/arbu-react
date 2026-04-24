@@ -5,7 +5,16 @@
 }
 
 .heroSection {
-  background: linear-gradient(135deg, #4a9b6f 0%, #2d6a4f 100%);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(74, 155, 111, 0.9) 0%,
+      rgba(45, 106, 79, 0.92) 100%
+    ),
+    url("../api/assets/arbuimg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
   padding: 60px 20px;
   text-align: center;
@@ -198,53 +207,32 @@
   text-align: center;
   font-size: 1.1rem;
   color: #4a9b6f;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   font-weight: 600;
 }
 
-.acknowledgementsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
+.acknowledgementsSimple {
+  max-width: 900px;
   margin: 0 auto;
+  text-align: center;
 }
 
-.acknowledgementsCard {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  border-left: 5px solid #4a9b6f;
+.acknowledgementsGroup {
+  margin-bottom: 18px;
 }
 
-.acknowledgementsCard h3 {
-  font-size: 1.2rem;
+.acknowledgementsGroup h3 {
+  font-size: 1.8rem;
   color: #2d6a4f;
-  margin: 0 0 15px 0;
+  margin: 0 0 8px 0;
   font-weight: 700;
 }
 
-.acknowledgementsCard ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.acknowledgementsCard li {
-  font-size: 0.95rem;
+.acknowledgementsGroup p {
+  font-size: 1.05rem;
+  line-height: 1.55;
   color: #4a4a4a;
-  margin-bottom: 8px;
-  padding-left: 15px;
-  position: relative;
-}
-
-.acknowledgementsCard li:before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #4a9b6f;
-  font-weight: bold;
+  margin: 0;
 }
 
 .labSection {
@@ -314,14 +302,20 @@
     text-align: left;
   }
 
-  .teamGrid,
-  .acknowledgementsGrid {
+  .teamGrid {
     grid-template-columns: 1fr;
   }
 
-  .teamCard,
-  .acknowledgementsCard {
+  .teamCard {
     padding: 20px;
+  }
+
+  .acknowledgementsGroup h3 {
+    font-size: 1.45rem;
+  }
+
+  .acknowledgementsGroup p {
+    font-size: 1rem;
   }
 
   .memberAvatar {
@@ -374,5 +368,13 @@
 
   .teamCard p {
     font-size: 0.85rem;
+  }
+
+  .acknowledgementsGroup h3 {
+    font-size: 1.2rem;
+  }
+
+  .acknowledgementsGroup p {
+    font-size: 0.92rem;
   }
 }
