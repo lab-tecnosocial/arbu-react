@@ -1,4 +1,3 @@
-import { scoresMes } from "../components/ranking/scoresMes"
 import { db } from "../firebase/firebase-config";
 // let Arbol = require('./Arbol.js');
 import Arbol from './Arbol';
@@ -18,7 +17,7 @@ export const traerScoresMes = async() => {
   // console.log(listaOrdenada);
   
 
-  return listaOrdenada;
+  return listaOrdenada.slice(0, 30);
   // return scoresMes;
 }
 const calcularTop = async(arbolConNodos) =>{
