@@ -1,3 +1,5 @@
+import { loadArboles } from "../helpers/loadArboles";
+import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados";
 import { types } from "../types/types";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -71,15 +73,13 @@ export const fetchMappedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchMappedTreesRequest());
-      const response = await fetch(`${API_URL}/arboles-mapeados`);
 
-      if (!response.ok) {
-        throw new Error("Error al obtener los árboles mapeados");
-      }
+      const treesData = await loadArbolesMapeados();
 
-      const treesData = await response.json();
       dispatch(fetchMappedTreesSuccess(treesData));
     } catch (error) {
+      console.log(error);
+
       dispatch(fetchMappedTreesFailure(error.message));
     }
   };
@@ -89,15 +89,11 @@ export const fetchPlantedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchPlantedTreesRequest());
-      const response = await fetch(`${API_URL}/arboles-plantados`);
-
-      if (!response.ok) {
-        throw new Error("Error al obtener los árboles plantados");
-      }
-
-      const treesData = await response.json();
+      const treesData = await loadArboles();
+  
       dispatch(fetchPlantedTreesSuccess(treesData));
     } catch (error) {
+      console.log(error)
       dispatch(fetchPlantedTreesFailure(error.message));
     }
   };
