@@ -1,0 +1,89 @@
+/* CatalogoComponent Styles */
+
+.catalogo-main {
+	width: 100%;
+	min-height: calc(100dvh - 65px);
+	background: #fafafa;
+	padding: 24px 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.catalogo-main .main-footer {
+	margin-top: auto;
+}
+
+.catalogo-main--guias {
+    /* Use min-height and let the page (body) handle scrolling to avoid nested scrollbars */
+	min-height: calc(100dvh - 65px);
+	padding-top: 20px;
+	/* Reduced bottom padding so footer sits closer to viewport bottom */
+	padding-bottom: 24px;
+}
+
+.catalogo-main--guias .manuales-container {
+	flex: 1;
+	align-content: center;
+	margin-bottom: 12px;
+}
+
+.catalogo-main--guias .main-footer {
+	margin-top: 0;
+}
+
+@media (max-height: 820px) {
+	.catalogo-main {
+		min-height: auto;
+	}
+
+	.catalogo-main .main-footer {
+		margin-top: 24px;
+	}
+
+	.catalogo-main--guias {
+		min-height: calc(100dvh - 65px);
+	}
+
+	.catalogo-main--guias .manuales-container {
+		gap: 12px;
+	}
+}
+
+.catalogo-tabs {
+	width: min(1100px, 92%);
+	margin: 0 auto 20px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.tab-button {
+	height: 58px;
+	border-radius: 14px;
+	border: 1px solid #d9d9d9;
+	background: #f2f2f2;
+	color: #154b43;
+	font-family: 'Poppins', sans-serif;
+	font-size: 1.05rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-button.active {
+	border-color: #268576;
+	background: #268576;
+	color: #fff;
+}
+
+@media (max-width: 768px) {
+	.catalogo-tabs {
+		width: 94%;
+		gap: 10px;
+	}
+
+	.tab-button {
+		height: 50px;
+		font-size: 0.92rem;
+	}
+}

@@ -1,68 +1,130 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import './Manuales.css'
-import BtnSlider from './BtnSlider'
 import dataSlider from './dataSlider'
-import { IconButton } from "@mui/material";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { Link, useSearchParams } from 'react-router-dom';
+import PlantacionGuide from './PlantacionGuide';
+import SelectionGuide from './SelectionGuide';
+const guiaTitles = [
+    ['CATÁLOGO DE', 'ESPECIES'],
+    ['GUÍA DE', 'SELECCIÓN DE ESPECIES'],
+    ['GUÍA DE', 'PLANTACIÓN'],
+    
+]
+
+const guiaImages = [
+    '/Imgs/catalogodeespecies.svg',
+    '/Imgs/guiadeseleccion.svg',
+    '/Imgs/guiadeplantacion.svg',
+    
+]
 
 
 export default function Slider() {
+    const [searchParams] = useSearchParams()
+    const [showPlantacionGuide, setShowPlantacionGuide] = useState(false)
+    const [showSelectionGuide, setShowSelectionGuide] = useState(false)
 
-    const [slideIndex, setSlideIndex] = useState(1)
-
-    const nextSlide = () => {
-        if(slideIndex !== dataSlider.length){
-            setSlideIndex(slideIndex + 1)
-        } 
-        else if (slideIndex === dataSlider.length){
-            setSlideIndex(1)
+    // Cerrar modales cuando el usuario sale de la pestaña de guías
+    useEffect(() => {
+        const isOnCatalogo = searchParams.get('tab') === 'catalogo'
+        if (isOnCatalogo) {
+            setShowPlantacionGuide(false)
+            setShowSelectionGuide(false)
         }
-    }
+    }, [searchParams])
 
-    const prevSlide = () => {
-        if(slideIndex !== 1){
-            setSlideIndex(slideIndex - 1)
+    // Listener adicional para cerrar al hacer clic fuera (ESC)
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') {
+                setShowPlantacionGuide(false)
+                setShowSelectionGuide(false)
+            }
         }
-        else if (slideIndex === 1){
-            setSlideIndex(dataSlider.length)
-        }
-    }
-
-    const moveDot = index => {
-        setSlideIndex(index)
-    }
+        window.addEventListener('keydown', handleEsc)
+        return () => window.removeEventListener('keydown', handleEsc)
+    }, [])
 
     return (
-        <div className="container-slider">
-            {dataSlider.map((obj, index) => {
-                return (
-                    <div
-                    key={obj.id}
-                    className={slideIndex === index + 1 ? "slide active-anim" : "slide"}
-                    >
-                    <img className='img-desktop'
-                        src={`/Imgs/slides${index + 1}.png`} 
-                        />
-                    <img className='img-mobile'
-                        src={`/Imgs/imgs mobile/slides${index + 1}.png`} 
-                        />
-                    </div>
-                )
-            })}
-            
-            <BtnSlider moveSlide={nextSlide} direction={"next"} />
+        <>
+            <section className='manuales-container'>
+                {dataSlider.slice(0, 3).map((obj, index) => {
+                    const content = (
+                        <>
+                            <div className='guia-content'>
+                                <h2 className='guia-title'>
+                                    {guiaTitles[index].map((line, lineIndex) => (
+                                        <span key={`${obj.id}-${lineIndex}`}>
+                                            {line}
+                                            {lineIndex < guiaTitles[index].length - 1 ? <br /> : null}
+                                        </span>
+                                    ))}
+                                </h2>
+                            </div>
 
-            <BtnSlider moveSlide={prevSlide} direction={"prev"}/>
+                            <div className='guia-visual' aria-label='Ilustracion de la guia'>
+                                <img
+                                    className='guia-visual-image'
+                                    src={guiaImages[index]}
+                                    alt={guiaTitles[index].join(' ')}
+                                />
+                            </div>
+                        </>
+                    )
 
-            <div className="container-dots">
-                {Array.from({length: 9}).map((item, index) => (
-                    <div 
-                    key={`item-${index}`}
-                    onClick={() => moveDot(index + 1)}
-                    className={slideIndex === index + 1 ? "dot active" : "dot"}
-                    ></div>
-                ))}
-            </div>
-        </div>
+                    if (index === 0 || index === 3) {
+                        return (
+                            <Link
+                                to={'/aprende?tab=catalogo'}
+                                key={obj.id}
+                                className='guia-card guia-link'
+                            >
+                                {content}
+                            </Link>
+                        )
+                    }
+
+                    if (index === 1) {
+                        return (
+                            <button
+                                type='button'
+                                key={obj.id}
+                                className='guia-card guia-button'
+                                onClick={() => setShowSelectionGuide(true)}
+                            >
+                                {content}
+                            </button>
+                        )
+                    }
+
+                    if (index === 2) {
+                        return (
+                            <button
+                                type='button'
+                                key={obj.id}
+                                className='guia-card guia-button'
+                                onClick={() => setShowPlantacionGuide(true)}
+                            >
+                                {content}
+                            </button>
+                        )
+                    }
+
+                    return (
+                        <article key={obj.id} className='guia-card'>
+                            {content}
+                        </article>
+                    )
+                })}
+            </section>
+
+            {showSelectionGuide ? (
+                <SelectionGuide onClose={() => setShowSelectionGuide(false)} />
+            ) : null}
+
+            {showPlantacionGuide ? (
+                <PlantacionGuide onClose={() => setShowPlantacionGuide(false)} />
+            ) : null}
+        </>
     )
 }

@@ -1,136 +1,123 @@
-import {useEffect, useState} from 'react';
-import { IconButton } from '@mui/material';
+import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import InfoIcon from '@mui/icons-material/Info';
-import {useSelector,useDispatch} from 'react-redux';
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import TuneIcon from '@mui/icons-material/Tune';
+import { useSelector, useDispatch } from 'react-redux';
 import { setActiveEspecie } from '../../actions/catalogoActions';
-import DetailEspecie from './DetailEspecie';
-// import {especies} from "./especiesData.js"
-import './Especies.css'
-
+import './Especies.css';
 
 const Especies = () => {
   const dispatch = useDispatch();
-  const {especies} = useSelector(state=>state.catalogo);
+  const { especies } = useSelector(state => state.catalogo);
+  
   const [usuarios, setUsuarios] = useState([]);
   const [tablaUsuarios, setTablaUsuarios] = useState([]);
-  const [busqueda, setBusqueda] = useState([""]);
+  const [busqueda, setBusqueda] = useState(""); // Corregido: de [""] a ""
+  const [filtroOrigen, setFiltroOrigen] = useState("Todos"); // Nuevo estado para el filtro
 
-  const handleChange=e=>{
-    setBusqueda(e.target.value);
-    filtrar(e.target.value);
-  }
+  // Función unificada para filtrar por texto y por origen
+  const aplicarFiltros = (texto, origen) => {
+    let resultados = tablaUsuarios.filter(elemento => {
+      // Coincidencia por texto (nombre común, científico o descripción)
+      const busc = texto.toLowerCase();
+      const coincideTexto = 
+        (elemento.nombreComun || '').toLowerCase().includes(busc) ||
+        (elemento.nombreCientifico || '').toLowerCase().includes(busc) ||
+        (elemento.descripcion2 || '').toLowerCase().includes(busc);
+      
+      // Coincidencia por origen
+      const coincideOrigen = (origen === "Todos") || (elemento.origen === origen);
 
-  const filtrar=(terminoBusqueda)=>{
-    // console.log(tablaUsuarios); 
-    var resultadosBusqueda=tablaUsuarios.filter(elemento=>{
-      if(elemento.nombreComun.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-        || elemento.nombreCientifico.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-    ){
-      return elemento;
-    }
-  });
-  setUsuarios(resultadosBusqueda);
-  }
+      return coincideTexto && coincideOrigen;
+    });
+    setUsuarios(resultados);
+  };
+
+  const handleChangeBusqueda = e => {
+    const valor = e.target.value;
+    setBusqueda(valor);
+    aplicarFiltros(valor, filtroOrigen);
+  };
+
+  const handleCambiarFiltro = () => {
+    // Ciclo simple: Todos -> Nativa -> Introducida -> Todos
+    let nuevoFiltro;
+    if (filtroOrigen === "Todos") nuevoFiltro = "Nativa";
+    else if (filtroOrigen === "Nativa") nuevoFiltro = "Introducida";
+    else nuevoFiltro = "Todos";
+
+    setFiltroOrigen(nuevoFiltro);
+    aplicarFiltros(busqueda, nuevoFiltro);
+  };
 
   const handleClickEspecie = (usuario) => {
-  
-    // console.log(usuario);
     dispatch(setActiveEspecie(usuario));
-  }
+  };
   
   useEffect(() => {
     setUsuarios(especies);
     setTablaUsuarios(especies);
   }, [especies]);
+
   return (
-    <div className="App">
-      
-      
-    <div className="containerInput">
-      <div className='search'>
-        
-        <input
-          className="form-control inputBuscar"
-          value={busqueda}
-          placeholder="Búsqueda por Nombre común o científico"
-          onChange={handleChange}
-        />
-        <button className="btn btn-success">
-        {/* <IconButton aria-label="back" > */}
-        <SearchIcon  sx={{color:'#fff'}}/>
-        {/* </IconButton> */}
+    <section className='catalogo-wrapper'>
+      <div className='catalogo-search-row'>
+        {/* Botón de filtro ahora funcional */}
+        <button 
+          className={`filter-chip ${filtroOrigen !== 'Todos' ? 'active-filter' : ''}`} 
+          type='button'
+          onClick={handleCambiarFiltro}
+        >
+          <TuneIcon sx={{ fontSize: '1rem' }} />
+          {filtroOrigen === "Todos" ? "Filtrar" : `Origen: ${filtroOrigen}`}
+        </button>
+
+        <div className='search-box'>
+          <input
+            className='form-control inputBuscar'
+            value={busqueda}
+            placeholder='Buscar...'
+            onChange={handleChangeBusqueda}
+          />
+          <SearchIcon sx={{ color: '#777' }} />
+        </div>
+
+        <button className='btn-success' type='button' onClick={() => aplicarFiltros(busqueda, filtroOrigen)}>
+          Buscar
         </button>
       </div>
-    </div>
-    <div className='container-primary'>
 
-    {usuarios &&
-      usuarios.map((usuario)=>(   
-       <div key={usuario.id} onClick={()=>handleClickEspecie(usuario)} style={{borderRadius:'1rem'}}>
-        {/* <a  href="">      */}
+      <div className='container-primary'>
+        {usuarios && usuarios.map((usuario) => (
+          <article
+            key={usuario.id}
+            className='container-catalogo'
+            onClick={() => handleClickEspecie(usuario)}
+          >
+            <figure>
+              <img
+                src={usuario.imagenesUri[0]}
+                alt={usuario.nombreComun}
+                referrerPolicy='no-referrer'
+              />
+            </figure>
 
-        <div className='container-catalogo'>
-        
-          <Button className='button-primary'>
-        <figure>
-        <img 
-        src={usuario.imagenesUri[0]} 
-        alt={usuario.nombreComun} 
-        referrerPolicy="no-referrer"
-        style={{borderRadius:'1rem'}}
-        />  
-        </figure>
-        <div className='container-text-icon'>
-          <div className='text-arbol'>
-          <h2 className='titles'>
-              {usuario.nombreComun} 
-          </h2>
-            <p className='text-normal descripcion'>
-            {usuario.descripcion2}
-            </p>
-          </div>
+            <div className='container-text-icon'>
+              <div className='text-arbol'>
+                <h2 className='titles'>{usuario.nombreComun}</h2>
+                <p className='text-normal descripcion'>{usuario.descripcion2}</p>
+              </div>
 
-        <div className='container-icon-info'> 
-          <span>
-          </span>
-            <figure className="icon-info">
-              {/* <IconButton aria-label="back" >
-              <InfoIcon  sx={{color:'#fff'}}/>
-              </IconButton> */}
-              <div className="text-origen">
-              
-               {usuario?.origen === 'Nativa' ? 
-            
-               <span style={{backgroundColor:'#03b25e'}}>
-                 {usuario?.origen}
-                </span>
-               : 
-                <span >
+              <div className='container-icon-info'>
+                <span className={`origin-badge ${usuario?.origen === 'Nativa' ? 'nativa' : 'introducida'}`}>
                   {usuario?.origen}
-                  </span>
-               }
-                  
-                 
-                </div>
-        </figure>
-        </div>
-        </div>
-        </Button>
-        
-        </div> 
-        {/* </a> */}
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
-))
-
-}
-
-    </div>
-    </div>
+    </section>
   );
-}
-  
-  export default Especies
+};
+
+export default Especies;

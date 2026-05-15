@@ -1,17 +1,38 @@
 import { IconButton } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideDetailEspecie } from "../../actions/catalogoActions";
 import "./DetailEspecie.css";
 import EmblaCarouselComponent from "./carrusel/EmblaCarousel";
 import CloseIcon from '@mui/icons-material/Close';
+import { useSearchParams } from "react-router-dom";
 const DetailEspecie = () => {
   const { activeEspecie } = useSelector((state) => state.catalogo);
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
 
-  // const handleBack = () => {
-  //   dispatch(setHideDetailEspecie());
-  // };
+  const handleBack = () => {
+    dispatch(setHideDetailEspecie());
+  };
+
+  // Cerrar detalle cuando cambias de pestaña
+  useEffect(() => {
+    const isOnGuias = searchParams.get('tab') !== 'catalogo'
+    if (isOnGuias) {
+      dispatch(setHideDetailEspecie())
+    }
+  }, [searchParams, dispatch])
+
+  // Cerrar detalle al presionar ESC
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && activeEspecie) {
+        dispatch(setHideDetailEspecie())
+      }
+    }
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
+  }, [dispatch, activeEspecie])
 
   return (
 
@@ -21,11 +42,11 @@ const DetailEspecie = () => {
 
       <div className="detail-container-especie">
         <div className="detail-container-especie-secundary">
-        {/* <div className="button-exit">
+        <div className="button-exit">
           <IconButton aria-label="back" onClick={handleBack}>
           <CloseIcon  sx={{color:'#174C44'}}/>
           </IconButton>
-          </div> */}
+          </div>
           <div style={{ margin: "auto" }} >
             {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
             {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}

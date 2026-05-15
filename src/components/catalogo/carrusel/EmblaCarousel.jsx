@@ -19,12 +19,13 @@ const EmblaCarouselComponent = ({ autoplay, delayLength, children }) => {
   const [delay, setDelay] = useState(delayLength);
   const [isRunning, setIsRunning] = useState(autoplay);
 
-  const scrollTo = useCallback(index => embla.scrollTo(index), [embla]);
-  const scrollPrev = useCallback(() => embla.scrollPrev(), [embla]);
-  const scrollNext = useCallback(() => embla.scrollNext(), [embla]);
+  const scrollTo = useCallback(index => embla && embla.scrollTo(index), [embla]);
+  const scrollPrev = useCallback(() => embla && embla.scrollPrev(), [embla]);
+  const scrollNext = useCallback(() => embla && embla.scrollNext(), [embla]);
 
   useInterval(
     () => {
+      if (!embla) return;
       if (selectedIndex === scrollSnaps.length - 1) {
         scrollTo(0);
       } else {
@@ -46,6 +47,21 @@ const EmblaCarouselComponent = ({ autoplay, delayLength, children }) => {
       onSelect();
     }
   }, [embla]);
+
+  // Manual wrap helpers: when not using embla loop, move to first/last when boundary reached
+  const goPrev = useCallback(() => {
+    if (!embla) return;
+    const snaps = scrollSnaps;
+    if (embla.canScrollPrev()) embla.scrollPrev();
+    else if (snaps.length) embla.scrollTo(snaps.length - 1);
+  }, [embla, scrollSnaps]);
+
+  const goNext = useCallback(() => {
+    if (!embla) return;
+    const snaps = scrollSnaps;
+    if (embla.canScrollNext()) embla.scrollNext();
+    else if (snaps.length) embla.scrollTo(0);
+  }, [embla, scrollSnaps]);
 
   function handleIsRunningChange(e) {
     setIsRunning(e.target.checked);
@@ -92,8 +108,8 @@ const EmblaCarouselComponent = ({ autoplay, delayLength, children }) => {
             />
           ))}
         </div>
-        <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
-        <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
+        <PrevButton onClick={goPrev} enabled={true} />
+        <NextButton onClick={goNext} enabled={true} />
       </div>
   
     </div>

@@ -47,74 +47,58 @@
 
 
 .embla__button {
-  background-color: transparent;
+  background-color: rgba(0,0,0,0.35);
   position: absolute;
-  z-index: 1;
+  z-index: 5;
   top: 50%;
   transform: translateY(-50%);
   border: 0;
-  width: 5rem;
-  height: 7rem;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: background-color .12s ease, transform .08s ease, opacity .12s ease;
+  opacity: 0.95;
+}
+
+.embla__button--prev {
+  left: 0.5rem;
+}
+
+.embla__button--next {
+  right: 0.5rem;
+}
+
+.embla__button:hover:not(:disabled) {
+  background-color: rgba(0,0,0,0.6);
+  transform: translateY(-50%) scale(1.03);
 }
 
 .embla__button:not(:disabled) {
   cursor: pointer;
-  fill: #e9e9e9;
+  color: #fff;
 }
 
 .embla__button:disabled {
-  fill:var(--color-oscuro);
-   
+  opacity: 0.45;
+  cursor: default;
 }
 
 .embla__button__svg {
-  display: none;
-  width: 1.5rem;
-  height: 1.5rem;
+  display: block;
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
 }
 
-.embla__button--prev {
-  left: 0.1rem;
-}
-
-.embla__button--next {
-  right: 0.1rem;
-}
-
-.embla__dots {
-  display: flex;
-  list-style: none;
-  padding-left: 0;
-  justify-content: center;
-  left: 0;
-  right: 0;
-  top: 100%;
-}
-
-.embla__dot {
-  background-color: transparent;
-  cursor: pointer;
-  position: relative;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  margin-right: 0.4rem;
-  margin-left: 0.4rem;
-  border: 0;
-  display: flex;
-  align-items: center;
-}
-
-.embla__dot:after {
-  background-color: #efefef;
-  width: 40%;
-  border-radius: 50%;
-  height: 40%;
-  content: "";
-  border: 1px solid #f1f1f1;
+.embla__button.disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 .embla__dot.is-selected:after {
