@@ -122,7 +122,7 @@ export const CardTree = () => {
               ><ChevronLeft size={20} strokeWidth={1.75} /></button>
               <button
                 onClick={() => {
-                  const maxIndex = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredDatal.length : arbolesPlantados.data.length;
+                  const maxIndex = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length;
                   if (index < maxIndex - 1) {
                     const newIndex = index + 1;
                     const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
@@ -177,17 +177,17 @@ export const CardTree = () => {
               </div>
               <div className={styles.details}>
                 <div className={styles.detail}>
+                  <span className={styles.labelFirst}>Nombre propio</span>
+                  <span className={styles.labelSecond}>{selectedTree.nombrePropio}</span>
+                </div>
+                <div className={styles.detail}>
                   <span className={styles.labelFirst}>Nombre común</span>
-                  <span className={styles.labelSecond}>{selectedTree.nombreComun}</span>
+                  <span className={styles.labelSecond}>{selectedTree?.nombreComun}</span>
                 </div>
                 <div className={styles.detail}>
                   <span className={styles.labelFirst}>Nombre científico</span>
                   <span className={styles.labelSecond}>{selectedTree.nombreCientifico}</span>
-                </div>
-                <div className={styles.detail}>
-                  <span className={styles.labelFirst}>Nombre propio</span>
-                  <span className={styles.labelSecond}>{selectedTree.nombrePropio}</span>
-                </div>
+                </div>                
               </div>
             </div>
             <div className={styles.estadoMapeo}>

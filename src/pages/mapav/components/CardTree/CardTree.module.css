@@ -5,6 +5,9 @@
   display: none;
   width: 0px;
   max-width: 0px;
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
 }
 
 .cardTreeMobile {
@@ -20,18 +23,25 @@
   width: 100%;
   background-color: var(--white);
   z-index: 9999;
+  height: 100%;
+  min-height: 0;
 }
 
 .cardInner {
   min-width: 500px;
   max-width: 500px;
   width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .topBar {
   width: 100%;
   background-color: var(--geyser-50);
   height: 56px;
+  flex-shrink: 0;
   padding: 0 24px;
   display: flex;
   align-items: center;
@@ -71,8 +81,10 @@
 }
 
 .cardBody {
-  overflow-y: auto;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: overlay;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -212,7 +224,7 @@
     flex-direction: column;
     gap: 16px;
     width: 100%;
-    overflow: hidden;
+    min-width: 0;
 
     h3 {
       font-size: 20px;
@@ -287,5 +299,6 @@
   .cardInner {
     min-width: 100vw;
     min-height: 100vh;
+    height: 100vh;
   }
 }
