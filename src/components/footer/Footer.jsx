@@ -54,7 +54,7 @@ const Footer = () => {
         <div className={styles.rights}>
           <span>© {year} ARBU. Derechos Reservados</span>
           <div className={styles.rightsLinks}>
-            <Link to="/acerca">Acerca de Arbu</Link>
+            <Link to="/acerca-de-nosotros">Acerca de Arbu</Link>
             <a href="https://labtecnosocial.org/politica-de-privacidad-de-la-app-arbu/" target="_blank" rel="noopener noreferrer">
               Políticas de Privacidad
             </a>

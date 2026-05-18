@@ -1,0 +1,380 @@
+.aboutUsContainer {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.heroSection {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(74, 155, 111, 0.9) 0%,
+      rgba(45, 106, 79, 0.92) 100%
+    ),
+    url("../api/assets/arbuimg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroContent {
+  max-width: 800px;
+}
+
+.heroLogo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.heroSection h1 {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.heroDescription {
+  font-size: 1.3rem;
+  opacity: 0.95;
+  margin: 0;
+  font-weight: 300;
+  color: #ffffff;
+}
+
+.descriptionSection {
+  padding: 60px 20px;
+  background: white;
+  text-align: center;
+}
+
+.sectionContent {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.descriptionSection h2 {
+  font-size: 2.5rem;
+  color: #2d6a4f;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.descriptionText {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4a4a4a;
+  text-align: justify;
+  margin: 0;
+}
+
+.missionVisionSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 60px 20px;
+  background: #f9fafb;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.missionCard {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.missionCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cardIcon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.missionCard h3 {
+  font-size: 1.8rem;
+  color: #2d6a4f;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.missionCard p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #4a4a4a;
+  margin: 0;
+}
+
+.teamSection {
+  padding: 60px 20px;
+  background: white;
+}
+
+.teamSection:nth-of-type(even) {
+  background: #f9fafb;
+}
+
+.teamSection h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2d6a4f;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.teamCard {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.teamCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.memberAvatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: #e8f5e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.memberPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.teamCard h4 {
+  font-size: 1.3rem;
+  color: #2d6a4f;
+  margin: 15px 0 10px 0;
+  font-weight: 600;
+}
+
+.teamCard p {
+  font-size: 0.95rem;
+  color: #4a9b6f;
+  margin: 0;
+  font-weight: 500;
+}
+
+.acknowledgementsSection {
+  padding: 60px 20px;
+  background: #f9fafb;
+}
+
+.acknowledgementsSection h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2d6a4f;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.acknowledgementsSubtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #4a9b6f;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.acknowledgementsSimple {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.acknowledgementsGroup {
+  margin-bottom: 18px;
+}
+
+.acknowledgementsGroup h3 {
+  font-size: 1.8rem;
+  color: #2d6a4f;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.acknowledgementsGroup p {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #4a4a4a;
+  margin: 0;
+}
+
+.labSection {
+  padding: 60px 20px;
+  background: white;
+}
+
+.labSection h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2d6a4f;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.labSection p {
+  text-align: center;
+  font-size: 1.05rem;
+  color: #4a4a4a;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.labLogo {
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .heroSection h1 {
+    font-size: 2rem;
+  }
+
+  .heroDescription {
+    font-size: 1rem;
+  }
+
+  .heroLogo {
+    width: 80px;
+  }
+
+  .descriptionSection h2,
+  .teamSection h2,
+  .acknowledgementsSection h2,
+  .labSection h2 {
+    font-size: 1.8rem;
+  }
+
+  .missionVisionSection {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 40px 20px;
+  }
+
+  .missionCard {
+    padding: 25px;
+  }
+
+  .descriptionText {
+    text-align: left;
+  }
+
+  .teamGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .teamCard {
+    padding: 20px;
+  }
+
+  .acknowledgementsGroup h3 {
+    font-size: 1.45rem;
+  }
+
+  .acknowledgementsGroup p {
+    font-size: 1rem;
+  }
+
+  .memberAvatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .heroSection {
+    padding: 40px 20px;
+    min-height: 300px;
+  }
+
+  .labLogo {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroSection h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .heroDescription {
+    font-size: 0.9rem;
+  }
+
+  .descriptionSection,
+  .teamSection,
+  .acknowledgementsSection,
+  .labSection {
+    padding: 30px 15px;
+  }
+
+  .descriptionSection h2,
+  .teamSection h2,
+  .acknowledgementsSection h2,
+  .labSection h2 {
+    font-size: 1.5rem;
+  }
+
+  .missionCard p,
+  .labSection p {
+    font-size: 0.9rem;
+  }
+
+  .teamCard h4 {
+    font-size: 1.1rem;
+  }
+
+  .teamCard p {
+    font-size: 0.85rem;
+  }
+
+  .acknowledgementsGroup h3 {
+    font-size: 1.2rem;
+  }
+
+  .acknowledgementsGroup p {
+    font-size: 0.92rem;
+  }
+}

@@ -4,6 +4,7 @@ import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import APIComponent from './components/api/APIComponent';
 import MapaPage from './pages/mapav/MapaPage.jsx';
 import Acerca from './components/acerca/Acerca';
+import AboutUs from './components/acerca/AboutUs';
 import {
   ComoEmpezar,
   ReferenciaEndpoints,
@@ -51,6 +52,7 @@ const App = () => {
           <Route path='licencias-limitaciones' element={<Licencias />} />
         </Route>
         <Route path="acerca" element={<Acerca />} />
+        <Route path="acerca-de-nosotros" element={<AboutUs />} />
         <Route path="*" element={<main style={{ padding: "1rem" }}><h2>Ho hay nada aquí!</h2></main>} />
       </Routes>
     </BrowserRouter>
