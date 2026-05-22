@@ -5,6 +5,7 @@ import ThreePositionsMes from './ThreePositionsMes';
 import ThreePositionsGlobal from './ThreePositionsGlobal';
 import Footer from '../footer/Footer';
 import { loadScoresGlobal, loadScoresMes } from '../../actions/leaderboardActions';
+import { startLoadingUsuarios } from "../../actions/mapaActions";
 import erickImg from '../acerca/team/erick.png';
 import patriciaImg from '../acerca/team/patricia.png';
 import lourdesImg from '../acerca/team/lourdes.jpg';
@@ -48,13 +49,14 @@ const RankingComponent = () => {
   const { scoresGlobal, scoresMes } = useSelector((state) => state.leaderboard);
 
   useEffect(() => {
+    dispatch(startLoadingUsuarios());
     dispatch(loadScoresMes());
     dispatch(loadScoresGlobal());
   }, [dispatch]);
 
-  const getUserPhoto = (id) => {
+ const getUserPhoto = (id) => {
     if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
-      return usuariosMap[id]?.imageProfile;
+      return usuariosMap[id]?.imageProfileUrl || 'default';
     }
 
     return 'default';
