@@ -5,7 +5,6 @@ export const traerScoresGlobal = async () => {
   const rankingGlobalDoc = await getDoc(doc(db, "ranking", "top100"));
 
   if (!rankingGlobalDoc.exists()) {
-    console.log("El documento no existe");
     return [];
   }
 

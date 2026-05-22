@@ -56,7 +56,7 @@ const RankingComponent = () => {
 
  const getUserPhoto = (id) => {
     if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
-      return usuariosMap[id]?.imageProfileUrl || 'default';
+      return usuariosMap[id]?.imageProfile || 'default';
     }
 
     return 'default';
