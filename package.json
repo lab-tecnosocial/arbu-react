@@ -6,7 +6,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@mui/icons-material": "^5.8.4",
+    "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.8.5",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
@@ -45,6 +45,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.2.8"
+    "baseline-browser-mapping": "^2.10.36",
+    "vite": "^5.2.8",
+    "vite-plugin-pwa": "^1.3.0"
   }
 }

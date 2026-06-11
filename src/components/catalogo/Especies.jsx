@@ -6,7 +6,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { setActiveEspecie } from '../../actions/catalogoActions';
+import { setActiveEspecie, startLoadEspeciesCatalogo } from '../../actions/catalogoActions';
 import DetailEspecie from './DetailEspecie';
 // import {especies} from "./especiesData.js"
 import './Especies.css'
@@ -17,24 +17,30 @@ const Especies = () => {
   const {especies} = useSelector(state=>state.catalogo);
   const [usuarios, setUsuarios] = useState([]);
   const [tablaUsuarios, setTablaUsuarios] = useState([]);
-  const [busqueda, setBusqueda] = useState([""]);
+  const [busqueda, setBusqueda] = useState("");
 
   const handleChange=e=>{
     setBusqueda(e.target.value);
     filtrar(e.target.value);
   }
 
-  const filtrar=(terminoBusqueda)=>{
-    // console.log(tablaUsuarios); 
-    var resultadosBusqueda=tablaUsuarios.filter(elemento=>{
-      if(elemento.nombreComun.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-        || elemento.nombreCientifico.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-    ){
-      return elemento;
+const filtrar = (terminoBusqueda) => {
+    const termino = terminoBusqueda.toLowerCase().trim();
+    
+    if (!termino) {
+      setUsuarios(tablaUsuarios);
+      return;
     }
-  });
-  setUsuarios(resultadosBusqueda);
-  }
+
+    const resultadosBusqueda = tablaUsuarios.filter(elemento => {
+      const nombreComun = elemento.nombreComun?.toString().toLowerCase() || "";
+      const nombreCientifico = elemento.nombreCientifico?.toString().toLowerCase() || "";
+      
+      return nombreComun.includes(termino) || nombreCientifico.includes(termino);
+    });
+
+    setUsuarios(resultadosBusqueda);
+  };
 
   const handleClickEspecie = (usuario) => {
   
@@ -43,9 +49,16 @@ const Especies = () => {
   }
   
   useEffect(() => {
-    setUsuarios(especies);
-    setTablaUsuarios(especies);
+    dispatch(startLoadEspeciesCatalogo());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (especies && especies.length > 0) {
+      setUsuarios(especies);
+      setTablaUsuarios(especies);
+    }
   }, [especies]);
+
   return (
     <div className="App">
       
