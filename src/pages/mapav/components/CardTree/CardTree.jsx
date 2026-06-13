@@ -1,11 +1,17 @@
 import styles from "./CardTree.module.css"
-import { animate, createScope } from "animejs";
-import { useState, useRef, useEffect } from "react";
+import galleryStyles from "./TreePhotoGallery.module.css"
+import { animate } from "animejs";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowDown01, Calendar, Check, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
 import { Chip } from "../../../../components/Chip/Chip";
-import { selectPlantedTree } from "../../../../actions/arboles.actions";
-import { setModalState, setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
+import { setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
+import { TreePhotoGallery, TreePhotoTrigger } from "./TreePhotoGallery";
+import {
+  formatMonitoreoDateLong,
+  getTreePhotos,
+  MAPPED_PARTS_UI,
+} from "./treePhotos";
 
 export const CardTree = () => {
   const dispatch = useDispatch()
@@ -98,6 +104,26 @@ export const CardTree = () => {
     }
   }, [panelState, selectedTree, isLargeScreen])
 
+  const isMapped = selectedTree && Object.hasOwn(selectedTree, "mapeadoPor");
+  const photos = useMemo(
+    () => getTreePhotos(isMapped, monitoreos),
+    [isMapped, monitoreos]
+  );
+
+  const mainPhoto = useMemo(() => {
+    if (!photos.length) return null;
+    if (isMapped) {
+      return (
+        photos.find((p) => p.key === "fotoArbolCompleto") ?? photos[0]
+      );
+    }
+    return photos[0];
+  }, [photos, isMapped]);
+
+  const galleryKey =
+    selectedTree?.id ??
+    `${selectedTree?.latitud ?? ""}-${selectedTree?.longitud ?? ""}-${index}`;
+
   return (
     <div
       ref={contentRef}
@@ -107,7 +133,7 @@ export const CardTree = () => {
         <div className={styles.topBar}>
           <span>Detalles de Árbol</span>
           <div className={styles.topBarOptions}>
-            <span className={styles.topBarIndicator}>
+            {/* <span className={styles.topBarIndicator}>
               {index + 1} de {arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length}
             </span>
             <div className={styles.buttons}>
@@ -130,7 +156,7 @@ export const CardTree = () => {
                   }
                 }}
               ><ChevronRight size={20} strokeWidth={1.75} /></button>
-            </div>
+            </div> */}
             <button
               className={styles.closeButton}
               onClick={() => {
@@ -142,6 +168,7 @@ export const CardTree = () => {
           </div>
         </div>
         <div className={styles.cardBody}>
+          <TreePhotoGallery photos={photos} galleryKey={galleryKey}>
           <div className={styles.treeInfo}>
             <div className={styles.headerTitle}>
               <h2>
@@ -166,14 +193,13 @@ export const CardTree = () => {
             </div>
             <div className={styles.info}>
               <div className={styles.picture}>
-                {monitoreos.length > 0 &&
-                  (
-                    Object.hasOwn(selectedTree, "mapeadoPor") ?
-                      <img src={monitoreos[0].fotoArbolCompleto} alt="monitoreo" loading="lazy" />
-                      :
-                      <img src={monitoreos[0].fotografia} alt="monitoreo" loading="lazy" />
-                  )
-                }
+                {mainPhoto && (
+                  <TreePhotoTrigger src={mainPhoto.src} photoKey={mainPhoto.key}>
+                    <button type="button" className={galleryStyles.clickablePhoto} aria-label={`Ver foto: ${mainPhoto.label}`}>
+                      <img src={mainPhoto.src} alt={mainPhoto.label} loading="lazy" />
+                    </button>
+                  </TreePhotoTrigger>
+                )}
               </div>
               <div className={styles.details}>
                 <div className={styles.detail}>
@@ -190,12 +216,34 @@ export const CardTree = () => {
                 </div>                
               </div>
             </div>
-            <div className={styles.estadoMapeo}>
-              <div className={styles.estadoImg}>Raiz o base</div>
-              <div className={styles.estadoImg}>Corteza</div>
-              <div className={styles.estadoImg}>Hoja</div>
-              <div className={styles.estadoImg}>Floor</div>
-            </div>
+            {isMapped && monitoreos.length > 0 && (
+              <div className={styles.estadoMapeo}>
+                {MAPPED_PARTS_UI.map(({ key, label }) => {
+                  const src = monitoreos[0][key];
+                  const photoLabel = photos.find((p) => p.key === key)?.label ?? label;
+
+                  if (!src) {
+                    return (
+                      <div key={key} className={galleryStyles.estadoImgDisabled}>
+                        {label}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <TreePhotoTrigger key={key} src={src} photoKey={key}>
+                      <button
+                        type="button"
+                        className={galleryStyles.estadoImgButton}
+                        aria-label={`Ver foto: ${photoLabel}`}
+                      >
+                        {label}
+                      </button>
+                    </TreePhotoTrigger>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <div className="line"></div>
           <div className={styles.treeFeatures}>
@@ -254,14 +302,23 @@ export const CardTree = () => {
             {monitoreos.length > 0 &&
               monitoreos.map((item) => {
                 const date = toDate(item.timestamp)
+                const itemSrc = isMapped
+                  ? item.fotoArbolCompleto
+                  : item.fotografia;
+                const itemLabel = isMapped
+                  ? "Árbol completo"
+                  : `Monitoreado el ${formatMonitoreoDateLong(item.timestamp)}`;
+
                 return (
-                  <div key={item.monitoreoRealizadoPor} className={styles.monitoring}>
+                  <div key={item.timestamp?.seconds ?? item.monitoreoRealizadoPor} className={styles.monitoring}>
                     <div className={styles.monitoringPicture}>
-                      {Object.hasOwn(selectedTree, "mapeadoPor") && monitoreos.length > 0 ?
-                        <img src={monitoreos[0].fotoArbolCompleto} alt="monitoreo" loading="lazy" />
-                        :
-                        <img src={monitoreos[0].fotografia} alt="monitoreo" loading="lazy" />
-                      }
+                      {itemSrc ? (
+                        <TreePhotoTrigger src={itemSrc}>
+                          <button type="button" className={galleryStyles.clickablePhoto} aria-label={`Ver foto: ${itemLabel}`}>
+                            <img src={itemSrc} alt={itemLabel} loading="lazy" />
+                          </button>
+                        </TreePhotoTrigger>
+                      ) : null}
                     </div>
                     <div className={styles.monitoringInfo}>
                       <div className={styles.detail}>
@@ -308,6 +365,7 @@ export const CardTree = () => {
               })
             }
           </div>
+          </TreePhotoGallery>
         </div>
       </div>
     </div>
