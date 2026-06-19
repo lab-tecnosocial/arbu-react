@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-afac4cd2'], (function (workbox) { 'use strict';
+define(['./workbox-16ad23c7'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -81,13 +81,13 @@ define(['./workbox-afac4cd2'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.u60gua8lq04"
+    "revision": "0.msno3miqmh8"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
     allowlist: [/^\/$/]
   }));
-  workbox.registerRoute(/^https:\/\/firebasestorage\.googleapis\.com\/.*?/i, new workbox.CacheFirst({
+  workbox.registerRoute(/^https:\/\/firebasestorage\.googleapis\.com\/.*?/i, new workbox.StaleWhileRevalidate({
     "cacheName": "arbu-imagenes-especies",
     plugins: [new workbox.ExpirationPlugin({
       maxEntries: 100,
