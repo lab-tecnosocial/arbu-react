@@ -1,11 +1,11 @@
-import { arboles } from "../components/mapa/arbolesPlantados"
 import { db } from "../firebase/firebase-config";
-
+import { collection, getDocs } from "firebase/firestore"
 export const loadArboles = async () => {
-  const arbolesSnapshot = await db.collection("arbolesPlantados").get();
-  let arbolesArray = [];
-  await arbolesSnapshot.forEach((element)=>{
-    arbolesArray.push(element.data());
-  });
-  return arbolesArray;
+   const arbolesCol = collection(db, 'arbolesPlantados'); 
+    const snapshot = await getDocs(arbolesCol);    
+    const lista = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return lista;
 }
