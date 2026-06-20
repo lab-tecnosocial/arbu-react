@@ -1,226 +1,159 @@
-import React, {  useState } from 'react'
-
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import SportsScoreIcon from '@mui/icons-material/SportsScore';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
-import './RankingComponent.css'
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ChildComponent from './ChildComponent';
 import ThreePositionsMes from './ThreePositionsMes';
 import ThreePositionsGlobal from './ThreePositionsGlobal';
 import Footer from '../footer/Footer';
+import { loadScoresGlobal, loadScoresMes } from '../../actions/leaderboardActions';
+import { startLoadingUsuarios } from "../../actions/mapaActions";
+import erickImg from '../acerca/team/erick.png';
+import patriciaImg from '../acerca/team/patricia.png';
+import lourdesImg from '../acerca/team/lourdes.jpg';
+import brianImg from '../acerca/team/brian.jpg';
+import marianImg from '../acerca/team/marian.png';
+import montserratImg from '../acerca/team/montserrat.png';
+import luisImg from '../acerca/team/luis.png';
+import dayraImg from '../acerca/team/dayra.png';
+import './RankingComponent.css';
 
-import { ramasPuntos } from './ramasPuntos';
-import { ramasNombres } from './ramasNombres';
+const demoProfiles = [
+  { name: 'Ariel Isaias Ayma Romay', photo: erickImg },
+  { name: 'Diana Carolina Marca', photo: patriciaImg },
+  { name: 'Pedro Yucra', photo: lourdesImg },
+  { name: 'Valeria Peredo', photo: brianImg },
+  { name: 'Marian Gil', photo: marianImg },
+  { name: 'Montserrat Martinez', photo: montserratImg },
+  { name: 'Luis Ugarte', photo: luisImg },
+  { name: 'Dayra Estrada', photo: dayraImg },
+];
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+const buildDemoScores = (count, basePoints) =>
+  Array.from({ length: count }, (_, index) => {
+    const profile = demoProfiles[index % demoProfiles.length];
+    const cycle = Math.floor(index / demoProfiles.length);
+    return {
+      nombre: cycle === 0 ? profile.name : `${profile.name} ${cycle + 1}`,
+      foto: profile.photo,
+      institucion: 'ARBU Demo',
+      puntos: Math.max(basePoints - index * 97, 150),
+    };
+  });
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
+const demoGlobalScores = buildDemoScores(100, 8925);
+const demoMesScores = buildDemoScores(30, 4120);
 
 const RankingComponent = () => {
   const [value, setValue] = useState(0);
-  const {usuariosMap} = useSelector(state=>state.mapa);
-  const {scoresGlobal,scoresMes} = useSelector(state=>state.leaderboard);
+  const dispatch = useDispatch();
+  const { usuariosMap } = useSelector((state) => state.mapa);
+  const { scoresGlobal, scoresMes } = useSelector((state) => state.leaderboard);
 
+  useEffect(() => {
+    dispatch(startLoadingUsuarios());
+    dispatch(loadScoresMes());
+    dispatch(loadScoresGlobal());
+  }, [dispatch]);
 
-
-
-
-
-
-
-
-
-
-  
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const getUserPhoto = (id)=>{
-      if(usuariosMap !==null){
-         if(usuariosMap.hasOwnProperty(id)){
-            return usuariosMap[id]?.imageProfile;
-          }
-      }
-    return "default";
-  }
-  const getUserInstitucion = (id)=>{
-    if(usuariosMap !==null){
-       if(usuariosMap.hasOwnProperty(id)){
-          return usuariosMap[id]?.institucion;
-        }
+ const getUserPhoto = (id) => {
+    if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
+      return usuariosMap[id]?.imageProfile || 'default';
     }
-  return "default";
-}
 
+    return 'default';
+  };
+
+  const getUserInstitucion = (id) => {
+    if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
+      return usuariosMap[id]?.institucion;
+    }
+
+    return 'default';
+  };
 
   const getFullNameUser = (id) => {
-      if(usuariosMap !==null){
-        if(usuariosMap.hasOwnProperty(id)){
-           return usuariosMap[id]?.nombre;
-         }
-     }
-    return "";
+    if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
+      return usuariosMap[id]?.nombre;
+    }
+
+    return '';
   };
 
-  const getNameRama = (id) => {
-    if(ramasNombres !==null){
-      if(ramasNombres.hasOwnProperty(id)){
-         return ramasNombres[id]?.nombreRama;
-       }
-   }
-  return "";
-};
-const getRamaImagen = (id)=>{
-  if(ramasNombres !==null){
-     if(ramasNombres.hasOwnProperty(id)){
-        return ramasNombres[id]?.imagen;
-      }
-  }
-return "default";
-}
-  const getFormatedList = (scoresList) => {
-    let array = [];
-    scoresList.forEach(element => {
-      let n = getFullNameUser(element.id);
-      let institucion = getUserInstitucion(element.id);
-      let puntos = element.puntos;
-      let foto = getUserPhoto(element.id);
-      array.push({nombre:n,foto:foto,institucion:institucion, puntos:puntos});
-    });
-    return array;
-  }
+  const getFormattedList = (scoresList, fallbackList) => {
+    if (Array.isArray(scoresList) && scoresList.length > 0) {
+      return scoresList.map((element, index) => ({
+        nombre: getFullNameUser(element.id) || `Usuario ${String(index + 1).padStart(2, '0')}`,
+        foto: getUserPhoto(element.id),
+        institucion: getUserInstitucion(element.id),
+        puntos: element.puntos,
+      }));
+    }
+
+    return fallbackList;
+  };
+
+  const monthlyList = getFormattedList(scoresMes, demoMesScores);
+  const globalList = getFormattedList(scoresGlobal, demoGlobalScores);
+  const activeList = value === 0 ? globalList : monthlyList;
+  const ActiveTopThree = value === 0 ? ThreePositionsGlobal : ThreePositionsMes;
+  const activeTitle = value === 0 ? 'Top 100' : 'Top 30';
+  const activeSubtitle =
+    value === 0
+      ? 'El tablón global se actualiza todos los días a las 00:00 A.M.'
+      : 'El ranking mensual se actualiza con la actividad del mes en curso.';
+  const activeLimit = value === 0 ? 100 : 30;
+  const rowSuffix = value === 0 ? 'global' : 'mes';
+
+  const renderRows = (list, limit, offset, suffix) =>
+    list.slice(3, limit).map((item, index) => (
+      <ChildComponent
+        key={`${item.nombre}-${suffix}-${index}`}
+        nombre={item.nombre}
+        puntos={item.puntos}
+        foto={item.foto}
+        institucion={item.institucion}
+        index={offset + index}
+      />
+    ));
+
   return (
-    <div 
-    // style={{ padding: "1rem 0" }}
-    >
-    
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
-              <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
-          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
-          {/* <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="SCOUTS" {...a11yProps(2)} /> */}
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        <div>
-        <center>
-          <strong>Top 30</strong><br />
-        </center>
-          <ThreePositionsMes list3Best={getFormatedList(scoresMes)} />
-        {
-          scoresMes.map((item,i)=>(
-
-            i>2 && i<30 && <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+1} />
-
-          ))
-        }
-        {
-          scoresMes.length===0 && (
-            <center>
-              <br />
-              No hay usuarios compitiendo aún...
-            </center>
-          )
-        }
+    <div className="ranking-page">
+      <div className="ranking-shell">
+        <div className="ranking-tabs" role="tablist" aria-label="Ranking tabs">
+          <button
+            type="button"
+            className={`ranking-tab ${value === 0 ? 'is-active' : ''}`}
+            onClick={() => setValue(0)}
+            aria-pressed={value === 0}
+          >
+            Global
+          </button>
+          <button
+            type="button"
+            className={`ranking-tab ${value === 1 ? 'is-active' : ''}`}
+            onClick={() => setValue(1)}
+            aria-pressed={value === 1}
+          >
+            Mes
+          </button>
         </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-      <div>
-        <center>
-          <strong>Top 100</strong><br />
-        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
-        </center>
-          <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} />
-        {
-          scoresGlobal.map((item,i)=>(
-            
-            i>2 && i<100 && <ChildComponent key={`${item.id}-Global`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+1} />
-            
-          ))
-        }
-        {
-          scoresGlobal.length===0 && (
-            <center>
-              <br />
-              No hay usuarios compitiendo aún...
-            </center>
-          )
-        }
-        </div>
-      </TabPanel>
-      {/* <TabPanel value={value} index={2}>
-      <div> */}
-        {/* <center>
-          <strong>Top 100 Ramas</strong><br />
-        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
-        </center> */}
-        {/* <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} /> */}
-        {
-          // ramasPuntos.map((item,i)=>(
-            
-          //   i>2 && i<100 && <ChildComponent key={`${item.id}-Scouts`} 
-          //   nombre={getNameRama(item.id)}
-          //    puntos={item.puntos} 
-          //    foto={getRamaImagen(item.id)} 
-          //   //  institucion={getUserInstitucion(item.id)} 
-          //    index={i+1} />
-            
-          // ))
-        }
-        {/* {
-          ramasPuntos.length===0 && (
-            <center>
-              <br />
-              No hay usuarios compitiendo aún...
-            </center>
-          )
-        } */}
-       
-        {/* </div>
-      </TabPanel> */}
-      <br />
-      <br />
-      <br />
-      <br />
-      
-        <Footer />
-  </div>
-  )
-}
 
-export default RankingComponent
+        <section className="ranking-panel">
+          <div className="ranking-header">
+            <h2>{activeTitle}</h2>
+            <p>{activeSubtitle}</p>
+          </div>
+
+          <ActiveTopThree list3Best={activeList.slice(0, 3)} />
+
+          <div className="ranking-list">
+            {renderRows(activeList, activeLimit, 4, rowSuffix)}
+          </div>
+        </section>
+      </div>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default RankingComponent;
