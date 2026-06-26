@@ -54,9 +54,16 @@ const Especies = () => {
   };
   
   useEffect(() => {
-    setUsuarios(especies);
-    setTablaUsuarios(especies);
+    dispatch(startLoadEspeciesCatalogo());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (especies && especies.length > 0) {
+      setUsuarios(especies);
+      setTablaUsuarios(especies);
+    }
   }, [especies]);
+
 
   return (
     <section className='catalogo-wrapper'>
