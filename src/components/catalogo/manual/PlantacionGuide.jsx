@@ -57,8 +57,10 @@ export default function PlantacionGuide({ onClose }) {
   const imageCandidatesFor = (i) => [
     `/Imgs/consejo${i + 1}.png`,
     `/Imgs/consejo${i + 1}.jpg`,
+    `/Imgs/consejo${i + 1}.webp`,
     `/Imgs/plantacion-step-${i + 1}.png`,
     `/Imgs/plantacion-step-${i + 1}.jpg`,
+    `/Imgs/plantacion-step-${i + 1}.webp`,
   ]
 
   function StepImage({ index }) {

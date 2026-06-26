@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 import { useSelector, useDispatch } from 'react-redux';
-import { setActiveEspecie } from '../../actions/catalogoActions';
+import { setActiveEspecie, startLoadEspeciesCatalogo } from '../../actions/catalogoActions';
 import './Especies.css';
 
 const Especies = () => {
