@@ -1,5 +1,6 @@
 import { db } from "../firebase/firebase-config";
 import { collection, getDocs } from "firebase/firestore";
+import { ARBOLES_MAPEADOS_MOCK } from "../pages/mapav/utils/arbolesMapeadosMock";
 
 export const loadArbolesMapeados = async () => {
   const arbolesCol = collection(db, "arbolesMapeados");
@@ -11,5 +12,5 @@ export const loadArbolesMapeados = async () => {
     ...doc.data(),
   }));
 
-  return lista;
+  return [...lista, ...ARBOLES_MAPEADOS_MOCK];
 };

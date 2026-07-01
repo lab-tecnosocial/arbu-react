@@ -13,10 +13,9 @@ export default function ClusterArbolesMapeados({
   if (!arbolesMapeados.isActive) return null;
 
   const markers = useMemo(() => {
-    const arboles =
-      arbolesMapeados.filteredData.length > 0
-        ? arbolesMapeados.filteredData
-        : arbolesMapeados.data;
+    const arboles = arbolesMapeados.activityFilter
+      ? arbolesMapeados.filteredData
+      : arbolesMapeados.data;
 
     return arboles.map((arbol, index) => (
       <Marker
@@ -33,7 +32,7 @@ export default function ClusterArbolesMapeados({
         }}
       />
     ));
-  }, [arbolesMapeados.filteredData, arbolesMapeados.data, dispatch]);
+  }, [arbolesMapeados.activityFilter,arbolesMapeados.filteredData,arbolesMapeados.data,dispatch,]);
 
   return (
     <MarkerClusterGroup chunkedLoading>

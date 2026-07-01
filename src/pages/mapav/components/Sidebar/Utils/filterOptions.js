@@ -29,3 +29,7 @@ export const optionsMonitoreos = [
   { value: "esteMes", label: "Este mes" }, ,
   { value: "personalizado", label: "Buscar por rango de fecha" }, ,
 ]
+
+export const optionsActividades = [
+  { value: "scouts2025", label: "Mapeo Scouts 2025" },
+]
