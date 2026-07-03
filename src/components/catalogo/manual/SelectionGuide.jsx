@@ -3,14 +3,14 @@ import './PlantacionGuide.css'
 import speciesSelector from '../../../utils/speciesSelector'
 import { especies } from '../especiesData'
 
-export default function SelectionGuide({ onClose }) {
+export default function SelectionGuide({ onClose, isModal = true }) {
   const [lugar, setLugar] = useState('Calle')
   const [ancho, setAncho] = useState('')
   const [cables, setCables] = useState('No')
   const [results, setResults] = useState(null)
 
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget && onClose) {
+    if (isModal && e.target === e.currentTarget && onClose) {
       onClose()
     }
   }
@@ -35,14 +35,21 @@ export default function SelectionGuide({ onClose }) {
   }
 
   return (
-    <section className='plantacion-guide' aria-label='Guía de selección de especies' onClick={handleBackdropClick}>
-      <div className='plantacion-step-card' onClick={(e) => e.stopPropagation()}>
+    <section
+      className={`plantacion-guide ${isModal ? '' : 'plantacion-guide--page'}`.trim()}
+      aria-label='Guía de selección de especies'
+      onClick={handleBackdropClick}
+    >
+      <div
+        className={`plantacion-step-card ${isModal ? '' : 'plantacion-step-card--page'}`.trim()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className='selection-guide-header'>
           <div>
             <h3>Guía de selección de especies</h3>
             <p>Recomendaciones ordenadas por puntaje</p>
           </div>
-          <button className='plantacion-close' onClick={onClose}>✕</button>
+          {onClose ? <button className='plantacion-close' onClick={onClose}>✕</button> : null}
         </div>
 
         <form className='selection-guide-form' onSubmit={handleSubmit}>
@@ -63,7 +70,7 @@ export default function SelectionGuide({ onClose }) {
 
           <div className='selection-guide-actions'>
             <button className='selection-guide-primary' type='submit'>Calcular recomendación</button>
-            <button className='selection-guide-secondary' type='button' onClick={onClose}>Cerrar</button>
+            {onClose ? <button className='selection-guide-secondary' type='button' onClick={onClose}>Cerrar</button> : null}
           </div>
         </form>
 

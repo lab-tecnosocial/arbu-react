@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import './Manuales.css'
 import dataSlider from './dataSlider'
-import { Link, useSearchParams } from 'react-router-dom';
-import PlantacionGuide from './PlantacionGuide';
-import SelectionGuide from './SelectionGuide';
+import { Link } from 'react-router-dom';
 const guiaTitles = [
     ['CATÁLOGO DE', 'ESPECIES'],
     ['GUÍA DE', 'SELECCIÓN DE ESPECIES'],
@@ -20,31 +18,6 @@ const guiaImages = [
 
 
 export default function Slider() {
-    const [searchParams] = useSearchParams()
-    const [showPlantacionGuide, setShowPlantacionGuide] = useState(false)
-    const [showSelectionGuide, setShowSelectionGuide] = useState(false)
-
-    // Cerrar modales cuando el usuario sale de la pestaña de guías
-    useEffect(() => {
-        const isOnCatalogo = searchParams.get('tab') === 'catalogo'
-        if (isOnCatalogo) {
-            setShowPlantacionGuide(false)
-            setShowSelectionGuide(false)
-        }
-    }, [searchParams])
-
-    // Listener adicional para cerrar al hacer clic fuera (ESC)
-    useEffect(() => {
-        const handleEsc = (e) => {
-            if (e.key === 'Escape') {
-                setShowPlantacionGuide(false)
-                setShowSelectionGuide(false)
-            }
-        }
-        window.addEventListener('keydown', handleEsc)
-        return () => window.removeEventListener('keydown', handleEsc)
-    }, [])
-
     return (
         <>
             <section className='manuales-container'>
@@ -86,27 +59,25 @@ export default function Slider() {
 
                     if (index === 1) {
                         return (
-                            <button
-                                type='button'
+                            <Link
+                                to='/aprende?tab=guia-seleccion'
                                 key={obj.id}
-                                className='guia-card guia-button'
-                                onClick={() => setShowSelectionGuide(true)}
+                                className='guia-card guia-link'
                             >
                                 {content}
-                            </button>
+                            </Link>
                         )
                     }
 
                     if (index === 2) {
                         return (
-                            <button
-                                type='button'
+                            <Link
+                                to='/aprende?tab=guia-plantacion'
                                 key={obj.id}
-                                className='guia-card guia-button'
-                                onClick={() => setShowPlantacionGuide(true)}
+                                className='guia-card guia-link'
                             >
                                 {content}
-                            </button>
+                            </Link>
                         )
                     }
 
@@ -117,14 +88,6 @@ export default function Slider() {
                     )
                 })}
             </section>
-
-            {showSelectionGuide ? (
-                <SelectionGuide onClose={() => setShowSelectionGuide(false)} />
-            ) : null}
-
-            {showPlantacionGuide ? (
-                <PlantacionGuide onClose={() => setShowPlantacionGuide(false)} />
-            ) : null}
         </>
     )
 }

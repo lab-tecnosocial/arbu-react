@@ -13,6 +13,38 @@
 	margin-top: auto;
 }
 
+.catalogo-backbar {
+	width: min(1100px, 92%);
+	margin: 0 auto 14px;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.catalogo-back-button {
+	border: 1px solid #cfdad7;
+	background: #ffffff;
+	color: #145048;
+	border-radius: 12px;
+	padding: 10px 16px;
+	font-family: 'Poppins', sans-serif;
+	font-size: 0.95rem;
+	font-weight: 700;
+	cursor: pointer;
+	box-shadow: 0 6px 16px rgba(20, 80, 72, 0.1);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.catalogo-back-button:hover {
+	transform: translateY(-1px);
+	border-color: #98beb7;
+	box-shadow: 0 10px 22px rgba(20, 80, 72, 0.14);
+}
+
+.catalogo-back-button:focus-visible {
+	outline: 3px solid rgba(20, 80, 72, 0.22);
+	outline-offset: 2px;
+}
+
 .catalogo-main--guias {
     /* Use min-height and let the page (body) handle scrolling to avoid nested scrollbars */
 	min-height: calc(100dvh - 65px);
@@ -80,6 +112,11 @@
 	.catalogo-tabs {
 		width: 94%;
 		gap: 10px;
+	}
+
+	.catalogo-backbar {
+		width: 94%;
+		margin-bottom: 10px;
 	}
 
 	.tab-button {

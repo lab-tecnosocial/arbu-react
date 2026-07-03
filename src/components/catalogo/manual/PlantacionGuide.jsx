@@ -40,14 +40,14 @@ const plantacionSteps = [
   },
 ]
 
-export default function PlantacionGuide({ onClose }) {
+export default function PlantacionGuide({ onClose, isModal = true }) {
   const [stepIndex, setStepIndex] = useState(0)
 
   const totalSteps = plantacionSteps.length
   const step = useMemo(() => plantacionSteps[stepIndex], [stepIndex])
 
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget && onClose) {
+    if (isModal && e.target === e.currentTarget && onClose) {
       onClose()
     }
   }
@@ -89,10 +89,12 @@ export default function PlantacionGuide({ onClose }) {
 
   // when opened, prevent body scroll
   useEffect(() => {
+    if (!isModal) return undefined
+
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = prev }
-  }, [])
+  }, [isModal])
 
   const goPrev = () => {
     setStepIndex((current) => Math.max(0, current - 1))
@@ -118,13 +120,22 @@ export default function PlantacionGuide({ onClose }) {
   }
 
   return (
-    <section className='plantacion-guide' aria-label='Consejos de plantacion' onClick={handleBackdropClick}>
-      <article className='plantacion-step-card' onClick={(e) => e.stopPropagation()}>
+    <section
+      className={`plantacion-guide ${isModal ? '' : 'plantacion-guide--page'}`.trim()}
+      aria-label='Consejos de plantacion'
+      onClick={handleBackdropClick}
+    >
+      <article
+        className={`plantacion-step-card ${isModal ? '' : 'plantacion-step-card--page'}`.trim()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className='plantacion-guide-header'>
           <h3>Consejos de Plantacion</h3>
-          <button type='button' className='plantacion-close' onClick={onClose} aria-label='Cerrar'>
-            ✕
-          </button>
+          {onClose ? (
+            <button type='button' className='plantacion-close' onClick={onClose} aria-label='Cerrar'>
+              ✕
+            </button>
+          ) : null}
         </div>
 
         <header className='plantacion-top'>
