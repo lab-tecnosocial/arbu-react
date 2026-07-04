@@ -12,12 +12,13 @@ import {
   getTreePhotos,
   MAPPED_PARTS_UI,
 } from "./treePhotos";
+import { getScoutInfoByMapeadoPor } from "../../utils/scoutEscudos";
 
 export const CardTree = () => {
   const dispatch = useDispatch()
   const contentRef = useRef(null)
   const { usuarios, panelState, selectedTree, index } = useSelector((state) => state.mapa)
-  const { arbolesPlantados } = useSelector((state) => state.arboles)
+  const { arbolesPlantados, arbolesMapeados, inscripcionesMapeo } = useSelector((state) => state.arboles)
   const [monitoreos, setMonitoreos] = useState([])
   const [riegos, setRiegos] = useState([])
   const [isLargeScreen, setIsLargeScreen] = useState(
@@ -105,6 +106,19 @@ export const CardTree = () => {
   }, [panelState, selectedTree, isLargeScreen])
 
   const isMapped = selectedTree && Object.hasOwn(selectedTree, "mapeadoPor");
+  const showScoutInfo = arbolesMapeados.activityFilter === "scouts2025";
+  const scoutInfo = useMemo(() => {
+    if (!showScoutInfo || !isMapped || !selectedTree?.mapeadoPor) return null;
+    return getScoutInfoByMapeadoPor(
+      selectedTree.mapeadoPor,
+      inscripcionesMapeo.data
+    );
+  }, [
+    showScoutInfo,
+    isMapped,
+    selectedTree?.mapeadoPor,
+    inscripcionesMapeo.data,
+  ]);
   const photos = useMemo(
     () => getTreePhotos(isMapped, monitoreos),
     [isMapped, monitoreos]
@@ -365,6 +379,35 @@ export const CardTree = () => {
               })
             }
           </div>
+          {showScoutInfo && scoutInfo?.escudoSrc && (
+            <>
+              <div className="line"></div>
+              <div className={styles.treeScout}>
+                <h3>Scout</h3>
+                <div className={styles.scoutContent}>
+                  <div className={styles.scoutEscudo}>
+                    <img
+                      src={scoutInfo.escudoSrc}
+                      alt={`Escudo del grupo ${scoutInfo.grupo}`}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className={styles.scoutDetails}>
+                    <div className={styles.detail}>
+                      <span className={styles.labelFirst}>Grupo</span>
+                      <span className={styles.labelSecond}>{scoutInfo.grupo}</span>
+                    </div>
+                    {scoutInfo.nombre && (
+                      <div className={styles.detail}>
+                        <span className={styles.labelFirst}>Nombre</span>
+                        <span className={styles.labelSecond}>{scoutInfo.nombre}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           </TreePhotoGallery>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { CardTree } from "./components/CardTree/CardTree";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loadGeoScouts, startLoadingUsuarios } from "../../actions/mapaActions";
-import { fetchMappedTrees, fetchPlantedTrees } from "../../actions/arboles.actions";
+import { fetchInscripcionesMapeo, fetchMappedTrees, fetchPlantedTrees } from "../../actions/arboles.actions";
 import Modal from "./components/Modal/Modal";
 
 const MapaComponent = () => {
@@ -16,6 +16,7 @@ const MapaComponent = () => {
     // NOTE: fetch data, load archivos
     dispatch(fetchPlantedTrees())
     dispatch(fetchMappedTrees())
+    dispatch(fetchInscripcionesMapeo())
     dispatch(loadGeoScouts())
     dispatch(startLoadingUsuarios());
   }, [dispatch])

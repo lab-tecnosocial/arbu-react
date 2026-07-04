@@ -7,9 +7,9 @@ import { Radio } from "../../../../components/Radio/Radio";
 import { OptionChip } from "../../../../components/OptionChip/OptionChip"
 import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
-import { optionsGeo, optionsArbol, optionsCategorias, optionsRiegos, optionsMonitoreos } from "./Utils/filterOptions";
+import { optionsGeo, optionsArbol, optionsCategorias, optionsRiegos, optionsMonitoreos, optionsActividades } from "./Utils/filterOptions";
 import { especies } from "../../utils/especies";
-import { resetPlantedTreesFilter, setActiveMappedTrees, setActivePlantedTrees, setPlantedTreesFilter } from "../../../../actions/arboles.actions";
+import { resetMappedTreesActivityFilter, resetPlantedTreesFilter, setActiveMappedTrees, setActivePlantedTrees, setMappedTreesActivityFilter, setPlantedTreesFilter } from "../../../../actions/arboles.actions";
 import { setGeoMode } from "../../../../actions/mapaActions";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { Input } from "../../../../components/input/Input";
@@ -25,6 +25,7 @@ export const Sidebar = () => {
   const [selectedEspecies, setSelectedEspecies] = useState([])
   const [fechaDesde, setDesde] = useState("");
   const [fechaHasta, setHasta] = useState("");
+  const [selectedActividad, setSelectedActividad] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const { arbolesPlantados } = useSelector((state) => state.arboles)
@@ -61,16 +62,41 @@ export const Sidebar = () => {
     }
   };
 
+  const clearActivityFilter = () => {
+    setSelectedActividad("");
+    dispatch(resetMappedTreesActivityFilter());
+  };
+
   const handleToggleArbol = (value) => {
     if (arbolValues.includes(value)) {
       setArbolValues(arbolValues.filter((item) => item !== value));
       if (value === 'plantados') dispatch(setActivePlantedTrees(false))
-      if (value === 'mapeados') dispatch(setActiveMappedTrees(false))
+      if (value === 'mapeados') {
+        dispatch(setActiveMappedTrees(false))
+        if (selectedActividad) clearActivityFilter();
+      }
     } else {
+      if (selectedActividad) clearActivityFilter();
       setArbolValues([...arbolValues, value]);
       if (value === 'plantados') dispatch(setActivePlantedTrees(true))
       if (value === 'mapeados') dispatch(setActiveMappedTrees(true))
     }
+  };
+
+  const handleToggleActividad = (value) => {
+    if (selectedActividad === value) {
+      clearActivityFilter();
+      setArbolValues(["plantados"]);
+      dispatch(setActivePlantedTrees(true));
+      dispatch(setActiveMappedTrees(false));
+      return;
+    }
+
+    setSelectedActividad(value);
+    dispatch(setMappedTreesActivityFilter(value));
+    setArbolValues([]);
+    dispatch(setActivePlantedTrees(false));
+    dispatch(setActiveMappedTrees(true));
   };
 
   const calcularFechasRango = (tipo) => {
@@ -327,6 +353,21 @@ export const Sidebar = () => {
                   </button>
                 </Accordion>
 
+              </div>
+            </div>
+            <div className={styles.rowSidebar}>
+              <h3>Actividades pasadas</h3>
+              <div className={styles.options}>
+                {optionsActividades.map((option) => (
+                  <OptionChip
+                    key={option.value}
+                    fullWidth
+                    onClick={() => handleToggleActividad(option.value)}
+                    checked={selectedActividad === option.value}
+                  >
+                    {option.label}
+                  </OptionChip>
+                ))}
               </div>
             </div>
           </>

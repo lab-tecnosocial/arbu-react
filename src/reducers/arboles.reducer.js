@@ -1,9 +1,11 @@
 import { types } from "../types/types";
+import { filterMappedTreesByActivity } from "../pages/mapav/utils/mappedTreesFilters";
 
 // Initial state for mapped trees (árboles mapeados)
 const initialMappedTreesState = {
   data: [],
   filteredData: [],
+  activityFilter: null,
   isActive: false,
   loading: false,
   error: null,
@@ -21,10 +23,17 @@ const initialPlantedTreesState = {
   error: null,
 };
 
+const initialInscripcionesMapeoState = {
+  data: [],
+  loading: false,
+  error: null,
+};
+
 // Combined initial state
 const initialState = {
   arbolesMapeados: initialMappedTreesState,
   arbolesPlantados: initialPlantedTreesState,
+  inscripcionesMapeo: initialInscripcionesMapeoState,
 };
 
 // Mapped trees reducer
@@ -55,6 +64,20 @@ const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
       return {
         ...state,
         isActive: action.payload,
+      };
+
+    case types.FILTRAR_ARBOLES_MAPEADOS: {
+      return {
+        ...state,
+        activityFilter: action.payload,
+      };
+    }
+
+    case types.RESET_MAPEADOS_FILTRADOS:
+      return {
+        ...state,
+        activityFilter: null,
+        filteredData: [],
       };
 
     case types.mapaFiltrarArboles: {
@@ -108,6 +131,37 @@ const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
         filteredData,
       };
     }
+
+    default:
+      return state;
+  }
+};
+
+const inscripcionesMapeoReducer = (
+  state = initialInscripcionesMapeoState,
+  action
+) => {
+  switch (action.type) {
+    case types.FETCH_INSCRIPCIONES_MAPEO_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case types.FETCH_INSCRIPCIONES_MAPEO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+      };
+
+    case types.FETCH_INSCRIPCIONES_MAPEO_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     default:
       return state;
@@ -244,12 +298,38 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
   }
 };
 
+const ACTIONS_REQUIRING_FILTER_RECOMPUTE = new Set([
+  types.FETCH_ARBOLES_MAPEADOS_SUCCESS,
+  types.FETCH_INSCRIPCIONES_MAPEO_SUCCESS,
+  types.FILTRAR_ARBOLES_MAPEADOS,
+]);
+
 // Root reducer
 const treeReducers = (state = initialState, action) => {
-  return {
+  const nextState = {
     arbolesMapeados: arbolesMapeadosReducer(state.arbolesMapeados, action),
     arbolesPlantados: arbolesPlantadosReducer(state.arbolesPlantados, action),
+    inscripcionesMapeo: inscripcionesMapeoReducer(state.inscripcionesMapeo, action),
   };
+
+  if (
+    ACTIONS_REQUIRING_FILTER_RECOMPUTE.has(action.type) &&
+    nextState.arbolesMapeados.activityFilter
+  ) {
+    return {
+      ...nextState,
+      arbolesMapeados: {
+        ...nextState.arbolesMapeados,
+        filteredData: filterMappedTreesByActivity(
+          nextState.arbolesMapeados.data,
+          nextState.arbolesMapeados.activityFilter,
+          nextState.inscripcionesMapeo.data
+        ),
+      },
+    };
+  }
+
+  return nextState;
 };
 
 export default treeReducers;
