@@ -38,10 +38,18 @@
   background-color: rgb(40, 44, 52);
   position: relative;
   border-radius: 0.5rem;
-  /* min-height: 300px; */
   height: 400px;
-  /* padding-bottom: 46%; */
-  /* font-size: 5rem; */
+}
+
+@media (max-width: 768px) {
+  .embla__slide__inner {
+    height: clamp(220px, 52vw, 320px);
+  }
+
+  .embla__button {
+    width: 3rem;
+    height: 4.5rem;
+  }
 }
 
 
