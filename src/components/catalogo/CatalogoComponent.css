@@ -1,0 +1,150 @@
+/* CatalogoComponent Styles */
+
+.catalogo-main {
+	width: 100%;
+	min-height: calc(100dvh - 65px);
+	background: #fafafa;
+	padding: 24px 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.catalogo-main .main-footer {
+	margin-top: auto;
+}
+
+.catalogo-backbar {
+	width: min(1100px, 92%);
+	margin: 0 auto 14px;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.catalogo-back-button {
+	border: 1px solid #cfdad7;
+	background: #ffffff;
+	color: #145048;
+	border-radius: 12px;
+	padding: 10px 16px;
+	font-family: 'Poppins', sans-serif;
+	font-size: 0.95rem;
+	font-weight: 700;
+	cursor: pointer;
+	box-shadow: 0 6px 16px rgba(20, 80, 72, 0.1);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.catalogo-back-button:hover {
+	transform: translateY(-1px);
+	border-color: #98beb7;
+	box-shadow: 0 10px 22px rgba(20, 80, 72, 0.14);
+}
+
+.catalogo-back-button:focus-visible {
+	outline: 3px solid rgba(20, 80, 72, 0.22);
+	outline-offset: 2px;
+}
+
+.catalogo-main--guias {
+    /* Use min-height and let the page (body) handle scrolling to avoid nested scrollbars */
+	min-height: calc(100dvh - 65px);
+	padding-top: 20px;
+	/* Reduced bottom padding so footer sits closer to viewport bottom */
+	padding-bottom: 24px;
+}
+
+.catalogo-main--guias .manuales-container {
+	flex: 1;
+	align-content: center;
+	margin-bottom: 12px;
+}
+
+.catalogo-main--guias .main-footer {
+	margin-top: 0;
+}
+
+@media (max-height: 820px) {
+	.catalogo-main {
+		min-height: auto;
+	}
+
+	.catalogo-main .main-footer {
+		margin-top: 24px;
+	}
+
+	.catalogo-main--guias {
+		min-height: calc(100dvh - 65px);
+	}
+
+	.catalogo-main--guias .manuales-container {
+		gap: 12px;
+	}
+}
+
+.catalogo-tabs {
+	width: min(1100px, 92%);
+	margin: 0 auto 20px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.tab-button {
+	height: 58px;
+	border-radius: 14px;
+	border: 1px solid #d9d9d9;
+	background: #f2f2f2;
+	color: #154b43;
+	font-family: 'Poppins', sans-serif;
+	font-size: 1.05rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-button.active {
+	border-color: #268576;
+	background: #268576;
+	color: #fff;
+}
+
+@media (max-width: 768px) {
+	.catalogo-main {
+		padding: 16px 0 20px;
+	}
+
+	.catalogo-tabs {
+		width: 94%;
+		gap: 10px;
+	}
+
+	.catalogo-backbar {
+		width: 94%;
+		margin-bottom: 10px;
+	}
+
+	.catalogo-back-button {
+		padding: 9px 14px;
+		font-size: 0.9rem;
+	}
+
+	.tab-button {
+		height: 50px;
+		font-size: 0.92rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.catalogo-main {
+		padding: 12px 0 16px;
+	}
+
+	.catalogo-main--guias {
+		padding-top: 12px;
+		padding-bottom: 16px;
+	}
+
+	.catalogo-backbar {
+		margin-bottom: 8px;
+	}
+}
