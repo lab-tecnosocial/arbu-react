@@ -1,5 +1,9 @@
 import { loadArboles } from "../helpers/loadArboles";
 import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados";
+<<<<<<< HEAD
+=======
+import { INSCRIPCIONES_MAPEO_MOCK } from "../pages/mapav/utils/inscripcionesMapeoMock";
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 import { types } from "../types/types";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -53,6 +57,32 @@ export const resetPlantedTreesFilter = () => ({
   type: types.RESET_PLANTADOS_FILTRADOS,
 });
 
+<<<<<<< HEAD
+=======
+export const setMappedTreesActivityFilter = (activity) => ({
+  type: types.FILTRAR_ARBOLES_MAPEADOS,
+  payload: activity,
+});
+
+export const resetMappedTreesActivityFilter = () => ({
+  type: types.RESET_MAPEADOS_FILTRADOS,
+});
+
+export const fetchInscripcionesMapeoRequest = () => ({
+  type: types.FETCH_INSCRIPCIONES_MAPEO_REQUEST,
+});
+
+export const fetchInscripcionesMapeoSuccess = (data) => ({
+  type: types.FETCH_INSCRIPCIONES_MAPEO_SUCCESS,
+  payload: data,
+});
+
+export const fetchInscripcionesMapeoFailure = (error) => ({
+  type: types.FETCH_INSCRIPCIONES_MAPEO_FAILURE,
+  payload: error,
+});
+
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 // export const setActivePlantedTree = (value) => ({
 //   type: types.SET_ACTIVE_ARBOL_PLANTADO,
 //   payload: value,
@@ -73,9 +103,13 @@ export const fetchMappedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchMappedTreesRequest());
+<<<<<<< HEAD
 
       const treesData = await loadArbolesMapeados();
 
+=======
+      const treesData = await loadArbolesMapeados();
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
       dispatch(fetchMappedTreesSuccess(treesData));
     } catch (error) {
       console.log(error);
@@ -90,7 +124,10 @@ export const fetchPlantedTrees = () => {
     try {
       dispatch(fetchPlantedTreesRequest());
       const treesData = await loadArboles();
+<<<<<<< HEAD
   
+=======
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
       dispatch(fetchPlantedTreesSuccess(treesData));
     } catch (error) {
       console.log(error)
@@ -104,6 +141,25 @@ export const fetchAllTrees = () => {
     await Promise.all([
       dispatch(fetchMappedTrees()),
       dispatch(fetchPlantedTrees()),
+<<<<<<< HEAD
     ]);
   };
 };
+=======
+      dispatch(fetchInscripcionesMapeo()),
+    ]);
+  };
+};
+
+export const fetchInscripcionesMapeo = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchInscripcionesMapeoRequest());
+      dispatch(fetchInscripcionesMapeoSuccess(INSCRIPCIONES_MAPEO_MOCK));
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchInscripcionesMapeoFailure(error.message));
+    }
+  };
+};
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8

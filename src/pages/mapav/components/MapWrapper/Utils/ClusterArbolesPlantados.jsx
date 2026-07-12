@@ -10,10 +10,20 @@ export default function ClusterArbolesPlantados({
 }) {
   const dispatch = useDispatch();
 
+<<<<<<< HEAD
   const markers = useMemo(() => {
     const arboles = arbolesPlantados.isSearching
       ? arbolesPlantados.filteredData
       : arbolesPlantados.data;
+=======
+  if (!arbolesPlantados.isActive) return null;
+
+  const markers = useMemo(() => {
+    const arboles =
+      arbolesPlantados.filteredData.length > 0
+        ? arbolesPlantados.filteredData
+        : arbolesPlantados.data;
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 
     return arboles.map((arbol, index) => (
       <Marker
@@ -30,9 +40,13 @@ export default function ClusterArbolesPlantados({
         }}
       />
     ));
+<<<<<<< HEAD
   }, [arbolesPlantados.isSearching, arbolesPlantados.filteredData, arbolesPlantados.data, dispatch]);
 
   if (!arbolesPlantados.isActive) return null;
+=======
+  }, [arbolesPlantados.filteredData, arbolesPlantados.data, dispatch]);
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 
   return (
     <MarkerClusterGroup chunkedLoading>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root{
   --color-oscuro:#174C44 ;
   --color-claro:#268576; 
@@ -153,3 +154,263 @@
       place-content: center;
     }
   }
+=======
+:root {
+  --color-oscuro: #174C44;
+  --color-claro: #268576;
+}
+
+.titles {
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-oscuro);
+  font-size: 1rem;
+  margin: 0 0 6px;
+}
+
+.text-normal {
+  font-family: 'Open Sans', sans-serif;
+  color: var(--color-oscuro);
+  font-size: 0.9rem;
+}
+
+.inputBuscar {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #174C44 !important;
+}
+
+/* Layout del catálogo */
+.catalogo-wrapper {
+  width: min(1100px, 94%);
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+
+.catalogo-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #cfe2de;
+  background: #ffffff;
+  color: #174C44;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-chip.active-filter {
+  background: #e8f5f1;
+  border-color: var(--color-claro);
+  color: #0f5a50;
+}
+
+.search-box {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  border: 2px solid var(--color-claro);
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 0 12px;
+}
+
+.search-box .form-control {
+  border: 0;
+  padding: 0;
+  height: auto;
+  min-height: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.catalogo-search-row .btn-success {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 96px;
+  height: 48px;
+  border: 2px solid var(--color-claro);
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+/* Lista de especies */
+.container-primary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.container-catalogo {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 14px;
+  align-items: start;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #e3ecea;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 8px 20px rgba(23, 76, 68, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (hover: hover) {
+  .container-catalogo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(23, 76, 68, 0.12);
+  }
+}
+
+.text-arbol p {
+  color: var(--color-oscuro);
+}
+
+.container-catalogo figure {
+  margin: 0;
+}
+
+.container-catalogo figure img {
+  width: 100%;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  display: block;
+}
+
+.container-text-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  gap: 10px;
+}
+
+.descripcion {
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.container-icon-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+.origin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.origin-badge.nativa {
+  background: #03b25e;
+  color: #ffffff;
+}
+
+.origin-badge.introducida {
+  background: var(--color-oscuro);
+  color: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .container-catalogo {
+    grid-template-columns: 160px 1fr;
+    gap: 18px;
+    padding: 14px;
+  }
+
+  .container-catalogo figure img {
+    height: 160px;
+  }
+}
+
+@media (min-width: 900px) {
+  .container-primary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .container-catalogo {
+    grid-template-columns: 200px 1fr;
+    padding: 16px;
+  }
+
+  .container-catalogo figure img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .catalogo-wrapper {
+    width: 94%;
+    padding-bottom: 20px;
+  }
+
+  .catalogo-search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .filter-chip {
+    align-self: flex-start;
+  }
+
+  .search-box {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .catalogo-search-row .btn-success {
+    width: 100%;
+  }
+
+  .container-catalogo {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .container-catalogo figure img {
+    height: clamp(180px, 52vw, 240px);
+  }
+
+  .titles {
+    font-size: 1.05rem;
+  }
+
+  .descripcion {
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }
+}
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8

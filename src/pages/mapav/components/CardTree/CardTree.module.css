@@ -288,6 +288,69 @@
       }
     }
   }
+<<<<<<< HEAD
+=======
+
+  .treeScout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+
+    h3 {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--geyser-950);
+    }
+
+    .scoutContent {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .scoutEscudo {
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+      background-color: white;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .scoutDetails {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .detail {
+        display: flex;
+        flex-direction: column;
+
+        .labelFirst {
+          font-size: 14px;
+          color: var(--geyser-500);
+        }
+
+        .labelSecond {
+          font-size: 16px;
+          color: var(--geyser-950);
+          font-weight: 400;
+        }
+      }
+    }
+  }
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 }
 
 @media (max-width: 768px) {

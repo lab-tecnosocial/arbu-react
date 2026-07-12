@@ -52,6 +52,7 @@
 .detail-especie{
   z-index: 1000;
   position: fixed;
+<<<<<<< HEAD
   /* Este es el width 100% por defecto para dispositivos pequeños para que ocupe todo su ancho*/
   width: 100%;
   /* height:100%; es para todo el alto del dispositivo y height:auto; es para solo el alto del contenido del panel  */
@@ -62,13 +63,48 @@
   padding-bottom: 100px;
   right: -100%;
   transition: all 0.2s ease-in-out;
+=======
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: #EBF5EE;
+  top: 0;
+  padding-top: 65px;
+  padding-bottom: 24px;
+  right: -100%;
+  transition: right 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.detail-especie-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(23, 76, 68, 0.15);
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 }
 
 
 
 .scroll{
+<<<<<<< HEAD
   margin: 0 20px;
   
+=======
+  margin: 0 16px;
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 } 
 .container-info{
   position:relative;

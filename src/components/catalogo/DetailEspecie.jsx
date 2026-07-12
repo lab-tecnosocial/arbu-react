@@ -1,14 +1,22 @@
+<<<<<<< HEAD
 import { IconButton } from "@mui/material";
+=======
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideDetailEspecie } from "../../actions/catalogoActions";
 import "./DetailEspecie.css";
 import EmblaCarouselComponent from "./carrusel/EmblaCarousel";
 import CloseIcon from '@mui/icons-material/Close';
+<<<<<<< HEAD
+=======
+
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 const DetailEspecie = () => {
   const { activeEspecie } = useSelector((state) => state.catalogo);
   const dispatch = useDispatch();
 
+<<<<<<< HEAD
   // const handleBack = () => {
   //   dispatch(setHideDetailEspecie());
   // };
@@ -26,6 +34,26 @@ const DetailEspecie = () => {
           <CloseIcon  sx={{color:'#174C44'}}/>
           </IconButton>
           </div> */}
+=======
+  const handleClose = () => {
+    dispatch(setHideDetailEspecie());
+  };
+
+  if (!activeEspecie) return null;
+
+  return (
+    <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
+      <div className="detail-container-especie">
+        <div className="detail-container-especie-secundary">
+          <button
+            type="button"
+            className="detail-especie-close"
+            onClick={handleClose}
+            aria-label="Cerrar detalle de especie"
+          >
+            <CloseIcon sx={{ color: '#174C44' }} />
+          </button>
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
           <div style={{ margin: "auto" }} >
             {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
             {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}

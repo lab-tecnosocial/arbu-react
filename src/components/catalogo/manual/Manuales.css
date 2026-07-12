@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .container-slider {
   background-color: #E8F6EE; 
   display: flex;
@@ -220,3 +221,215 @@
   }
 
 }
+=======
+.manuales-container {
+  width: min(1160px, 94%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.guia-card {
+  background: linear-gradient(110deg, #9ad3c5 0%, #c8e0d8 45%, #d9ebe5 100%);
+  border: 1px solid rgba(0, 86, 77, 0.14);
+  border-radius: 22px;
+  min-height: clamp(180px, 23vh, 210px);
+  padding: clamp(18px, 2vw, 24px) clamp(22px, 2.6vw, 30px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 86, 77, 0.14);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.guia-card::before {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right: -70px;
+  top: -70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 72%);
+  pointer-events: none;
+}
+
+@media (min-width: 769px) {
+  .guia-card:nth-child(3) {
+    grid-column: 1 / -1;
+    max-width: 52%;
+    justify-self: center;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 860px) {
+  .guia-card:nth-child(3) {
+    max-width: 64%;
+  }
+}
+
+.guia-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.guia-title {
+  margin: 0;
+  color: #00564d;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.2rem, 3vw, 3rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0.3px;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+/* Remove default link styles when a card is a Link */
+.guia-link {
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+}
+
+.guia-button {
+  border: 0;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.guia-link:hover,
+.guia-button:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: 0 16px 34px rgba(0, 86, 77, 0.2);
+  filter: saturate(1.04);
+}
+
+.guia-link:focus-visible,
+.guia-button:focus-visible {
+  outline: 3px solid rgba(0, 86, 77, 0.35);
+  outline-offset: 3px;
+}
+
+.guia-visual {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 165px;
+}
+
+.guia-visual-image {
+  width: min(178px, 100%);
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .manuales-container {
+    width: min(1100px, 95%);
+  }
+
+  .guia-card {
+    grid-template-columns: 1fr auto;
+    min-height: 170px;
+    padding: 16px 18px;
+    gap: 18px;
+  }
+
+  .guia-title {
+    font-size: clamp(2rem, 4vw, 2.35rem);
+  }
+
+  .guia-visual-image {
+    width: min(152px, 100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .manuales-container {
+    grid-template-columns: 1fr;
+    width: 94%;
+    gap: 14px;
+  }
+
+  .guia-card {
+    grid-template-columns: 1fr;
+    min-height: 150px;
+    padding: 16px;
+    gap: 12px;
+    min-height: auto;
+  }
+
+  .guia-card:nth-child(3) {
+    grid-column: auto;
+    max-width: none;
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .guia-content {
+    text-align: center;
+    align-items: center;
+  }
+
+  .guia-title {
+    font-size: clamp(1.8rem, 7.4vw, 2.15rem);
+  }
+
+  .guia-visual {
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .guia-visual-image {
+    width: min(130px, 60vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .manuales-container {
+    width: 94%;
+    gap: 12px;
+  }
+
+  .guia-card {
+    padding: 14px 16px;
+    border-radius: 18px;
+  }
+
+  .guia-title {
+    font-size: clamp(1.55rem, 6.8vw, 1.9rem);
+    line-height: 1.12;
+  }
+
+  .guia-visual-image {
+    width: min(118px, 52vw);
+  }
+}
+
+@media (hover: none) {
+  .guia-link:hover,
+  .guia-button:hover {
+    transform: none;
+    filter: none;
+  }
+
+  .guia-link:active,
+  .guia-button:active {
+    transform: scale(0.985);
+  }
+}
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8

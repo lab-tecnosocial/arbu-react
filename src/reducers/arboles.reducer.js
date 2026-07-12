@@ -1,11 +1,20 @@
 import { types } from "../types/types";
+<<<<<<< HEAD
+=======
+import { filterMappedTreesByActivity } from "../pages/mapav/utils/mappedTreesFilters";
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 
 // Initial state for mapped trees (árboles mapeados)
 const initialMappedTreesState = {
   data: [],
   filteredData: [],
+<<<<<<< HEAD
   isActive: false,
   isSearching: false,
+=======
+  activityFilter: null,
+  isActive: false,
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
   loading: false,
   error: null,
 };
@@ -22,10 +31,23 @@ const initialPlantedTreesState = {
   error: null,
 };
 
+<<<<<<< HEAD
+=======
+const initialInscripcionesMapeoState = {
+  data: [],
+  loading: false,
+  error: null,
+};
+
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 // Combined initial state
 const initialState = {
   arbolesMapeados: initialMappedTreesState,
   arbolesPlantados: initialPlantedTreesState,
+<<<<<<< HEAD
+=======
+  inscripcionesMapeo: initialInscripcionesMapeoState,
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 };
 
 // Mapped trees reducer
@@ -58,6 +80,7 @@ const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
         isActive: action.payload,
       };
 
+<<<<<<< HEAD
     case types.RESET_PLANTADOS_FILTRADOS:
       return {
         ...state,
@@ -137,6 +160,22 @@ const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
       };
     }
 
+=======
+    case types.FILTRAR_ARBOLES_MAPEADOS: {
+      return {
+        ...state,
+        activityFilter: action.payload,
+      };
+    }
+
+    case types.RESET_MAPEADOS_FILTRADOS:
+      return {
+        ...state,
+        activityFilter: null,
+        filteredData: [],
+      };
+
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
     case types.mapaFiltrarArboles: {
       const {
         busqueda,
@@ -194,7 +233,42 @@ const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
   }
 };
 
+<<<<<<< HEAD
 // Planteb d trees reducer
+=======
+const inscripcionesMapeoReducer = (
+  state = initialInscripcionesMapeoState,
+  action
+) => {
+  switch (action.type) {
+    case types.FETCH_INSCRIPCIONES_MAPEO_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case types.FETCH_INSCRIPCIONES_MAPEO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+      };
+
+    case types.FETCH_INSCRIPCIONES_MAPEO_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+// Planted trees reducer
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
   switch (action.type) {
     // case types.SET_ACTIVE_ARBOL_PLANTADO:
@@ -252,25 +326,45 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
     case types.FILTRAR_ARBOLES_PLANTADOS:
       const {
         search,
+<<<<<<< HEAD
         selectedCategorias = "",
         selectedRiegos,
         selectedMonitoreos,
         selectedEspecies = [],
+=======
+        selectedCategorias,
+        selectedRiegos,
+        selectedMonitoreos,
+        // busqueda,
+        // camposSeleccionados,
+        // riegosSeleccionados,
+        // monitoreoFiltro,
+        // especiesSeleccionadas
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
       } = action.payload;
 
 
       const texto = (search || "").toLowerCase().trim();
+<<<<<<< HEAD
       const campo = selectedCategorias || "todos";
 
       const riego = selectedRiegos || "conysin";
       const filtroMonitoreo = selectedMonitoreos || { tipo: "todo", desde: null, hasta: null };
 
       const normalizeText = (value) => (value || "").toLowerCase().trim();
+=======
+
+      const campo = selectedCategorias || "todos";
+
+      const riego = selectedRiegos || "conysin";
+      // const especie = especiesSeleccionadas || "todas";
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 
       const filtrados = state.data.filter((item) => {
         let coincideTexto = false;
         if (campo === "todos") {
           coincideTexto =
+<<<<<<< HEAD
             texto === "" ||
             [item.nombreComun, item.nombreCientifico, item.nombrePropio].some((valor) =>
               normalizeText(valor).includes(texto)
@@ -281,6 +375,17 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
           coincideTexto = normalizeText(item.nombreCientifico).includes(texto);
         } else if (campo === "nombrePropio") {
           coincideTexto = normalizeText(item.nombrePropio).includes(texto);
+=======
+            item.nombreComun?.toLowerCase().includes(texto) ||
+            item.nombreCientifico?.toLowerCase().includes(texto) ||
+            item.nombrePropio?.toLowerCase().includes(texto);
+        } else if (campo === "nombreComun") {
+          coincideTexto = item.nombreComun?.toLowerCase().includes(texto);
+        } else if (campo === "nombreCientifico") {
+          coincideTexto = item.nombreCientifico?.toLowerCase().includes(texto);
+        } else if (campo === "nombrePropio") {
+          coincideTexto = item.nombrePropio?.toLowerCase().includes(texto);
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
         }
 
         const tieneRiegos = item.riegos && Object.keys(item.riegos).length > 0;
@@ -292,16 +397,24 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
 
         const hayMonitoreoEnRango = Object.values(monitoreos).some((mon) => {
           const ts = mon.timestamp?.seconds * 1000;
+<<<<<<< HEAD
           const cumpleDesde = !filtroMonitoreo.desde || ts >= filtroMonitoreo.desde;
           const cumpleHasta = !filtroMonitoreo.hasta || ts <= filtroMonitoreo.hasta;
           return (
             ts &&
             cumpleDesde &&
             cumpleHasta
+=======
+          return (
+            ts &&
+            (!selectedMonitoreos.desde || ts >= selectedMonitoreos.desde) &&
+            (!selectedMonitoreos.hasta || ts <= selectedMonitoreos.hasta)
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
           );
         });
 
         const coincideMonitoreo =
+<<<<<<< HEAD
           !filtroMonitoreo.tipo ||
           filtroMonitoreo.tipo === "todo" ||
           filtroMonitoreo.tipo === "todos" ||
@@ -314,6 +427,19 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
         return coincideTexto && coincideRiego && coincideMonitoreo && coincideEspecie;
       });
 
+=======
+          selectedMonitoreos.tipo === "todo" || hayMonitoreoEnRango;
+
+        // const coincideEspecie =
+        //   especiesSeleccionadas.length === 0 ||
+        //   especiesSeleccionadas.includes(item.nombreCientifico);
+        //
+        return coincideTexto && coincideRiego && coincideMonitoreo;
+      });
+
+      console.log("filtrados", filtrados);
+
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
       return {
         ...state,
         filteredData: filtrados,
@@ -325,12 +451,47 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
   }
 };
 
+<<<<<<< HEAD
 // Root reducer
 const treeReducers = (state = initialState, action) => {
   return {
     arbolesMapeados: arbolesMapeadosReducer(state.arbolesMapeados, action),
     arbolesPlantados: arbolesPlantadosReducer(state.arbolesPlantados, action),
   };
+=======
+const ACTIONS_REQUIRING_FILTER_RECOMPUTE = new Set([
+  types.FETCH_ARBOLES_MAPEADOS_SUCCESS,
+  types.FETCH_INSCRIPCIONES_MAPEO_SUCCESS,
+  types.FILTRAR_ARBOLES_MAPEADOS,
+]);
+
+// Root reducer
+const treeReducers = (state = initialState, action) => {
+  const nextState = {
+    arbolesMapeados: arbolesMapeadosReducer(state.arbolesMapeados, action),
+    arbolesPlantados: arbolesPlantadosReducer(state.arbolesPlantados, action),
+    inscripcionesMapeo: inscripcionesMapeoReducer(state.inscripcionesMapeo, action),
+  };
+
+  if (
+    ACTIONS_REQUIRING_FILTER_RECOMPUTE.has(action.type) &&
+    nextState.arbolesMapeados.activityFilter
+  ) {
+    return {
+      ...nextState,
+      arbolesMapeados: {
+        ...nextState.arbolesMapeados,
+        filteredData: filterMappedTreesByActivity(
+          nextState.arbolesMapeados.data,
+          nextState.arbolesMapeados.activityFilter,
+          nextState.inscripcionesMapeo.data
+        ),
+      },
+    };
+  }
+
+  return nextState;
+>>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 };
 
 export default treeReducers;
