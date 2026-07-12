@@ -1,0 +1,103 @@
+.formContainer {
+  width: 100%;
+  height: 80vh;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.fitHeight {
+  height: auto;
+}
+
+.header {
+  border-bottom: 1px solid var(--geyser-200);
+  padding: 16px 24px;
+  padding-right: 16px;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--geyser-100);
+
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  svg {
+    color: var(--geyser-400);
+  }
+}
+
+.formBody {
+  width: 100%;
+  overflow-y: auto;
+  height: 100%;
+  position: relative;
+  padding: 24px;
+}
+
+.formInner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+
+.submitActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+.textInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--geyser-200);
+  border-radius: 10px;
+}
+
+.preview {
+  max-width: 250px;
+  max-height: 250px;
+  object-fit: cover;
+  height: 100%;
+}
+
+.radioContainer {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lugarPlantacion {
+  background: lightblue;
+}
+
+.stepActions {
+  border-top: 1px solid var(--geyser-200);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+}
+
+.successContainer {
+  padding: 32px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  h3 {
+    margin-inline: 32px;
+  }
+
+  button {
+    margin-top: 1rem;
+  }
+}

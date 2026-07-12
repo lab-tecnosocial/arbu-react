@@ -1,0 +1,50 @@
+.resultCard {
+  border: 1px solid var(--geyser-200);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  transition: .2s ease;
+
+  h5 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--geyser-950);
+    margin-bottom: 8px;
+  }
+}
+
+.resultDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0px;
+  color: var(--geyser-700);
+  padding: 16px;
+  border-bottom: 1px solid var(--geyser-200);
+}
+
+.detail {
+  color: var(--geyser-700);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 14px;
+
+  span {
+    margin-top: 3px;
+  }
+}
+
+.footer {
+  padding: 8px 16px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resultCard:hover {
+  background-color: var(--geyser-50);
+  border: 1px solid var(--geyser-300);
+}
