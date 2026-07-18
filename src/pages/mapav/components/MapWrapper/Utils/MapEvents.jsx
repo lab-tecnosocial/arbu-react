@@ -7,12 +7,12 @@ export const MapEvents = () => {
   const dispatch = useDispatch();
   const { selectedCoords, zoom, duration } = useSelector((state) => state.mapa)
   const map = useMap();
-  useMapEvents({
-    click(e) {
-      const { lat, lng } = e.latlng;
-      dispatch(setSelectedCoords([lat, lng]));
-    },
-  })
+  // useMapEvents({
+  //   click(e) {
+  //     const { lat, lng } = e.latlng;
+  //     dispatch(setSelectedCoords([lat, lng]));
+  //   },
+  // })
 
   useEffect(() => {
     if (selectedCoords) {
