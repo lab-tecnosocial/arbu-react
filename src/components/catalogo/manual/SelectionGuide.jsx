@@ -1,27 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
 import './PlantacionGuide.css'
-import { recommendSpecies, getCompatibilityLevel } from '../../../utils/speciesSelector'
-import { especies as especiesFallback } from '../especiesData'
-import { startLoadEspeciesCatalogo } from '../../../actions/catalogoActions'
+import { recommendSpecies } from '../../../utils/speciesSelector'
+
+// IMPORTAMOS EL JSON DIRECTAMENTE (Ajusta la ruta si lo guardaste en otra carpeta)
+import especiesData from './especies.json'
 import { LUGARES, OPCIONES_CABLES } from '../data/speciesPlantingProfiles'
 
 export default function SelectionGuide({ onClose, isModal = true }) {
-  const dispatch = useDispatch()
-  const especiesCatalogo = useSelector((state) => state.catalogo.especies)
-  const especies = especiesCatalogo?.length ? especiesCatalogo : especiesFallback
+  // Extraemos el arreglo de especies del archivo JSON
+  const especies = especiesData.especies;
 
   const [lugar, setLugar] = useState('Calle')
   const [ancho, setAncho] = useState('')
   const [cables, setCables] = useState('No')
   const [results, setResults] = useState(null)
   const [searched, setSearched] = useState(false)
-
-  useEffect(() => {
-    if (!especiesCatalogo?.length) {
-      dispatch(startLoadEspeciesCatalogo())
-    }
-  }, [dispatch, especiesCatalogo?.length])
 
   const handleBackdropClick = (e) => {
     if (isModal && e.target === e.currentTarget && onClose) {
@@ -37,7 +30,8 @@ export default function SelectionGuide({ onClose, isModal = true }) {
       cables,
     }
 
-    const rec = recommendSpecies(especies, answers, { topN: 5, minScore: 3 })
+    // Le pasamos nuestro arreglo de JSON a la función
+    const rec = recommendSpecies(especies, answers, { topN: 5 })
     setResults(rec)
     setSearched(true)
   }
@@ -55,7 +49,7 @@ export default function SelectionGuide({ onClose, isModal = true }) {
         <div className='selection-guide-header'>
           <div>
             <h3>Guía de selección de especies</h3>
-            <p>Recomendaciones según el sitio de plantación y las {especies.length} especies del catálogo.</p>
+            <p>Recomendaciones exactas según el sitio de plantación.</p>
           </div>
           {onClose ? (
             <button type='button' className='plantacion-close' onClick={onClose} aria-label='Cerrar'>
@@ -94,7 +88,7 @@ export default function SelectionGuide({ onClose, isModal = true }) {
 
           <div className='selection-guide-actions'>
             <button className='selection-guide-primary' type='submit'>
-              Calcular recomendación
+              Buscar especie
             </button>
             {onClose ? (
               <button className='selection-guide-secondary' type='button' onClick={onClose}>
@@ -106,76 +100,44 @@ export default function SelectionGuide({ onClose, isModal = true }) {
 
         {searched && results?.length === 0 ? (
           <p className='selection-guide-empty'>
-            No encontramos especies adecuadas con esos criterios. Prueba ampliar el ancho disponible o cambiar el tipo de área.
+            No encontramos ninguna especie que cumpla con todos los criterios exactos. Prueba ampliar el ancho disponible o cambiar el tipo de área.
           </p>
         ) : null}
 
         {results?.length ? (
           <div className='selection-guide-results'>
-            <h4>Recomendaciones</h4>
-            <aside className='selection-guide-score-help' aria-label='Explicación de compatibilidad'>
-              <strong>¿Qué significa compatibilidad?</strong>
-              <p>
-                Es un puntaje calculado según tus respuestas: tipo de área, ancho disponible y cables aéreos.
-                Cada especie suma o resta puntos según su perfil de plantación del catálogo ARBU.
-              </p>
-              <ul>
-                <li><span>20+</span> Excelente</li>
-                <li><span>15–19</span> Alta</li>
-                <li><span>10–14</span> Media</li>
-                <li><span>3–9</span> Baja</li>
-              </ul>
-              <p className='selection-guide-score-help-note'>
-                Las especies están ordenadas de mayor a menor compatibilidad. Revisa también las advertencias de cada resultado.
-              </p>
-            </aside>
+            <h4>Resultados Compatibles</h4>
             <ol>
-              {results.map((r) => {
-                const compatibility = getCompatibilityLevel(r.score)
-
-                return (
-                <li key={r.especie.id || r.especie.nombreComun}>
+              {results.map((r) => (
+                <li key={r.especie.cod || r.especie.nombreComun}>
                   <div className='selection-guide-card'>
                     <div className='selection-guide-rank'>{r.rank}</div>
                     <img
-                      src={r.especie.imagenesUri?.[0]}
+                      src={r.especie.img}
                       alt={r.especie.nombreComun}
                       className='selection-guide-image'
                     />
                     <div className='selection-guide-content'>
                       <div className='selection-guide-name'>
-                        {r.especie.nombreComun || r.especie.nombreCientifico}
+                        {r.especie.nombreComun}
                       </div>
                       <div className='selection-guide-meta'>
-                        <span className={`selection-guide-origin ${r.especie.origen === 'Nativa' ? 'nativa' : 'introducida'}`}>
+                        <span className={`selection-guide-origin ${r.especie.origen === 'nativa' ? 'nativa' : 'introducida'}`}>
                           {r.especie.origen}
                         </span>
-                        <span
-                          className={`selection-guide-score-label selection-guide-score-label--${compatibility.label.toLowerCase()}`}
-                          title={compatibility.description}
-                        >
-                          Compatibilidad: {r.score} · {compatibility.label}
+                        <span className="selection-guide-score-label" style={{marginLeft: '10px', color: '#2e7d32'}}>
+                          ✓ Cumple requisitos
                         </span>
                       </div>
-                      {r.reasons?.length ? (
-                        <ul className='selection-guide-reasons'>
-                          {r.reasons.map((reason) => (
-                            <li key={reason}>{reason}</li>
-                          ))}
-                        </ul>
-                      ) : null}
-                      {r.warnings?.length ? (
-                        <ul className='selection-guide-warnings'>
-                          {r.warnings.map((warning) => (
-                            <li key={warning}>{warning}</li>
-                          ))}
-                        </ul>
-                      ) : null}
+                      <ul className='selection-guide-reasons' style={{marginTop: '10px', fontSize: '14px', color: '#555'}}>
+                        <li><strong>Tamaño:</strong> {r.especie.tamanoArbol} ({r.especie.dimJardinera2}m requeridos)</li>
+                        <li><strong>Cables:</strong> {r.especie.cablesElectricidad}</li>
+                        <li><strong>Deciduosidad:</strong> {r.especie.deciduosidad}</li>
+                      </ul>
                     </div>
                   </div>
                 </li>
-                )
-              })}
+              ))}
             </ol>
           </div>
         ) : null}
