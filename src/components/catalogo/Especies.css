@@ -1,160 +1,121 @@
-<<<<<<< HEAD
-:root{
-  --color-oscuro:#174C44 ;
-  --color-claro:#268576; 
+:root {
+  --color-oscuro: #174C44;
+  --color-claro: #268576;
 }
 
-.titles{
+.titles {
   font-family: 'Poppins', sans-serif;
   color: var(--color-oscuro);
   font-size: 1rem;
+  margin: 0 0 6px;
 }
-.text-normal{
-  font-family: 'Open Sans' , sans-serif;
+
+.text-normal {
+  font-family: 'Open Sans', sans-serif;
   color: var(--color-oscuro);
   font-size: 0.9rem;
 }
-.inputBuscar{
-  font-family: 'Poppins';
+
+.inputBuscar {
+  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   color: #174C44 !important;
 }
-/* buscador */
 
-.containerInput {
+/* Layout del catálogo */
+.catalogo-wrapper {
+  width: min(1100px, 94%);
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+
+.catalogo-search-row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.filter-chip {
+  display: inline-flex;
   align-items: center;
-}
-.search{
-  margin-top: 10px;
-  display: flex;
-  width: 80%;
-}
-
-.form-control {
-  width: 100%;
-  border: 4px solid var(--color-claro);
-  border-right: none;
-  padding: 5px;
-  height: 38px;
-  font-size: 17px;
-  border-radius:20px 0 0 20px;
-  outline: none;
-  color: #9DBFAF;
-}
-
-.btn-success{
-  width: 70px;
-  height: 56px;
-  border: 4px solid var(--color-claro);
-  background: var(--color-claro);
-  text-align: center;
-  color: #fff;
-  border-radius: 0 20px 20px 0;
+  gap: 6px;
+  border: 1px solid #cfe2de;
+  background: #ffffff;
+  color: #174C44;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
-  /* container */
-  
-  .container-primary{
-    margin: 20px 50px 20px 50px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill,640px);
-    gap: 36px;
-    place-content: center;
-  }
-  .container-catalogo{
-    display: grid;
-    grid-template-columns: auto 1fr ;
-    gap: 20px;
-    cursor: pointer;
-  }
 
-  
-  .text-arbol p{
-    color: var(--color-oscuro);
-  }
-  
-  .container-catalogo figure{
-    margin: 0;
-  }
-  .container-catalogo figure img{
-    width: 250px;
-    height: 250px;
-    border-radius: 3px;
-  }
-  .container-text-icon{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin: 10px;
-  }
+.filter-chip.active-filter {
+  background: #e8f5f1;
+  border-color: var(--color-claro);
+  color: #0f5a50;
+}
 
-  .container-icon-info{
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-top: 12px;
-  }
-  .icon-info {
-      margin: 0;
-      background-color: var(--color-oscuro);
-      border-radius: 40px;
-      text-transform: capitalize;
-  }
+.search-box {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  border: 2px solid var(--color-claro);
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 0 12px;
+}
 
-  @media (max-width: 850px){
+.search-box .form-control {
+  border: 0;
+  padding: 0;
+  height: auto;
+  min-height: 0;
+  border-radius: 0;
+  background: transparent;
+}
 
-    .container-primary{
-      margin: 20px 50px 20px 50px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill,540px);
-      gap: 26px;
-      place-content: center;
-    }
-    .container-catalogo figure img{
-      width: 210px;
-      height: 210px;
-    }
-  }
-  @media (max-width: 550px){
-    .search{
-      margin-top: 10px;
-      width: 90%;
-    }
+.catalogo-search-row .btn-success {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 96px;
+  height: 48px;
+  border: 2px solid var(--color-claro);
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
 
-    .button-primary{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .button-primary p{
-      margin-top: 0px;
-    }
-    .button-primary h2{
-      margin-top: 0px;
-    }
-    .container-catalogo figure img{
-      width: 250px;
-      height: 250px;
-    }
+/* Lista de especies */
+.container-primary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
 
-    .container-catalogo {
-      width: 100%;
-      gap: 0;
-      align-items: center;
-      margin: 0;
-    }
-    .container-primary{
-      margin: 10px 20px 10px 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill,340px);
-      gap: 36px;
-      place-content: center;
-    }
-  }
-=======
+.container-catalogo {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 14px;
+  align-items: start;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #e3ecea;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 8px 20px rgba(23, 76, 68, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 :root {
   --color-oscuro: #174C44;
   --color-claro: #268576;

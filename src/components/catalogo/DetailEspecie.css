@@ -1,21 +1,24 @@
 :root{
   --color-oscuro:#174C44 ;
-
 }
+
 .titleEspecie{
   font-family: 'Poppins', sans-serif;
   color: var(--color-oscuro);
   font-size: 1.1rem;
   margin: 0;
 }
+
 .text-normal{
   font-family: 'Open Sans' , sans-serif;
   color: var(--color-oscuro);
   font-size: 0.9rem;
 }
+
 .nombreCientifico{
   font-size: 1.1rem;
 }
+
 .text-container{
   display: flex;
   justify-content: space-between;
@@ -23,6 +26,7 @@
   padding-bottom: 6px;
   border-bottom: 1px solid var(--color-oscuro);
 }
+
 .text-origen > span{
   font-family: 'Open Sans' , sans-serif;
   font-weight:bold;
@@ -32,11 +36,11 @@
   padding: 2px 5px;
   font-size: 0.8rem;
 }
+
 .text-descripcion{
   font-family: 'Open Sans' , sans-serif;
   color: var(--color-oscuro);
   font-size: 0.9rem;
-  
   margin-bottom: 1.2rem;
 }
 
@@ -52,19 +56,9 @@
 .detail-especie{
   z-index: 1000;
   position: fixed;
-<<<<<<< HEAD
   /* Este es el width 100% por defecto para dispositivos pequeños para que ocupe todo su ancho*/
   width: 100%;
-  /* height:100%; es para todo el alto del dispositivo y height:auto; es para solo el alto del contenido del panel  */
-  height: 90%;
-  overflow-y: scroll;
-  background-color: #EBF5EE;
-  top: 60px;
-  padding-bottom: 100px;
-  right: -100%;
-  transition: all 0.2s ease-in-out;
-=======
-  width: 100%;
+  /* height: 100dvh; es para todo el alto del dispositivo móvil dinámico evitando recortes */
   height: 100dvh;
   max-height: 100dvh;
   overflow-y: auto;
@@ -93,22 +87,16 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(23, 76, 68, 0.15);
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 }
 
-
-
 .scroll{
-<<<<<<< HEAD
-  margin: 0 20px;
-  
-=======
   margin: 0 16px;
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 } 
+
 .container-info{
   position:relative;
 }
+
 .image-epecie{
   border-radius: 50%;
   width: 150px;
@@ -131,7 +119,6 @@
   flex-direction: column;
   margin: 0;
 }
-
 
 /* Aqui se cambia el width del panel para dispositivos medianos y grandes */
 @media only screen and (min-width: 768px) {

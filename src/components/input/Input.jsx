@@ -45,11 +45,7 @@ export const Input = ({
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-<<<<<<< HEAD
-      searchOnClick?.();
-=======
-      searchOnClick();
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
+    searchOnClick?.();
     }
   };
 
@@ -114,10 +110,7 @@ export const Input = ({
           placeholder={placeholder}
           value={value}
           onChange={suggestions.length > 0 ? handleInputChange : onChange}
-<<<<<<< HEAD
           onKeyDown={handleKeyDown}
-=======
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
           onFocus={() => setShowSuggestions(filteredSuggestions.length > 0)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           className={`${styles.input} `}

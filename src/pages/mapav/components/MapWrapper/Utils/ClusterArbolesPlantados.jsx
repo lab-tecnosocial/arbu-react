@@ -1,31 +1,21 @@
 import { Marker } from "react-leaflet";
 import { useMemo } from "react";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setPanelState, setSelectedCoords, setSelectedTree } from "../../../../../actions/mapaActions";
 
-export default function ClusterArbolesPlantados({
-  arbolesPlantados,
-  customIcon,
-}) {
+export default function ClusterArbolesPlantados({ arbolesPlantados, customIcon }) {
   const dispatch = useDispatch();
 
-<<<<<<< HEAD
-  const markers = useMemo(() => {
-    const arboles = arbolesPlantados.isSearching
-      ? arbolesPlantados.filteredData
-      : arbolesPlantados.data;
-=======
-  if (!arbolesPlantados.isActive) return null;
+  if (!arbolesPlantados?.isActive) return null;
 
   const markers = useMemo(() => {
     const arboles =
-      arbolesPlantados.filteredData.length > 0
+      arbolesPlantados.filteredData && arbolesPlantados.filteredData.length > 0
         ? arbolesPlantados.filteredData
         : arbolesPlantados.data;
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 
-    return arboles.map((arbol, index) => (
+    return (arboles || []).map((arbol, index) => (
       <Marker
         key={arbol.id}
         position={[arbol.latitud, arbol.longitud]}
@@ -40,13 +30,7 @@ export default function ClusterArbolesPlantados({
         }}
       />
     ));
-<<<<<<< HEAD
-  }, [arbolesPlantados.isSearching, arbolesPlantados.filteredData, arbolesPlantados.data, dispatch]);
-
-  if (!arbolesPlantados.isActive) return null;
-=======
   }, [arbolesPlantados.filteredData, arbolesPlantados.data, dispatch]);
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 
   return (
     <MarkerClusterGroup chunkedLoading>

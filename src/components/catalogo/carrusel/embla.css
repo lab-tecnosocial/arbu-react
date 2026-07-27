@@ -38,12 +38,6 @@
   background-color: rgb(40, 44, 52);
   position: relative;
   border-radius: 0.5rem;
-<<<<<<< HEAD
-  /* min-height: 300px; */
-  height: 400px;
-  /* padding-bottom: 46%; */
-  /* font-size: 5rem; */
-=======
   height: 400px;
 }
 
@@ -56,7 +50,6 @@
     width: 3rem;
     height: 4.5rem;
   }
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 }
 
 

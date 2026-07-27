@@ -1,32 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-import Manuales from './manual/Manuales'
-
-import './CatalogoComponent.css'
-import Especies from './Especies'
-import {useSelector} from 'react-redux';
-import DetailEspecie from './DetailEspecie';
-import Footer from '../footer/Footer';
-
-const CatalogoComponent = () => {
-  const {activeEspecie} = useSelector(state=>state.catalogo);
-  return (
-        <main>
-          {
-        activeEspecie ?
-        (
-          <DetailEspecie />
-        )
-        :
-        (
-          <span></span>
-        )
-        }
-          <Manuales />
-          <Especies />
-          <Footer />
-        </main>
-=======
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
@@ -90,21 +61,7 @@ const CatalogoComponent = () => {
       {renderContent()}
       <Footer />
     </main>
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
   )
 }
 
 export default CatalogoComponent
-<<<<<<< HEAD
-
-// export default function CatalogoComponent(){
-//   return (
-//     <div>
-//       <Especies/>
-//       <Manuales/>
-//     </div>
-//   )
-
-// }
-=======
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8

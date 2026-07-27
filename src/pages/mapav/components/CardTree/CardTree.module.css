@@ -288,10 +288,8 @@
       }
     }
   }
-<<<<<<< HEAD
-=======
 
-  .treeScout {
+    .treeScout {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -350,7 +348,6 @@
       }
     }
   }
->>>>>>> a7d307769a044f360211c87a4837a02a1d6945d8
 }
 
 @media (max-width: 768px) {
