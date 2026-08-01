@@ -79,11 +79,27 @@
   object-fit: cover;
 }
 
+.estadoPartIcon {
+  display: block;
+  width: clamp(28px, 7vw, 40px);
+  height: clamp(28px, 7vw, 40px);
+  object-fit: contain;
+  margin: 0 auto;
+}
+
 .estadoImgButton {
   flex: 1 1 calc(50% - 4px);
   min-width: 0;
-  background-color: var(--geyser-100);
-  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  background-color: color-mix(
+    in srgb,
+    var(--geyser-200) 60%,
+    var(--geyser-300) 40%
+  );
+  padding: clamp(8px, 2vw, 12px);
   border-radius: 6px;
   border: none;
   font-size: inherit;
@@ -97,7 +113,7 @@
 }
 
 .estadoImgButton:hover:not(:disabled) {
-  background-color: var(--geyser-200);
+  background-color: var(--geyser-100);
 }
 
 .estadoImgButton:disabled {
@@ -108,8 +124,12 @@
 .estadoImgDisabled {
   flex: 1 1 calc(50% - 4px);
   min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   background-color: var(--geyser-100);
-  padding: 10px 8px;
+  padding: clamp(8px, 2vw, 12px);
   border-radius: 6px;
   opacity: 0.45;
   text-align: center;
@@ -174,6 +194,11 @@
   .estadoImgButton,
   .estadoImgDisabled {
     flex: 1 1 calc(50% - 4px);
-    font-size: 13px;
+    min-height: 40px;
+  }
+
+  .estadoPartIcon {
+    width: clamp(24px, 6vw, 32px);
+    height: clamp(24px, 6vw, 32px);
   }
 }

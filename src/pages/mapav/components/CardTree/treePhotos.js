@@ -8,10 +8,10 @@ const MAPPED_PHOTO_FIELDS = [
 ];
 
 export const MAPPED_PARTS_UI = [
-  { key: "fotoRaiz", label: "Raíz o base" },
-  { key: "fotoCorteza", label: "Corteza" },
-  { key: "fotoHoja", label: "Hoja" },
-  { key: "fotoFlor", label: "Flor" },
+  { key: "fotoRaiz", label: "Raíz o base", icon: "/icons/raiz.png" },
+  { key: "fotoCorteza", label: "Corteza", icon: "/icons/corteza.png" },
+  { key: "fotoHoja", label: "Hoja", icon: "/icons/hoja.png" },
+  { key: "fotoFlor", label: "Flor", icon: "/icons/flor.png" },
 ];
 
 export function formatMonitoreoDateLong(timestamp, locale = "es-BO") {
