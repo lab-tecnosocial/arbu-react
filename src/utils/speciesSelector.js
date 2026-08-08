@@ -2,10 +2,6 @@ export function recommendSpecies(especies = [], answers = {}, options = {}) {
   const { lugar, ancho, cables } = answers;
   const topN = options.topN || 5;
 
-  // 🐛 DEBUG: Esto te mostrará en la consola del navegador qué datos estás recibiendo
-  console.log("🔍 Criterios de búsqueda:", { lugar, ancho, cables });
-  console.log("🌳 Primera especie analizada:", especies[0]); 
-
   const filtrados = especies.filter((data) => {
     // Si la especie no tiene los datos requeridos, la ignoramos.
     // ESTO ES CLAVE: Si ves muchos de estos en consola, significa que tu base
@@ -34,11 +30,6 @@ export function recommendSpecies(especies = [], answers = {}, options = {}) {
         cumpleCables = true;
     } else if (cables === 'Media' && cablesArbol.includes('media')) {
         cumpleCables = true;
-    }
-
-    // Si todo se cumple, mostramos en consola cuál pasó la prueba
-    if (cumpleAncho && cumpleLugar && cumpleCables) {
-        console.log("✅ Especie APROBADA:", data.nombreComun);
     }
 
     return cumpleAncho && cumpleLugar && cumpleCables;
