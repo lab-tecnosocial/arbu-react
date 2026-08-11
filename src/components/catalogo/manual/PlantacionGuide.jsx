@@ -51,7 +51,6 @@ export default function PlantacionGuide({ onClose, isModal = true }) {
       onClose()
     }
   }
-
   // image files expected in public/Imgs named plantacion-step-1..9.png (or .jpg)
   // prefer images named consejo1..consejo9, fallback to plantacion-step-{n}
   const imageCandidatesFor = (i) => [
