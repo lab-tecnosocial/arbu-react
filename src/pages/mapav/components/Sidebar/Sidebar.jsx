@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { Button } from '../../../../components/button/Button';
@@ -62,6 +62,28 @@ export const Sidebar = () => {
     localStorage.removeItem(STORAGE_KEY);
   };
 
+  const clearUrlFilterParams = () => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    ['search', 'categorias', 'riegos', 'monitoreo', 'especies', 'actividad', 'arboles'].forEach((param) => {
+      url.searchParams.delete(param);
+    });
+    window.history.replaceState({}, '', url.pathname + url.search);
+  };
+
+  const buildStoragePayload = () => ({
+    search,
+    selectedCategorias,
+    selectedRiegos,
+    selectedMonitoreosOption,
+    selectedMonitoreosRange: getMonitoreoRange(selectedMonitoreosOption),
+    selectedEspecies,
+    fechaDesde,
+    fechaHasta,
+    selectedActividad,
+    arbolValues,
+  });
+
   useEffect(() => {
     const saved = loadSavedFilters();
     if (saved) {
@@ -110,33 +132,75 @@ export const Sidebar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!isResultView) return;
+    saveFilters(buildStoragePayload());
+  }, [search, selectedCategorias, selectedRiegos, selectedMonitoreosOption, selectedEspecies, fechaDesde, fechaHasta, selectedActividad, arbolValues, isResultView]);
+
   const handleToggleArbol = (value) => {
-    if (arbolValues.includes(value)) {
-      setArbolValues(arbolValues.filter((item) => item !== value));
-      if (value === 'plantados') dispatch(setActivePlantedTrees(false));
-      if (value === 'mapeados') dispatch(setActiveMappedTrees(false));
-    } else {
-      setArbolValues([...arbolValues, value]);
-      if (value === 'plantados') dispatch(setActivePlantedTrees(true));
-      if (value === 'mapeados') dispatch(setActiveMappedTrees(true));
-    }
+    const nextArbolValues = arbolValues.includes(value)
+      ? arbolValues.filter((item) => item !== value)
+      : [...arbolValues, value];
+
+    setArbolValues(nextArbolValues);
+    dispatch(setActivePlantedTrees(nextArbolValues.includes('plantados')));
+    dispatch(setActiveMappedTrees(nextArbolValues.includes('mapeados')));
+
+    saveFilters({
+      search,
+      selectedCategorias,
+      selectedRiegos,
+      selectedMonitoreosOption,
+      selectedMonitoreosRange: getMonitoreoRange(selectedMonitoreosOption),
+      selectedEspecies,
+      fechaDesde,
+      fechaHasta,
+      selectedActividad,
+      arbolValues: nextArbolValues,
+    });
   };
 
   const handleToggleActividad = (value) => {
     if (selectedActividad === value) {
+      const nextArbolValues = ['plantados'];
       setSelectedActividad('');
       dispatch(resetMappedTreesActivityFilter());
-      setArbolValues(['plantados']);
+      setArbolValues(nextArbolValues);
       dispatch(setActivePlantedTrees(true));
       dispatch(setActiveMappedTrees(false));
+      saveFilters({
+        search,
+        selectedCategorias,
+        selectedRiegos,
+        selectedMonitoreosOption,
+        selectedMonitoreosRange: getMonitoreoRange(selectedMonitoreosOption),
+        selectedEspecies,
+        fechaDesde,
+        fechaHasta,
+        selectedActividad: '',
+        arbolValues: nextArbolValues,
+      });
       return;
     }
 
+    const nextArbolValues = [];
     setSelectedActividad(value);
     dispatch(setMappedTreesActivityFilter(value));
-    setArbolValues([]);
+    setArbolValues(nextArbolValues);
     dispatch(setActivePlantedTrees(false));
     dispatch(setActiveMappedTrees(true));
+    saveFilters({
+      search,
+      selectedCategorias,
+      selectedRiegos,
+      selectedMonitoreosOption,
+      selectedMonitoreosRange: getMonitoreoRange(selectedMonitoreosOption),
+      selectedEspecies,
+      fechaDesde,
+      fechaHasta,
+      selectedActividad: value,
+      arbolValues: nextArbolValues,
+    });
   };
 
   const handleCheckBox = (value) => {
@@ -193,6 +257,19 @@ export const Sidebar = () => {
     };
 
     dispatch(setPlantedTreesFilter(payload));
+    saveFilters({
+      search: searchValue,
+      selectedCategorias: categoriasValue,
+      selectedRiegos: riegosValue,
+      selectedMonitoreosOption,
+      selectedMonitoreosRange: monitoreosValue,
+      selectedEspecies: especiesValue,
+      fechaDesde,
+      fechaHasta,
+      selectedActividad,
+      arbolValues,
+    });
+
     if (searchValue || riegosValue || monitoreosValue || especiesValue.length > 0) {
       setIsResultView(true);
     }
@@ -244,7 +321,11 @@ export const Sidebar = () => {
     setSelectedActividad('');
     setIsResultView(false);
     clearSavedFilters();
+    clearUrlFilterParams();
     dispatch(resetPlantedTreesFilter());
+    dispatch(resetMappedTreesActivityFilter());
+    dispatch(setActivePlantedTrees(true));
+    dispatch(setActiveMappedTrees(false));
   };
 
   return (

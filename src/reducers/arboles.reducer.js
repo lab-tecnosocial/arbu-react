@@ -15,6 +15,7 @@ const initialMappedTreesState = {
 const initialPlantedTreesState = {
   data: [],
   filteredData: [],
+  filterCriteria: null,
   isActive: true,
   selectedTree: null,
   isTreeSelected: false,
@@ -27,6 +28,64 @@ const initialInscripcionesMapeoState = {
   data: [],
   loading: false,
   error: null,
+};
+
+const filterPlantedTrees = (data, filters) => {
+  if (!filters) return [];
+
+  const {
+    search,
+    selectedCategorias,
+    selectedRiegos,
+    selectedMonitoreos,
+    selectedEspecies,
+  } = filters;
+
+  const texto = (search || "").toLowerCase().trim();
+  const campo = selectedCategorias || "todos";
+  const especiesSeleccionadas = selectedEspecies || [];
+  const riego = selectedRiegos || "conysin";
+
+  return data.filter((item) => {
+    let coincideTexto = false;
+    if (campo === "todos") {
+      coincideTexto =
+        texto === "" ||
+        [item.nombreComun, item.nombreCientifico, item.nombrePropio].some((valor) =>
+          (valor || "").toLowerCase().includes(texto)
+        );
+    } else if (campo === "nombreComun") {
+      coincideTexto = (item.nombreComun || "").toLowerCase().includes(texto);
+    } else if (campo === "nombreCientifico") {
+      coincideTexto = (item.nombreCientifico || "").toLowerCase().includes(texto);
+    } else if (campo === "nombrePropio") {
+      coincideTexto = (item.nombrePropio || "").toLowerCase().includes(texto);
+    }
+
+    const tieneRiegos = item.riegos && Object.keys(item.riegos).length > 0;
+    let coincideRiego = true;
+    if (riego === "sinRiegos") coincideRiego = !tieneRiegos;
+    else if (riego === "conRiegos") coincideRiego = tieneRiegos;
+
+    const monitoreos = item.monitoreos || {};
+    const hayMonitoreoEnRango = Object.values(monitoreos).some((mon) => {
+      const ts = mon.timestamp?.seconds * 1000;
+      return (
+        ts &&
+        (!selectedMonitoreos?.desde || ts >= selectedMonitoreos.desde) &&
+        (!selectedMonitoreos?.hasta || ts <= selectedMonitoreos.hasta)
+      );
+    });
+
+    const coincideMonitoreo =
+      !selectedMonitoreos || selectedMonitoreos.tipo === "todos" || hayMonitoreoEnRango;
+
+    const coincideEspecie =
+      especiesSeleccionadas.length === 0 ||
+      especiesSeleccionadas.includes(item.nombreCientifico);
+
+    return coincideTexto && coincideRiego && coincideMonitoreo && coincideEspecie;
+  });
 };
 
 // Combined initial state
@@ -184,12 +243,19 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
         error: null,
       };
 
-    case types.FETCH_ARBOLES_PLANTADOS_SUCCESS:
+    case types.FETCH_ARBOLES_PLANTADOS_SUCCESS: {
+      const filteredData = state.filterCriteria
+        ? filterPlantedTrees(action.payload, state.filterCriteria)
+        : [];
+
       return {
         ...state,
         loading: false,
         data: action.payload,
+        filteredData,
+        isSearching: !!state.filterCriteria,
       };
+    }
 
     case types.FETCH_ARBOLES_PLANTADOS_FAILURE:
       return {
@@ -208,6 +274,7 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
       return {
         ...state,
         filteredData: [],
+        filterCriteria: null,
         isSearching: false,
       };
 
@@ -218,64 +285,10 @@ const arbolesPlantadosReducer = (state = initialPlantedTreesState, action) => {
       };
 
     case types.FILTRAR_ARBOLES_PLANTADOS: {
-      const {
-        search,
-        selectedCategorias,
-        selectedRiegos,
-        selectedMonitoreos,
-        selectedEspecies,
-      } = action.payload;
-
-      const texto = (search || "").toLowerCase().trim();
-      const campo = selectedCategorias || "todos";
-      const especiesSeleccionadas = selectedEspecies || [];
-      const riego = selectedRiegos || "conysin";
-
-      const filtrados = state.data.filter((item) => {
-        let coincideTexto = false;
-        if (campo === "todos") {
-          coincideTexto =
-            texto === "" ||
-            [item.nombreComun, item.nombreCientifico, item.nombrePropio].some((valor) =>
-              (valor || "").toLowerCase().includes(texto)
-            );
-        } else if (campo === "nombreComun") {
-          coincideTexto = (item.nombreComun || "").toLowerCase().includes(texto);
-        } else if (campo === "nombreCientifico") {
-          coincideTexto = (item.nombreCientifico || "").toLowerCase().includes(texto);
-        } else if (campo === "nombrePropio") {
-          coincideTexto = (item.nombrePropio || "").toLowerCase().includes(texto);
-        }
-
-        const tieneRiegos = item.riegos && Object.keys(item.riegos).length > 0;
-        let coincideRiego = true;
-        if (riego === "sinRiegos") coincideRiego = !tieneRiegos;
-        else if (riego === "conRiegos") coincideRiego = tieneRiegos;
-
-        const monitoreos = item.monitoreos || {};
-
-        const hayMonitoreoEnRango = Object.values(monitoreos).some((mon) => {
-          const ts = mon.timestamp?.seconds * 1000;
-          return (
-            ts &&
-            (!selectedMonitoreos?.desde || ts >= selectedMonitoreos.desde) &&
-            (!selectedMonitoreos?.hasta || ts <= selectedMonitoreos.hasta)
-          );
-        });
-
-        const coincideMonitoreo =
-          !selectedMonitoreos || selectedMonitoreos.tipo === "todos" || hayMonitoreoEnRango;
-
-        const coincideEspecie =
-          especiesSeleccionadas.length === 0 ||
-          especiesSeleccionadas.includes(item.nombreCientifico);
-
-        return coincideTexto && coincideRiego && coincideMonitoreo && coincideEspecie;
-      });
-
       return {
         ...state,
-        filteredData: filtrados,
+        filteredData: filterPlantedTrees(state.data, action.payload),
+        filterCriteria: action.payload,
         isSearching: true,
       };
     }
