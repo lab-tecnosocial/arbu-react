@@ -1,0 +1,8 @@
+allowBuilds:
+  '@scarf/scarf': true
+  core-js-pure: true
+  esbuild: true
+  protobufjs: true
+  tree-sitter: true
+  tree-sitter-json: true
+  tree-sitter-yaml: true
