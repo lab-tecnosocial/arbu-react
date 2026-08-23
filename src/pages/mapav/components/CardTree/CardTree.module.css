@@ -356,9 +356,47 @@
     height: 100vh;
   }
 
+  .cardTreeMobile {
+    max-width: 100%;
+  }
+
   .cardInner {
-    min-width: 100vw;
+    min-width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     height: 100vh;
+  }
+
+  .cardBody {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .cardBody .treeInfo .headerTitle h2 {
+    font-size: 28px;
+  }
+
+  .cardBody .treeInfo .info {
+    flex-direction: column;
+  }
+
+  .cardBody .treeInfo .info .picture {
+    max-width: 100%;
+  }
+
+  .cardBody .treeInfo .estadoMapeo {
+    flex-wrap: wrap;
+    justify-content: stretch;
+    gap: 8px;
+  }
+
+  .cardBody .treeMonitoring .monitoring {
+    flex-direction: column;
+  }
+
+  .cardBody .treeMonitoring .monitoring .monitoringPicture {
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
   }
 }
