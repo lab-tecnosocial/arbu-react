@@ -227,14 +227,23 @@ export const CardTree = () => {
             </div>
             {isMapped && monitoreos.length > 0 && (
               <div className={styles.estadoMapeo}>
-                {MAPPED_PARTS_UI.map(({ key, label }) => {
+                {MAPPED_PARTS_UI.map(({ key, label, icon }) => {
                   const src = monitoreos[0][key];
                   const photoLabel = photos.find((p) => p.key === key)?.label ?? label;
 
                   if (!src) {
                     return (
-                      <div key={key} className={galleryStyles.estadoImgDisabled}>
-                        {label}
+                      <div
+                        key={key}
+                        className={galleryStyles.estadoImgDisabled}
+                        aria-label={label}
+                      >
+                        <img
+                          src={icon}
+                          alt=""
+                          className={galleryStyles.estadoPartIcon}
+                          aria-hidden="true"
+                        />
                       </div>
                     );
                   }
@@ -246,7 +255,12 @@ export const CardTree = () => {
                         className={galleryStyles.estadoImgButton}
                         aria-label={`Ver foto: ${photoLabel}`}
                       >
-                        {label}
+                        <img
+                          src={icon}
+                          alt=""
+                          className={galleryStyles.estadoPartIcon}
+                          aria-hidden="true"
+                        />
                       </button>
                     </TreePhotoTrigger>
                   );

@@ -97,6 +97,7 @@ export function TreePhotoGallery({ photos, galleryKey, children }) {
       {photos.length > 0 && (
         <PhotoSlider
           key={galleryKey}
+          className={styles.photoSliderPortal}
           images={sliderImages}
           visible={visible}
           index={activeIndex}
