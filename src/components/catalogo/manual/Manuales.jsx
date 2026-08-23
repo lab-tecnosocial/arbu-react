@@ -1,21 +1,19 @@
 import React from 'react'
 import './Manuales.css'
 import dataSlider from './dataSlider'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+
 const guiaTitles = [
     ['CATÁLOGO DE', 'ESPECIES'],
     ['GUÍA DE', 'SELECCIÓN DE ESPECIES'],
     ['GUÍA DE', 'PLANTACIÓN'],
-    
 ]
 
 const guiaImages = [
     '/Imgs/catalogodeespecies.svg',
     '/Imgs/guiadeseleccion.svg',
     '/Imgs/guiadeplantacion.svg',
-    
 ]
-
 
 export default function Slider() {
     return (
@@ -45,13 +43,9 @@ export default function Slider() {
                         </>
                     )
 
-                    if (index === 0 || index === 3) {
+                    if (index === 0) {
                         return (
-                            <Link
-                                to={'/aprende?tab=catalogo'}
-                                key={obj.id}
-                                className='guia-card guia-link'
-                            >
+                            <Link to={'/aprende?tab=catalogo'} key={obj.id} className='guia-card guia-link'>
                                 {content}
                             </Link>
                         )
@@ -59,11 +53,7 @@ export default function Slider() {
 
                     if (index === 1) {
                         return (
-                            <Link
-                                to='/aprende?tab=guia-seleccion'
-                                key={obj.id}
-                                className='guia-card guia-link'
-                            >
+                            <Link to={'/aprende?tab=guia-seleccion'} key={obj.id} className='guia-card guia-link'>
                                 {content}
                             </Link>
                         )
@@ -71,11 +61,7 @@ export default function Slider() {
 
                     if (index === 2) {
                         return (
-                            <Link
-                                to='/aprende?tab=guia-plantacion'
-                                key={obj.id}
-                                className='guia-card guia-link'
-                            >
+                            <Link to={'/aprende?tab=guia-plantacion'} key={obj.id} className='guia-card guia-link'>
                                 {content}
                             </Link>
                         )

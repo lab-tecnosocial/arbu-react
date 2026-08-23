@@ -11,6 +11,5 @@ export const loadArbolesMapeados = async () => {
     id: doc.id,
     ...doc.data(),
   }));
-
   return [...lista, ...ARBOLES_MAPEADOS_MOCK];
 };

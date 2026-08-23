@@ -101,7 +101,6 @@ export const fetchMappedTrees = () => {
       dispatch(fetchMappedTreesSuccess(treesData));
     } catch (error) {
       console.log(error);
-
       dispatch(fetchMappedTreesFailure(error.message));
     }
   };

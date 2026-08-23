@@ -66,26 +66,19 @@ export const arbolesPlantadosReducer = (state = initialState, action) => {
         selectedCategorias,
         selectedRiegos,
         selectedMonitoreos,
-        // busqueda,
-        // camposSeleccionados,
-        // riegosSeleccionados,
-        // monitoreoFiltro,
-        // especiesSeleccionadas
+        selectedEspecies,
       } = action.payload;
 
-
       const texto = (search || "").toLowerCase().trim();
-
       const campo = selectedCategorias || "todos";
-
       const riego = selectedRiegos || "conysin";
-      // const especie = especiesSeleccionadas || "todas";
+      const especiesSeleccionadas = selectedEspecies || [];
 
-      console.log(selectedMonitoreos)
       const filtrados = state.arbolesPlantadosData.filter((item) => {
         let coincideTexto = false;
         if (campo === "todos") {
           coincideTexto =
+            texto === "" ||
             item.nombreComun?.toLowerCase().includes(texto) ||
             item.nombreCientifico?.toLowerCase().includes(texto) ||
             item.nombrePropio?.toLowerCase().includes(texto);
@@ -103,31 +96,32 @@ export const arbolesPlantadosReducer = (state = initialState, action) => {
         else if (riego === "conRiegos") coincideRiego = tieneRiegos;
 
         const monitoreos = item.monitoreos || {};
-
         const hayMonitoreoEnRango = Object.values(monitoreos).some((mon) => {
           const ts = mon.timestamp?.seconds * 1000;
           return (
             ts &&
-            (!selectedMonitoreos.desde || ts >= selectedMonitoreos.desde) &&
-            (!selectedMonitoreos.hasta || ts <= selectedMonitoreos.hasta)
+            (!selectedMonitoreos?.desde || ts >= selectedMonitoreos.desde) &&
+            (!selectedMonitoreos?.hasta || ts <= selectedMonitoreos.hasta)
           );
         });
 
         const coincideMonitoreo =
-          selectedMonitoreos.tipo === "todo" || hayMonitoreoEnRango;
+          !selectedMonitoreos ||
+          selectedMonitoreos.tipo === "todos" ||
+          hayMonitoreoEnRango;
 
-        // const coincideEspecie =
-        //   especiesSeleccionadas.length === 0 ||
-        //   especiesSeleccionadas.includes(item.nombreCientifico);
-        //
-        return coincideTexto && coincideRiego && coincideMonitoreo;
+        const coincideEspecie =
+          especiesSeleccionadas.length === 0 ||
+          especiesSeleccionadas.includes(item.nombreCientifico);
+
+        return coincideTexto && coincideRiego && coincideMonitoreo && coincideEspecie;
       });
 
       return {
         ...state,
         arbolesPlantadosFiltrados: filtrados,
         statusSearch: true,
-      }
+      };
     default:
       return state;
   }

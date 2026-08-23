@@ -29,7 +29,7 @@ export const MapWrapper = () => {
   const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles)
 
   const onEachFeature = (feature, layer) => {
-    const map = useMap();
+    
     const idFeature = feature.id
 
     layersRef.current.set(idFeature, layer);

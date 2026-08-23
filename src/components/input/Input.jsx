@@ -45,7 +45,7 @@ export const Input = ({
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      searchOnClick();
+    searchOnClick?.();
     }
   };
 
@@ -110,6 +110,7 @@ export const Input = ({
           placeholder={placeholder}
           value={value}
           onChange={suggestions.length > 0 ? handleInputChange : onChange}
+          onKeyDown={handleKeyDown}
           onFocus={() => setShowSuggestions(filteredSuggestions.length > 0)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           className={`${styles.input} `}
