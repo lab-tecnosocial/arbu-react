@@ -106,19 +106,14 @@ export const CardTree = () => {
   }, [panelState, selectedTree, isLargeScreen])
 
   const isMapped = selectedTree && Object.hasOwn(selectedTree, "mapeadoPor");
-  const showScoutInfo = arbolesMapeados.activityFilter === "scouts2025";
+  const showScoutInfo = arbolesMapeados?.activityFilter === "scouts2025";
   const scoutInfo = useMemo(() => {
     if (!showScoutInfo || !isMapped || !selectedTree?.mapeadoPor) return null;
     return getScoutInfoByMapeadoPor(
       selectedTree.mapeadoPor,
-      inscripcionesMapeo.data
+      inscripcionesMapeo?.data || []
     );
-  }, [
-    showScoutInfo,
-    isMapped,
-    selectedTree?.mapeadoPor,
-    inscripcionesMapeo.data,
-  ]);
+  }, [showScoutInfo, isMapped, selectedTree?.mapeadoPor, inscripcionesMapeo?.data]);
   const photos = useMemo(
     () => getTreePhotos(isMapped, monitoreos),
     [isMapped, monitoreos]

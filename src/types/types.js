@@ -18,11 +18,9 @@ export const types = {
   SHOW_DATA_ARBOLES_MAPEADOS: '[ARBOL] show data arboles mapeados',
   FILTRAR_ARBOLES_MAPEADOS: '[ARBOL] filtrar arboles mapeados',
   RESET_MAPEADOS_FILTRADOS: '[ARBOL] reset arboles mapeados filtrados',
-
   FETCH_INSCRIPCIONES_MAPEO_REQUEST: '[ARBOL] fetch inscripciones mapeo request',
   FETCH_INSCRIPCIONES_MAPEO_SUCCESS: '[ARBOL] fetch inscripciones mapeo success',
   FETCH_INSCRIPCIONES_MAPEO_FAILURE: '[ARBOL] fetch inscripciones mapeo failure',
-
   LOAD_GEO_SCOUTS: '[MAPA] Load geo scouts',
   LOAD_GEO_OTBS: '[MAPA] Load geo otbs',
   SET_GEO_MODE: '[MAPA] Set geo mode',

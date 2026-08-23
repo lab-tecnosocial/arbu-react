@@ -174,37 +174,3 @@
     width: min(130px, 60vw);
   }
 }
-
-@media (max-width: 480px) {
-  .manuales-container {
-    width: 94%;
-    gap: 12px;
-  }
-
-  .guia-card {
-    padding: 14px 16px;
-    border-radius: 18px;
-  }
-
-  .guia-title {
-    font-size: clamp(1.55rem, 6.8vw, 1.9rem);
-    line-height: 1.12;
-  }
-
-  .guia-visual-image {
-    width: min(118px, 52vw);
-  }
-}
-
-@media (hover: none) {
-  .guia-link:hover,
-  .guia-button:hover {
-    transform: none;
-    filter: none;
-  }
-
-  .guia-link:active,
-  .guia-button:active {
-    transform: scale(0.985);
-  }
-}

@@ -47,6 +47,31 @@
   gap: 16px;
 }
 
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.resultsTitle {
+  font-weight: 700;
+  color: var(--geyser-950);
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  color: var(--green2);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+}
+
 .footer {
   display: flex;
   gap: 1rem;

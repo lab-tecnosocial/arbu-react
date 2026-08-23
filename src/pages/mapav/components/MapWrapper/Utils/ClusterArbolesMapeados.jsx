@@ -4,20 +4,17 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import { useDispatch } from "react-redux";
 import { setPanelState, setSelectedCoords, setSelectedTree } from "../../../../../actions/mapaActions";
 
-export default function ClusterArbolesMapeados({
-  arbolesMapeados,
-  customIcon,
-}) {
+export default function ClusterArbolesMapeados({ arbolesMapeados, customIcon }) {
   const dispatch = useDispatch();
 
-  if (!arbolesMapeados.isActive) return null;
+  if (!arbolesMapeados?.isActive) return null;
 
   const markers = useMemo(() => {
     const arboles = arbolesMapeados.activityFilter
       ? arbolesMapeados.filteredData
       : arbolesMapeados.data;
 
-    return arboles.map((arbol, index) => (
+    return (arboles || []).map((arbol, index) => (
       <Marker
         key={arbol.id}
         position={[arbol.latitud, arbol.longitud]}
@@ -32,7 +29,7 @@ export default function ClusterArbolesMapeados({
         }}
       />
     ));
-  }, [arbolesMapeados.activityFilter,arbolesMapeados.filteredData,arbolesMapeados.data,dispatch,]);
+  }, [arbolesMapeados.activityFilter, arbolesMapeados.filteredData, arbolesMapeados.data, dispatch]);
 
   return (
     <MarkerClusterGroup chunkedLoading>

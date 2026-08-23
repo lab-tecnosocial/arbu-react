@@ -64,7 +64,6 @@ const Especies = () => {
     }
   }, [especies]);
 
-
   return (
     <section className='catalogo-wrapper'>
       <div className='catalogo-search-row'>
