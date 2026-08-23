@@ -112,15 +112,16 @@ export const MapWrapper = () => {
 
   return (
     <div className={styles.map}>
-      {
+      
+      {/*
         selectedCoords && (
           <div className={styles.mapControls}>
-            {/* <button onClick={dispatch(setShowTreeMappingForm(true))}>Adoptar Arbol</button> */}
             <button onClick={() => dispatch(setModalState("OPEN"))} >Mapear Arbol</button>
             <button onClick={() => dispatch(setSelectedCoords(null))}><X /></button>
           </div>
         )
-      }
+      */}
+      
 
       <MapContainer
         center={[-17.3917, -66.1448]}
@@ -136,7 +137,7 @@ export const MapWrapper = () => {
         />
 
         <MapEvents />
-        <ClickableMarker position={selectedCoords} icon={customIcon} />
+        {/* <ClickableMarker position={selectedCoords} icon={customIcon} /> */}
 
         {geoMode === "scouts" && <GeoJSON data={geoScouts} onEachFeature={onEachFeature} />}
 
