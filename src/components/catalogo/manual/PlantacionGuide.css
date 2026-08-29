@@ -499,7 +499,7 @@
     position: fixed;
     inset: 0;
     z-index: 1400;
-    background: rgba(8, 28, 18, 0.62);
+    background: var(--aprende-modal-backdrop, rgba(8, 28, 18, 0.62));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -513,9 +513,9 @@
     max-height: min(90dvh, 760px);
     overflow: auto;
     border-radius: 18px;
-    background: #ffffff;
-    color: #18453f;
-    box-shadow: 0 24px 48px rgba(8, 28, 18, 0.28);
+    background: var(--aprende-panel-bg, #ffffff);
+    color: var(--aprende-panel-text, #18453f);
+    box-shadow: 0 24px 48px var(--aprende-modal-shadow, rgba(8, 28, 18, 0.28));
   }
 
   .selection-species-modal-close {
@@ -527,18 +527,18 @@
     height: 36px;
     border: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.94);
-    color: #174640;
+    background: var(--aprende-detail-close-bg, rgba(255, 255, 255, 0.94));
+    color: var(--aprende-input-text, #174640);
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(20, 80, 72, 0.18);
+    box-shadow: 0 4px 14px var(--aprende-shadow, rgba(20, 80, 72, 0.18));
   }
 
   .selection-species-modal-hero {
     width: 100%;
     aspect-ratio: 16 / 10;
-    background: #f3faf8;
+    background: var(--aprende-bg-muted, #f3faf8);
     overflow: hidden;
   }
 
@@ -557,7 +557,7 @@
 
   .selection-species-modal-header h3 {
     margin: 0;
-    color: #174640;
+    color: var(--aprende-panel-text, #174640);
     font-family: 'Poppins', sans-serif;
     font-size: 1.35rem;
     font-weight: 800;
@@ -566,7 +566,7 @@
 
   .selection-species-modal-scientific {
     margin: 4px 0 0;
-    color: #4f6b66;
+    color: var(--aprende-panel-text-muted, #4f6b66);
     font-family: 'Poppins', sans-serif;
     font-size: 0.92rem;
     font-style: italic;
@@ -584,8 +584,8 @@
     align-items: center;
     padding: 4px 10px;
     border-radius: 999px;
-    background: #ebf4f2;
-    color: #16544b;
+    background: var(--aprende-origin-intro-bg, #ebf4f2);
+    color: var(--aprende-origin-intro-text, #16544b);
     font-family: 'Poppins', sans-serif;
     font-size: 0.74rem;
     font-weight: 700;
@@ -593,7 +593,7 @@
 
   .selection-species-modal-section h4 {
     margin: 0 0 8px;
-    color: #174640;
+    color: var(--aprende-panel-text, #174640);
     font-family: 'Poppins', sans-serif;
     font-size: 0.92rem;
     font-weight: 800;
@@ -604,7 +604,7 @@
     grid-template-columns: minmax(110px, 38%) 1fr;
     gap: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid #e3ecea;
+    border-bottom: 1px solid var(--aprende-border, #e3ecea);
   }
 
   .selection-species-modal-row:last-child {
@@ -612,14 +612,14 @@
   }
 
   .selection-species-modal-label {
-    color: #4f6b66;
+    color: var(--aprende-panel-text-muted, #4f6b66);
     font-family: 'Poppins', sans-serif;
     font-size: 0.82rem;
     font-weight: 600;
   }
 
   .selection-species-modal-value {
-    color: #174640;
+    color: var(--aprende-panel-text, #174640);
     font-family: 'Poppins', sans-serif;
     font-size: 0.84rem;
     line-height: 1.4;
@@ -627,13 +627,13 @@
   }
 
   .selection-species-modal .selection-guide-origin.nativa {
-    background: #dff0ec;
-    color: #13584f;
+    background: var(--aprende-origin-nativa-bg, #dff0ec);
+    color: var(--aprende-origin-nativa-text, #13584f);
   }
 
   .selection-species-modal .selection-guide-origin.introducida {
-    background: #ebf4f2;
-    color: #16544b;
+    background: var(--aprende-origin-intro-bg, #ebf4f2);
+    color: var(--aprende-origin-intro-text, #16544b);
   }
 
   .plantacion-top { display:flex; align-items:center; gap:12px; }
@@ -1163,10 +1163,10 @@
   }
   
   .plantacion-guide--page .plantacion-step-card.plantacion-step-card--page {
-    background: #ffffff;
-    color: #18453f;
-    border: 1px solid #d9e7e3;
-    box-shadow: 0 14px 30px rgba(20, 80, 72, 0.12);
+    background: var(--aprende-panel-bg, #ffffff);
+    color: var(--aprende-panel-text, #18453f);
+    border: 1px solid var(--aprende-panel-border, #d9e7e3);
+    box-shadow: 0 14px 30px var(--aprende-panel-shadow, rgba(20, 80, 72, 0.12));
     border-radius: 18px;
   }
   
@@ -1176,107 +1176,107 @@
   .plantacion-guide--page .selection-guide-form label,
   .plantacion-guide--page .selection-guide-name,
   .plantacion-guide--page .plantacion-step-text {
-    color: #18453f;
+    color: var(--aprende-panel-text, #18453f);
   }
   
   .plantacion-guide--page .selection-guide-header p,
   .plantacion-guide--page .selection-guide-rank,
   .plantacion-guide--page .selection-guide-score-label {
-    color: #4f6b66;
+    color: var(--aprende-panel-text-muted, #4f6b66);
   }
 
   .plantacion-guide--page .selection-guide-reasons li {
-    color: #3f5c56;
+    color: var(--aprende-text-body, #3f5c56);
   }
 
   .plantacion-guide--page .selection-guide-warnings li {
-    color: #9a6b00;
+    color: var(--aprende-warning-text, #9a6b00);
   }
 
   .plantacion-guide--page .selection-guide-empty {
-    background: #f3faf8;
-    color: #4f6b66;
-    border: 1px solid #d9ebe7;
+    background: var(--aprende-surface-empty, #f3faf8);
+    color: var(--aprende-panel-text-muted, #4f6b66);
+    border: 1px solid var(--aprende-border, #d9ebe7);
   }
 
   .plantacion-guide--page .selection-guide-score-help {
-    background: #f8fcfb;
-    border: 1px solid #d9ebe7;
-    color: #3f5c56;
+    background: var(--aprende-surface-help, #f8fcfb);
+    border: 1px solid var(--aprende-border, #d9ebe7);
+    color: var(--aprende-text-body, #3f5c56);
   }
 
   .plantacion-guide--page .selection-guide-score-help strong {
-    color: #18453f;
+    color: var(--aprende-panel-text, #18453f);
   }
 
   .plantacion-guide--page .selection-guide-score-help li span {
-    background: #dff0ec;
-    color: #13584f;
+    background: var(--aprende-badge-bg, #dff0ec);
+    color: var(--aprende-badge-text, #13584f);
   }
 
   .plantacion-guide--page .selection-guide-score-help-note {
-    color: #4f6b66;
+    color: var(--aprende-panel-text-muted, #4f6b66);
   }
 
   .plantacion-guide--page .selection-guide-score-label--excelente,
   .plantacion-guide--page .selection-guide-score-label--alta {
-    color: #0f7a57;
+    color: var(--aprende-score-good, #0f7a57);
   }
 
   .plantacion-guide--page .selection-guide-score-label--media {
-    color: #9a6b00;
+    color: var(--aprende-score-medium, #9a6b00);
   }
 
   .plantacion-guide--page .selection-guide-score-label--baja {
-    color: #b04444;
+    color: var(--aprende-score-low, #b04444);
   }
 
   .plantacion-guide--page .selection-guide-origin.nativa {
-    background: #dff0ec;
-    color: #13584f;
+    background: var(--aprende-origin-nativa-bg, #dff0ec);
+    color: var(--aprende-origin-nativa-text, #13584f);
   }
 
   .plantacion-guide--page .selection-guide-origin.introducida {
-    background: #ebf4f2;
-    color: #16544b;
+    background: var(--aprende-origin-intro-bg, #ebf4f2);
+    color: var(--aprende-origin-intro-text, #16544b);
   }
   
   .plantacion-guide--page .selection-guide-form select,
   .plantacion-guide--page .selection-guide-form input {
-    background: #f7fbfa;
-    color: #174640;
-    border: 1px solid #d8e8e4;
+    background: var(--aprende-input-bg, #f7fbfa);
+    color: var(--aprende-input-text, #174640);
+    border: 1px solid var(--aprende-input-border, #d8e8e4);
   }
   
   .plantacion-guide--page .selection-guide-form select:focus,
   .plantacion-guide--page .selection-guide-form input:focus {
-    box-shadow: 0 0 0 3px rgba(22, 94, 84, 0.18);
+    box-shadow: 0 0 0 3px var(--aprende-focus, rgba(22, 94, 84, 0.18));
   }
   
   .plantacion-guide--page .selection-guide-card {
-    background: #f8fcfb;
-    border: 1px solid #d9ebe7;
+    background: var(--aprende-surface-card, #f8fcfb);
+    border: 1px solid var(--aprende-border, #d9ebe7);
   }
 
   .plantacion-guide--page .selection-guide-card:hover {
-    border-color: #b8d4cc;
-    box-shadow: 0 10px 24px rgba(20, 80, 72, 0.1);
+    border-color: var(--aprende-card-hover-border, #b8d4cc);
+    box-shadow: 0 10px 24px var(--aprende-shadow-hover, rgba(20, 80, 72, 0.1));
   }
 
   .plantacion-guide--page .selection-guide-results-hint {
-    color: #4f6b66;
+    color: var(--aprende-panel-text-muted, #4f6b66);
   }
 
   .plantacion-guide--page .selection-guide-summary {
-    color: #4f6b66;
+    color: var(--aprende-panel-text-muted, #4f6b66);
   }
 
   .plantacion-guide--page .selection-guide-card-cta {
-    color: #1f7a6d;
+    color: var(--aprende-accent-bright, #1f7a6d);
   }
 
   .plantacion-guide--page .selection-guide-score-label--match {
-    color: #0f7a57;
+    color: var(--aprende-score-good, #0f7a57);
   }
 
   @media (hover: none) {
@@ -1291,39 +1291,44 @@
   }
   
   .plantacion-guide--page .selection-guide-score {
-    background: #dff0ec;
-    color: #13584f;
+    background: var(--aprende-badge-bg, #dff0ec);
+    color: var(--aprende-badge-text, #13584f);
   }
   
   .plantacion-guide--page .plantacion-step-number {
-    background: #dff0ec;
-    color: #16665b;
+    background: var(--aprende-guide-step-number-bg, #dff0ec);
+    color: var(--aprende-guide-step-number-text, #16665b);
   }
   
   .plantacion-guide--page .plantacion-step-visual {
-    background: #f7fbfa;
-    border: 1px solid #d9ebe7;
+    background: var(--aprende-guide-image-bg, #f7fbfa);
+    border: 1px solid var(--aprende-guide-image-border, #d9ebe7);
     box-shadow: none;
   }
   
   .plantacion-guide--page .selection-guide-primary,
   .plantacion-guide--page .plantacion-step-controls button {
-    background: #1f7a6d;
-    color: #ffffff;
+    background: var(--aprende-btn-primary-bg, #1f7a6d);
+    color: var(--aprende-btn-primary-text, #ffffff);
   }
   
   .plantacion-guide--page .selection-guide-secondary {
-    background: #ebf4f2;
-    color: #16544b;
-    border: 1px solid #cfe2de;
+    background: var(--aprende-btn-secondary-bg, #ebf4f2);
+    color: var(--aprende-btn-secondary-text, #16544b);
+    border: 1px solid var(--aprende-btn-secondary-border, #cfe2de);
   }
   
   .plantacion-guide--page .plantacion-dot {
-    background: #c7d8d4;
+    background: var(--aprende-dot-idle, #c7d8d4);
   }
   
   .plantacion-guide--page .plantacion-dot.active {
-    background: #1f7a6d;
+    background: var(--aprende-dot-active, #1f7a6d);
+  }
+
+  .plantacion-guide--page .plantacion-close {
+    background: var(--aprende-bg-muted, #f3faf8);
+    color: var(--aprende-text, #174c44);
   }
   
   @media (max-width: 768px) {
@@ -1340,7 +1345,7 @@
   max-height: none;
   aspect-ratio: unset;
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--aprende-guide-image-bg, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1365,8 +1370,8 @@
 }
 
 .plantacion-guide--page .plantacion-step-visual {
-  background: #f7fbfa;
-  border: 1px solid #d9ebe7;
+  background: var(--aprende-guide-image-bg, #f7fbfa);
+  border: 1px solid var(--aprende-guide-image-border, #d9ebe7);
 }
 
 @media (max-width: 768px) {
