@@ -25,7 +25,7 @@ const DetailEspecie = () => {
             onClick={handleClose}
             aria-label="Cerrar detalle de especie"
           >
-            <CloseIcon sx={{ color: '#174C44' }} />
+            <CloseIcon sx={{ color: 'inherit' }} />
           </button>
           <div style={{ margin: "auto" }} >
             {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
