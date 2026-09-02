@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import L from "leaflet";
 import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { BASEMAP_URL, BASEMAP_ATTRIBUTION } from "../../helpers/basemap";
 import { Box, FormControl, InputLabel, Select, MenuItem, Chip, TextField, Button } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -368,8 +369,8 @@ const MapaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin }) => {
         style={{ width: "100%", height: "100%" }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution={BASEMAP_ATTRIBUTION}
+          url={BASEMAP_URL}
         />
         <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup>
       </MapContainer>
