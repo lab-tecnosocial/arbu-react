@@ -1,0 +1,197 @@
+/* Tokens de tema — alcance: módulo /aprende (.catalogo-main) */
+
+.catalogo-main {
+  --aprende-bg: #fafafa;
+  --aprende-bg-elevated: #ffffff;
+  --aprende-bg-muted: #f3faf8;
+  --aprende-bg-soft: #ebf5ee;
+  --aprende-text: #174c44;
+  --aprende-text-heading: #18453f;
+  --aprende-text-muted: #4f6b66;
+  --aprende-text-soft: #5f6f6b;
+  --aprende-border: #e3ecea;
+  --aprende-border-strong: #cfe2de;
+  --aprende-accent: #268576;
+  --aprende-accent-dark: #145048;
+  --aprende-accent-soft: #e8f5f1;
+  --aprende-accent-bright: #1f7a6d;
+  --aprende-shadow: rgba(23, 76, 68, 0.08);
+  --aprende-shadow-hover: rgba(23, 76, 68, 0.14);
+  --aprende-focus: rgba(20, 80, 72, 0.22);
+
+  --aprende-card-gradient: linear-gradient(110deg, #9ad3c5 0%, #c8e0d8 45%, #d9ebe5 100%);
+  --aprende-card-title: #00564d;
+  --aprende-card-border: rgba(0, 86, 77, 0.14);
+  --aprende-card-glow: rgba(255, 255, 255, 0.32);
+  --aprende-card-shadow: rgba(0, 86, 77, 0.14);
+  --aprende-card-shadow-hover: rgba(0, 86, 77, 0.2);
+
+  --aprende-panel-bg: #ffffff;
+  --aprende-panel-border: #d9e7e3;
+  --aprende-panel-shadow: rgba(20, 80, 72, 0.12);
+  --aprende-panel-text: #18453f;
+  --aprende-panel-text-muted: #4f6b66;
+  --aprende-input-bg: #f7fbfa;
+  --aprende-input-border: #d8e8e4;
+  --aprende-input-text: #174640;
+
+  --aprende-guide-surface: rgba(255, 255, 255, 0.08);
+  --aprende-guide-surface-border: rgba(236, 248, 235, 0.12);
+  --aprende-guide-text: #ecf8eb;
+  --aprende-guide-text-muted: rgba(236, 248, 235, 0.82);
+  --aprende-guide-btn-primary-bg: #ecf8eb;
+  --aprende-guide-btn-primary-text: #1b6d2f;
+  --aprende-guide-btn-secondary-bg: rgba(236, 248, 235, 0.16);
+  --aprende-guide-step-bg: linear-gradient(180deg, #163f22 0%, #1b6d2f 100%);
+  --aprende-guide-step-number-bg: #dff0ec;
+  --aprende-guide-step-number-text: #16665b;
+  --aprende-guide-image-bg: #f7fbfa;
+  --aprende-guide-image-border: #d9ebe7;
+
+  --aprende-detail-bg: #ebf5ee;
+  --aprende-detail-close-bg: rgba(255, 255, 255, 0.92);
+
+  --aprende-footer-text: inherit;
+  --aprende-footer-link: inherit;
+
+  --aprende-surface-card: #f8fcfb;
+  --aprende-surface-empty: #f3faf8;
+  --aprende-surface-help: #f8fcfb;
+  --aprende-text-body: #3f5c56;
+  --aprende-warning-text: #9a6b00;
+  --aprende-score-good: #0f7a57;
+  --aprende-score-medium: #9a6b00;
+  --aprende-score-low: #b04444;
+  --aprende-badge-bg: #dff0ec;
+  --aprende-badge-text: #13584f;
+  --aprende-origin-nativa-bg: #dff0ec;
+  --aprende-origin-nativa-text: #13584f;
+  --aprende-origin-intro-bg: #ebf4f2;
+  --aprende-origin-intro-text: #16544b;
+  --aprende-btn-primary-bg: #1f7a6d;
+  --aprende-btn-primary-text: #ffffff;
+  --aprende-btn-secondary-bg: #ebf4f2;
+  --aprende-btn-secondary-text: #16544b;
+  --aprende-btn-secondary-border: #cfe2de;
+  --aprende-dot-idle: #c7d8d4;
+  --aprende-dot-active: #1f7a6d;
+  --aprende-card-hover-border: #b8d4cc;
+  --aprende-modal-backdrop: rgba(8, 28, 18, 0.62);
+  --aprende-modal-shadow: rgba(8, 28, 18, 0.28);
+  --aprende-close-bg: rgba(255, 255, 255, 0.06);
+  --aprende-close-text: #333333;
+  --aprende-embla-dot: #efefef;
+  --aprende-embla-dot-border: #f1f1f1;
+  --aprende-embla-btn-fill: #e9e9e9;
+  --aprende-embla-slide-bg: rgb(40, 44, 52);
+
+  --color-oscuro: var(--aprende-accent-dark);
+
+  background: var(--aprende-bg);
+  color: var(--aprende-text);
+  color-scheme: light;
+}
+
+.catalogo-main.catalogo-main--night {
+  --aprende-bg: #0b1210;
+  --aprende-bg-elevated: #121f1b;
+  --aprende-bg-muted: #162822;
+  --aprende-bg-soft: #1a3029;
+  --aprende-text: #d8ece6;
+  --aprende-text-heading: #ecf8f3;
+  --aprende-text-muted: #9bb5ad;
+  --aprende-text-soft: #8aa59c;
+  --aprende-border: #243832;
+  --aprende-border-strong: #2f4a42;
+  --aprende-accent: #3da892;
+  --aprende-accent-dark: #6fd4bc;
+  --aprende-accent-soft: #1a3530;
+  --aprende-accent-bright: #4ec4aa;
+  --aprende-shadow: rgba(0, 0, 0, 0.28);
+  --aprende-shadow-hover: rgba(0, 0, 0, 0.38);
+  --aprende-focus: rgba(78, 196, 170, 0.35);
+
+  --aprende-card-gradient: linear-gradient(125deg, #1a3d34 0%, #214a40 48%, #1a322c 100%);
+  --aprende-card-title: #b8f0de;
+  --aprende-card-border: rgba(78, 196, 170, 0.18);
+  --aprende-card-glow: rgba(78, 196, 170, 0.12);
+  --aprende-card-shadow: rgba(0, 0, 0, 0.32);
+  --aprende-card-shadow-hover: rgba(0, 0, 0, 0.42);
+
+  --aprende-panel-bg: #121f1b;
+  --aprende-panel-border: #2a423b;
+  --aprende-panel-shadow: rgba(0, 0, 0, 0.35);
+  --aprende-panel-text: #ecf8f3;
+  --aprende-panel-text-muted: #9bb5ad;
+  --aprende-input-bg: #162822;
+  --aprende-input-border: #2f4a42;
+  --aprende-input-text: #d8ece6;
+
+  --aprende-guide-surface: rgba(255, 255, 255, 0.05);
+  --aprende-guide-surface-border: rgba(255, 255, 255, 0.08);
+  --aprende-guide-text: #ecf8f3;
+  --aprende-guide-text-muted: rgba(236, 248, 243, 0.78);
+  --aprende-guide-btn-primary-bg: #2a8f7a;
+  --aprende-guide-btn-primary-text: #ffffff;
+  --aprende-guide-btn-secondary-bg: rgba(255, 255, 255, 0.08);
+  --aprende-guide-step-bg: linear-gradient(180deg, #121f1b 0%, #183028 100%);
+  --aprende-guide-step-number-bg: #1f3f37;
+  --aprende-guide-step-number-text: #9fe8d4;
+  --aprende-guide-image-bg: #162822;
+  --aprende-guide-image-border: #2f4a42;
+
+  --aprende-detail-bg: #0f1a17;
+  --aprende-detail-close-bg: rgba(18, 31, 27, 0.94);
+
+  --aprende-surface-card: #162822;
+  --aprende-surface-empty: #162822;
+  --aprende-surface-help: #162822;
+  --aprende-text-body: #9bb5ad;
+  --aprende-warning-text: #f0c86a;
+  --aprende-score-good: #7ddeb8;
+  --aprende-score-medium: #f0c86a;
+  --aprende-score-low: #f0a0a0;
+  --aprende-badge-bg: #1f3f37;
+  --aprende-badge-text: #9fe8d4;
+  --aprende-origin-nativa-bg: rgba(3, 178, 94, 0.22);
+  --aprende-origin-nativa-text: #9ef0c8;
+  --aprende-origin-intro-bg: #1a3530;
+  --aprende-origin-intro-text: #6fd4bc;
+  --aprende-btn-primary-bg: #4ec4aa;
+  --aprende-btn-primary-text: #0b1210;
+  --aprende-btn-secondary-bg: #162822;
+  --aprende-btn-secondary-text: #d8ece6;
+  --aprende-btn-secondary-border: #2f4a42;
+  --aprende-dot-idle: #2f4a42;
+  --aprende-dot-active: #4ec4aa;
+  --aprende-card-hover-border: #2f4a42;
+  --aprende-modal-backdrop: rgba(0, 0, 0, 0.72);
+  --aprende-modal-shadow: rgba(0, 0, 0, 0.55);
+  --aprende-close-bg: var(--aprende-bg-muted);
+  --aprende-close-text: var(--aprende-text);
+  --aprende-embla-dot: #2f4a42;
+  --aprende-embla-dot-border: #243832;
+  --aprende-embla-btn-fill: #d8ece6;
+  --aprende-embla-slide-bg: #121f1b;
+
+  color-scheme: dark;
+}
+
+/* Footer dentro de /aprende */
+.catalogo-main.catalogo-main--night > footer {
+  color: var(--aprende-text-muted);
+}
+
+.catalogo-main.catalogo-main--night > footer a,
+.catalogo-main.catalogo-main--night > footer p,
+.catalogo-main.catalogo-main--night > footer span {
+  color: var(--aprende-text-muted);
+}
+
+.catalogo-main.catalogo-main--night > footer a:hover {
+  color: var(--aprende-accent-dark);
+}
+
+.catalogo-main.catalogo-main--night > footer .line {
+  background: var(--aprende-border);
+}

@@ -1,16 +1,16 @@
 :root{
-  --color-oscuro:#174C44 ;
-
+  --color-oscuro: var(--aprende-accent-dark, #174C44);
 }
+
 .titleEspecie{
   font-family: 'Poppins', sans-serif;
-  color: var(--color-oscuro);
+  color: var(--aprende-text);
   font-size: 1.1rem;
   margin: 0;
 }
 .text-normal{
   font-family: 'Open Sans' , sans-serif;
-  color: var(--color-oscuro);
+  color: var(--aprende-text);
   font-size: 0.9rem;
 }
 .nombreCientifico{
@@ -21,28 +21,27 @@
   justify-content: space-between;
   margin-bottom: 12px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--color-oscuro);
+  border-bottom: 1px solid var(--aprende-border-strong);
 }
 .text-origen > span{
   font-family: 'Open Sans' , sans-serif;
   font-weight:bold;
   color: white;
-  background-color: var(--color-oscuro);
+  background-color: var(--aprende-accent);
   border-radius: 10px;
   padding: 2px 5px;
   font-size: 0.8rem;
 }
 .text-descripcion{
   font-family: 'Open Sans' , sans-serif;
-  color: var(--color-oscuro);
+  color: var(--aprende-text-muted);
   font-size: 0.9rem;
-  
   margin-bottom: 1.2rem;
 }
 
 .text-recomendable{
   font-family: 'Open Sans' , sans-serif;
-  color: var(--color-oscuro);
+  color: var(--aprende-text);
   text-align: center;
   font-weight: bold;
   font-size: 1rem;
@@ -52,23 +51,42 @@
 .detail-especie{
   z-index: 1000;
   position: fixed;
-  /* Este es el width 100% por defecto para dispositivos pequeños para que ocupe todo su ancho*/
   width: 100%;
-  /* height:100%; es para todo el alto del dispositivo y height:auto; es para solo el alto del contenido del panel  */
-  height: 90%;
-  overflow-y: scroll;
-  background-color: #EBF5EE;
-  top: 60px;
-  padding-bottom: 100px;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--aprende-detail-bg);
+  top: 0;
+  padding-top: 65px;
+  padding-bottom: 24px;
   right: -100%;
-  transition: all 0.2s ease-in-out;
+  transition: right 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.detail-especie-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  border: 0;
+  background: var(--aprende-detail-close-bg);
+  color: var(--aprende-text);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--aprende-shadow);
 }
 
 
 
 .scroll{
-  margin: 0 20px;
-  
+  margin: 0 16px;
 } 
 .container-info{
   position:relative;

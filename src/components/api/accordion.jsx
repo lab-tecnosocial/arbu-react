@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import './APIComponent.css'
+// import './APIComponent.css'
 import { useRef, useState } from "react";
 
 const Accordion = ({ id, itemName, itemContent, currentActive, onClick }) => {

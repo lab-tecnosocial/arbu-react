@@ -1,27 +1,27 @@
 import { loadEspecies } from "../helpers/loadEspecies";
 import { types } from "../types/types";
 
-export const startLoadEspeciesCatalogo = ()=>{
+export const startLoadEspeciesCatalogo = () => {
   return async (dispatch) => {
     const especies = await loadEspecies();
-    dispatch(setEspecies(especies)); 
+    dispatch(setEspecies(especies));
   }
 }
 
 export const setEspecies = (especies) => {
   return {
     type: types.catalogoLoadEspecies,
-    payload:especies
+    payload: especies
   }
 }
 
-export const setActiveEspecie= (especie) => {
+export const setActiveEspecie = (especie) => {
   return {
     type: types.catalogoSetActiveEspecie,
     payload: especie
   }
 }
-export const setHideDetailEspecie= () => {
+export const setHideDetailEspecie = () => {
   return {
     type: types.catalogoHideDetailEspecie,
   }

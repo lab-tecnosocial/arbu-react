@@ -6,6 +6,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import TreeCardPopup from "./TreeCardPopup";
 import FiltroFechas from "./FiltroFechas";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
 import * as XLSX from "xlsx";
 
@@ -93,7 +94,7 @@ const TablaMapeo = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLimp
       );
 
       // Actualizar en Firestore en segundo plano
-      await db.collection("inscripcionesMapeo").doc(mapperId).update({
+      await updateDoc(doc(db, "inscripcionesMapeo", mapperId), {
         pagado: pagadoBoolean
       });
     } catch (error) {

@@ -5,6 +5,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useMapeoScout } from "../../context/MapeoScoutContext";
 import FiltroFechas from "./FiltroFechas";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
 import * as XLSX from "xlsx";
 
@@ -129,7 +130,7 @@ const TablaArboles = ({ fechaInicio, fechaFin, setFechaInicio, setFechaFin, onLi
             );
 
             // Actualizar en Firestore en segundo plano
-            await db.collection("arbolesMapeados").doc(arbolId).update({
+            await updateDoc(doc(db, "arbolesMapeados", arbolId), {
                 validado: validadoBoolean
             });
         } catch (error) {

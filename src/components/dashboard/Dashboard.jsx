@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Dashboard.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../../actions/authActions";
+import { authLogout } from "../../actions/auth.actions";
 
 import { getAuth, signOut } from "firebase/auth";
 import { app, db } from "../../firebase/firebase-config";
@@ -79,7 +79,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      dispatch(clearUser());
+      dispatch(authLogout());
       dispatch(setInscripciones([]));
       navigate("/iniciar-sesion");
     } catch (error) {

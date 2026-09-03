@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './IniciarSesion.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, clearUser } from "../../actions/authActions";
+import { authLogin, authLogout } from "../../actions/auth.actions";
 
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { app } from "../../firebase/firebase-config";
@@ -22,7 +22,7 @@ const IniciarSesion = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const loggedUser = result.user;
-      dispatch(setUser(loggedUser));
+      dispatch(authLogin(loggedUser));
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Error al iniciar sesión con Google:", error);
@@ -32,10 +32,10 @@ const IniciarSesion = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(setUser(user));
+        dispatch(authLogin(user));
         navigate(from, { replace: true });
       } else {
-        dispatch(clearUser());
+        dispatch(authLogout());
       }
     });
     return () => unsubscribe();

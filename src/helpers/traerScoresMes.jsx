@@ -1,28 +1,33 @@
-import { scoresMes } from "../components/ranking/scoresMes"
 import { db } from "../firebase/firebase-config";
-// let Arbol = require('./Arbol.js');
-import Arbol from './Arbol';
-export const traerScoresMes = async() => {
-  const date = new Date();
-  // console.log(date.getMonth()+1);
-  // console.log(date.getFullYear());
-  const scoresSnapshot = await db.collection((date.getMonth()+1)+"_"+date.getFullYear()).get();
-  let arrayCompetidores = [];
-  let arbol = new Arbol();
-  await scoresSnapshot.forEach((element)=>{
-    arrayCompetidores.push(element.data());
-    arbol.insert(element.data());
-  });
-  const listaOrdenada = await calcularTop(arbol);
-  // console.log(arrayCompetidores);
-  // console.log(listaOrdenada);
-  
+import { collection, getDocs } from "firebase/firestore";
+import Arbol from "./Arbol";
 
-  return listaOrdenada;
-  // return scoresMes;
-}
-const calcularTop = async(arbolConNodos) =>{
+export const traerScoresMes = async () => {
+  try {
+    const date = new Date();
+    const nombreColeccion = (date.getMonth()+1) + "_" + date.getFullYear();
+    //const nombreColeccion = "5_2025";
+    const scoresRef = collection(db, nombreColeccion);
+    const scoresSnapshot = await getDocs(scoresRef);
+    let arrayCompetidores = [];
+    let arbol = new Arbol();
+
+    scoresSnapshot.forEach((doc) => {
+      const data = doc.data();
+      arrayCompetidores.push(data);
+      arbol.insert(data);
+    });
+    const listaOrdenada = await calcularTop(arbol);
+    return listaOrdenada.slice(0, 30);
+
+  } catch (error) {
+    console.log("Error en traerScoresMes:", error);
+    throw error;
+  }
+};
+
+const calcularTop = async (arbolConNodos) => {
   let listTop = await arbolConNodos.inorder(arbolConNodos.getRootNode());
   listTop.reverse();
- return listTop;
-}
+  return listTop;
+};

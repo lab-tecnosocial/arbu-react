@@ -5,7 +5,7 @@ import { checkUserAuthorization } from "../../helpers/checkAuthorization";
 import { CircularProgress, Box } from "@mui/material";
 
 const ProtectedRoute = ({ element, requiresAuthorization = false }) => {
-  const user = useSelector((state) => state.auth.user);
+  const { user, checking } = useSelector((state) => state.auth);
   const location = useLocation();
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [loading, setLoading] = useState(requiresAuthorization);
@@ -22,6 +22,23 @@ const ProtectedRoute = ({ element, requiresAuthorization = false }) => {
 
     verifyAuthorization();
   }, [user, requiresAuthorization]);
+
+  // Mientras Firebase resuelve si hay sesión no se puede decidir nada: al
+  // recargar una ruta protegida el usuario todavía no está en el store.
+  if (checking) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   // Si no hay usuario, redirigir al login
   if (!user) {

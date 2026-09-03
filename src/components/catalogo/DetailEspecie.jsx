@@ -1,31 +1,32 @@
-import { IconButton } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideDetailEspecie } from "../../actions/catalogoActions";
 import "./DetailEspecie.css";
 import EmblaCarouselComponent from "./carrusel/EmblaCarousel";
 import CloseIcon from '@mui/icons-material/Close';
+
 const DetailEspecie = () => {
   const { activeEspecie } = useSelector((state) => state.catalogo);
   const dispatch = useDispatch();
 
-  // const handleBack = () => {
-  //   dispatch(setHideDetailEspecie());
-  // };
+  const handleClose = () => {
+    dispatch(setHideDetailEspecie());
+  };
+
+  if (!activeEspecie) return null;
 
   return (
-
     <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
-
-      
-
       <div className="detail-container-especie">
         <div className="detail-container-especie-secundary">
-        {/* <div className="button-exit">
-          <IconButton aria-label="back" onClick={handleBack}>
-          <CloseIcon  sx={{color:'#174C44'}}/>
-          </IconButton>
-          </div> */}
+          <button
+            type="button"
+            className="detail-especie-close"
+            onClick={handleClose}
+            aria-label="Cerrar detalle de especie"
+          >
+            <CloseIcon sx={{ color: 'inherit' }} />
+          </button>
           <div style={{ margin: "auto" }} >
             {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
             {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}

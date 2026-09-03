@@ -1,0 +1,1409 @@
+.plantacion-guide {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 46%),
+      linear-gradient(90deg, #114e25 0%, #1b6d2f 50%, #163f22 100%);
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 16px;
+    box-sizing: border-box;
+    /* Allow scrolling on small screens so content doesn't get cut off */
+    overflow: auto;
+    backdrop-filter: blur(4px);
+  }
+  
+  .plantacion-guide--page {
+    position: static;
+    inset: auto;
+    background: transparent;
+    z-index: auto;
+    padding: 8px 0 16px;
+    backdrop-filter: none;
+  }
+  
+  .plantacion-step-card {
+    width: clamp(320px, 80vw, 840px);
+    max-width: 96vw;
+    max-height: calc(100vh - 48px);
+    border-radius: 18px;
+    padding: 20px 22px 28px 22px;
+    background: linear-gradient(180deg, #163f22 0%, #1b6d2f 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    color: #ecf8eb;
+    overflow: auto;
+    box-sizing: border-box;
+    margin: auto;
+    box-shadow: 0 18px 40px rgba(6, 28, 12, 0.6);
+    border: 1px solid rgba(255,255,255,0.04);
+    transform: translateZ(0);
+    transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+  }
+  
+  .plantacion-step-card--page {
+    width: min(980px, 94%);
+    max-width: 980px;
+    max-height: none;
+    margin: 0 auto;
+  }
+  
+  .plantacion-guide-header {
+    position: static;
+    width: 100%;
+    padding-right: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .plantacion-guide-header h3 {
+    margin: 0;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  
+  .plantacion-close {
+    position: relative;
+    flex-shrink: 0;
+    border: 0;
+    background: rgba(255,255,255,0.06);
+    color: #333333;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 120ms ease;
+  }
+  
+  .plantacion-close:hover {
+    background: rgba(255,255,255,0.12);
+    scale: 1.1;
+    transition: background 120ms ease, scale 120ms ease;
+  }
+  
+  .selection-guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .selection-guide-header h3 {
+    margin: 0;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+  }
+  
+  .selection-guide-header p {
+    margin: 6px 0 0;
+    color: rgba(236, 248, 235, 0.8);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+  }
+  
+  .selection-guide-form {
+    display: grid;
+    gap: 12px;
+  }
+  
+  .selection-guide-form label {
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  
+  .selection-guide-form select,
+  .selection-guide-form input {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    min-height: 54px;
+    padding: 11px 12px;
+    background: #f7fbf7;
+    color: #173b1f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    box-sizing: border-box;
+    outline: none;
+  }
+  
+  .selection-guide-form input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+  
+  .selection-guide-form input[type='number']::-webkit-outer-spin-button,
+  .selection-guide-form input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .selection-guide-form select:focus,
+  .selection-guide-form input:focus {
+    box-shadow: 0 0 0 3px rgba(236, 248, 235, 0.18);
+  }
+  
+  .selection-guide-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  
+  .selection-guide-actions > button {
+    flex: 1 1 160px;
+  }
+  
+  .selection-guide-primary,
+  .selection-guide-secondary {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .selection-guide-primary {
+    background: #ecf8eb;
+    color: #1b6d2f;
+  }
+  
+  .selection-guide-secondary {
+    background: rgba(236, 248, 235, 0.16);
+    color: #ecf8eb;
+  }
+  
+  .selection-guide-results {
+    display: grid;
+    gap: 12px;
+  }
+  
+  .selection-guide-results h4 {
+    margin: 4px 0 0;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  
+  .selection-guide-results ol,
+  .selection-guide-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .selection-guide-results-hint {
+    margin: 0;
+    color: rgba(236, 248, 235, 0.78);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+  
+  .selection-guide-card {
+    width: 100%;
+    border: 1px solid rgba(236, 248, 235, 0.14);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+
+  .selection-guide-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(236, 248, 235, 0.28);
+    box-shadow: 0 10px 24px rgba(8, 40, 24, 0.16);
+  }
+
+  .selection-guide-card:focus-visible {
+    outline: 3px solid rgba(236, 248, 235, 0.35);
+    outline-offset: 2px;
+  }
+
+  .selection-guide-card-media {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    align-self: center;
+    background: #ffffff;
+    overflow: hidden;
+  }
+  
+  .selection-guide-rank {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 80, 72, 0.88);
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  }
+  
+  .selection-guide-image {
+    width: 100%;
+    height: 96px;
+    max-height: 96px;
+    min-height: 96px;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+    background: #ffffff;
+  }
+  
+  .selection-guide-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 14px;
+  }
+  
+  .selection-guide-name {
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-transform: capitalize;
+  }
+  
+  .selection-guide-description {
+    margin-top: 4px;
+    color: rgba(236, 248, 235, 0.88);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    line-clamp: 2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .selection-guide-score {
+    min-width: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(236, 248, 235, 0.16);
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+
+  .selection-guide-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .selection-guide-origin {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  .selection-guide-origin.nativa {
+    background: rgba(3, 178, 94, 0.22);
+    color: #d7ffe8;
+  }
+
+  .selection-guide-origin.introducida {
+    background: rgba(236, 248, 235, 0.14);
+    color: rgba(236, 248, 235, 0.92);
+  }
+
+  .selection-guide-score-label {
+    color: rgba(236, 248, 235, 0.82);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .selection-guide-score-label--match {
+    color: #b8f0d0;
+  }
+
+  .selection-guide-summary {
+    margin: 0;
+    color: rgba(236, 248, 235, 0.82);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .selection-guide-card-cta {
+    margin-top: 2px;
+    color: rgba(236, 248, 235, 0.72);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .selection-guide-reasons,
+  .selection-guide-warnings {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .selection-guide-reasons li,
+  .selection-guide-warnings li {
+    color: rgba(236, 248, 235, 0.9);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .selection-guide-warnings li {
+    color: #ffe3a8;
+  }
+
+  .selection-guide-empty {
+    margin: 4px 0 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(236, 248, 235, 0.88);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .selection-guide-score-help {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(236, 248, 235, 0.14);
+    color: rgba(236, 248, 235, 0.92);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  .selection-guide-score-help strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.92rem;
+    color: #ecf8eb;
+  }
+
+  .selection-guide-score-help p {
+    margin: 0 0 8px;
+  }
+
+  .selection-guide-score-help ul {
+    margin: 0 0 8px;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: 4px;
+  }
+
+  .selection-guide-score-help li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .selection-guide-score-help li span {
+    display: inline-flex;
+    min-width: 42px;
+    justify-content: center;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(236, 248, 235, 0.14);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .selection-guide-score-help-note {
+    margin: 0;
+    font-size: 0.82rem;
+    color: rgba(236, 248, 235, 0.78);
+  }
+
+  .selection-guide-score-label--excelente,
+  .selection-guide-score-label--alta {
+    color: #c8f5dc;
+  }
+
+  .selection-guide-score-label--media {
+    color: #ffe9a8;
+  }
+
+  .selection-guide-score-label--baja {
+    color: #ffc9c9;
+  }
+
+  /* Modal detalle especie (guía de selección) */
+  .selection-species-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    background: var(--aprende-modal-backdrop, rgba(8, 28, 18, 0.62));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .selection-species-modal {
+    position: relative;
+    width: min(560px, 100%);
+    max-height: min(90dvh, 760px);
+    overflow: auto;
+    border-radius: 18px;
+    background: var(--aprende-panel-bg, #ffffff);
+    color: var(--aprende-panel-text, #18453f);
+    box-shadow: 0 24px 48px var(--aprende-modal-shadow, rgba(8, 28, 18, 0.28));
+  }
+
+  .selection-species-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--aprende-detail-close-bg, rgba(255, 255, 255, 0.94));
+    color: var(--aprende-input-text, #174640);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px var(--aprende-shadow, rgba(20, 80, 72, 0.18));
+  }
+
+  .selection-species-modal-hero {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--aprende-bg-muted, #f3faf8);
+    overflow: hidden;
+  }
+
+  .selection-species-modal-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .selection-species-modal-body {
+    padding: 18px 18px 22px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .selection-species-modal-header h3 {
+    margin: 0;
+    color: var(--aprende-panel-text, #174640);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    text-transform: capitalize;
+  }
+
+  .selection-species-modal-scientific {
+    margin: 4px 0 0;
+    color: var(--aprende-panel-text-muted, #4f6b66);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    font-style: italic;
+  }
+
+  .selection-species-modal-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .selection-species-modal-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--aprende-origin-intro-bg, #ebf4f2);
+    color: var(--aprende-origin-intro-text, #16544b);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  .selection-species-modal-section h4 {
+    margin: 0 0 8px;
+    color: var(--aprende-panel-text, #174640);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+  }
+
+  .selection-species-modal-row {
+    display: grid;
+    grid-template-columns: minmax(110px, 38%) 1fr;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--aprende-border, #e3ecea);
+  }
+
+  .selection-species-modal-row:last-child {
+    border-bottom: 0;
+  }
+
+  .selection-species-modal-label {
+    color: var(--aprende-panel-text-muted, #4f6b66);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .selection-species-modal-value {
+    color: var(--aprende-panel-text, #174640);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.84rem;
+    line-height: 1.4;
+    text-transform: capitalize;
+  }
+
+  .selection-species-modal .selection-guide-origin.nativa {
+    background: var(--aprende-origin-nativa-bg, #dff0ec);
+    color: var(--aprende-origin-nativa-text, #13584f);
+  }
+
+  .selection-species-modal .selection-guide-origin.introducida {
+    background: var(--aprende-origin-intro-bg, #ebf4f2);
+    color: var(--aprende-origin-intro-text, #16544b);
+  }
+
+  .plantacion-top { display:flex; align-items:center; gap:12px; }
+  .plantacion-step-number {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #1b6d2f;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+  }
+  .plantacion-step-visual {
+    min-height: 320px;
+    border-radius: 20px 0 0 20px;
+    background: #ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 16px;
+    box-shadow: 0 14px 40px rgba(7,31,12,0.14);
+    overflow: hidden;
+    width: 100%;
+    max-width: 520px;
+    height: 320px;
+  }
+  
+  .plantacion-step-img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; border-radius: 8px; border: none; box-shadow: 0 6px 20px rgba(10,40,20,0.08); background: #ffffff; }
+  
+  @media (min-width: 900px) {
+    .plantacion-step-card {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-height: calc(100vh - 40px);
+    }
+  
+    .plantacion-top { display:flex; align-items:center; gap:12px; }
+  
+    .plantacion-step-visual {
+      min-height: auto;
+      width: 100%;
+      max-width: 520px;
+      height: 320px;
+      padding: 10px;
+      align-self: center;
+    }
+  
+    .plantacion-step-text { text-align: center; padding: 0 12px; font-size: 1.15rem; }
+  
+    .plantacion-step-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  }
+  /* Responsive adjustments for small screens */
+  @media (max-width: 600px) {
+    .plantacion-step-card {
+      width: 100%;
+      max-width: 100%;
+      padding: 16px;
+      max-height: calc(100vh - 32px);
+    }
+  
+    .plantacion-guide-header {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+  
+    .selection-guide-form {
+      gap: 10px;
+    }
+
+    .selection-guide-card {
+      grid-template-columns: 84px minmax(0, 1fr);
+    }
+
+    .selection-guide-card-media {
+      width: 84px;
+      height: 84px;
+    }
+
+    .selection-guide-image {
+      height: 84px;
+      max-height: 84px;
+      min-height: 84px;
+    }
+
+    .selection-guide-content {
+      padding: 10px 12px;
+    }
+
+    .selection-guide-name {
+      font-size: 0.98rem;
+    }
+
+    .selection-guide-summary {
+      font-size: 0.78rem;
+    }
+
+    .selection-guide-card-cta {
+      display: none;
+    }
+
+    .selection-guide-actions {
+      flex-direction: row;
+      gap: 8px;
+    }
+
+    .selection-guide-actions > button {
+      width: auto;
+      flex: 1 1 0;
+      min-height: 40px;
+      padding: 8px 12px;
+      font-size: 0.86rem;
+    }
+
+    .selection-guide-form select,
+    .selection-guide-form input {
+      min-height: 44px;
+      padding: 9px 11px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .selection-guide-card {
+      grid-template-columns: 76px minmax(0, 1fr);
+    }
+
+    .selection-guide-card-media {
+      width: 76px;
+      height: 76px;
+    }
+
+    .selection-guide-image {
+      height: 76px;
+      max-height: 76px;
+      min-height: 76px;
+    }
+
+    .selection-guide-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .selection-guide-actions > button {
+      min-height: 36px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+    }
+  }
+  .plantacion-step-text {
+    margin: 0;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.18rem;
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 12px;
+  }
+  .plantacion-step-controls {
+    display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 6px 8px 0 8px;
+    gap: 12px;
+  }
+  .plantacion-step-controls button {
+    border: 0; background: #1b6d2f; color: #ecf8eb; font-weight:700; font-size:1rem; cursor:pointer; padding:8px 12px; border-radius:8px
+  }
+  .plantacion-step-dots { display:flex; gap:8px; justify-content:center }
+  .plantacion-dot { width:10px; height:10px; border-radius:50%; background: rgba(236, 248, 235, 0.18) }
+  .plantacion-dot.active { background:#ecf8eb }
+  .plantacion-guide { padding:10px }
+  
+  .plantacion-image-note {
+    margin-top: 10px;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  .plantacion-image-note strong { color: #ecf8eb }
+  .plantacion-guide {
+    margin-top: 22px;
+    border-radius: 16px;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(27, 109, 47, 0.94) 0%, rgba(13, 72, 34, 0.98) 100%);
+  }
+  
+  .plantacion-guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  
+  .plantacion-guide-header h3 {
+    margin: 0;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  
+  .plantacion-guide-header button:not(.plantacion-close) {
+    border: 0;
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: #ecf8eb;
+    background: #1b6d2f;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .plantacion-step-card {
+    border-radius: 14px;
+    background: linear-gradient(180deg, #163f22 0%, #1b6d2f 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .plantacion-step-number {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #1b6d2f;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+  }
+  
+  .plantacion-step-visual {
+    min-height: 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #0f461d;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 12px;
+    overflow: hidden;
+  }
+  
+  .plantacion-step-text {
+    margin: 0;
+    color: #ecf8eb;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+  }
+  
+  .plantacion-step-controls {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .plantacion-step-controls button {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ecf8eb;
+    background: #1b6d2f;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .plantacion-step-controls button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  
+  .plantacion-step-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .plantacion-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(236, 248, 235, 0.18);
+    transition: transform 160ms ease, background 160ms ease;
+  }
+  
+  .plantacion-dot.active {
+    background: #ecf8eb;
+    transform: scale(1.25);
+  }
+  
+  @media (max-width: 768px) {
+    .plantacion-guide {
+      padding: 10px;
+    }
+  
+    .selection-guide-header h3 {
+      font-size: 1.25rem;
+    }
+  
+    .selection-guide-header p {
+      font-size: 0.85rem;
+    }
+  
+    .plantacion-close {
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: none;
+      transition: background 120ms ease;
+    }
+  
+    .plantacion-step-number {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      background: #1b6d2f;
+      color: #ecf8eb;
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+  
+    .plantacion-step-visual {
+      width: 100%;
+      height: 280px;
+      border-radius: 20px 0 0 20px;
+      padding: 12px;
+    }
+  
+    .plantacion-step-img {
+      max-height: 100%;
+      width: 100%;
+    }
+  
+    .selection-guide-card {
+      grid-template-columns: 80px minmax(0, 1fr);
+    }
+
+    .selection-guide-card-media {
+      width: 80px;
+      height: 80px;
+    }
+
+    .selection-guide-image {
+      height: 80px;
+      max-height: 80px;
+      min-height: 80px;
+    }
+
+    .selection-guide-content {
+      padding: 10px 12px;
+    }
+
+    .selection-guide-actions {
+      flex-direction: row;
+      gap: 8px;
+    }
+  
+    .selection-guide-actions > button {
+      width: auto;
+      flex: 1 1 0;
+      min-height: 40px;
+      padding: 8px 12px;
+      font-size: 0.86rem;
+    }
+  
+    .selection-guide-name {
+      font-size: 0.95rem;
+    }
+  
+    .selection-guide-description {
+      font-size: 0.82rem;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+  }
+  
+  @media (max-width: 520px) {
+    .plantacion-guide {
+      padding: 8px;
+    }
+  
+    .plantacion-step-card {
+      width: calc(100vw - 16px);
+      max-height: calc(100vh - 16px);
+      padding: 12px;
+      gap: 10px;
+      border-radius: 12px;
+      padding-top: 18px;
+    }
+  
+    .plantacion-guide-header h3 {
+      font-size: 1.05rem;
+      padding-right: 40px;
+    }
+  
+    .plantacion-step-visual {
+      width: 100%;
+      height: 200px;
+      border-radius: 20px 0 0 20px;
+      padding: 10px;
+    }
+  
+    .plantacion-step-img {
+      max-height: 100%;
+      width: 100%;
+    }
+  
+    .selection-guide-card {
+      grid-template-columns: 72px minmax(0, 1fr);
+    }
+
+    .selection-guide-card-media {
+      width: 72px;
+      height: 72px;
+    }
+
+    .selection-guide-image {
+      height: 72px;
+      max-height: 72px;
+      min-height: 72px;
+    }
+
+    .selection-guide-content {
+      padding: 9px 10px;
+      gap: 4px;
+    }
+
+    .selection-guide-actions > button {
+      min-height: 36px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+    }
+
+    .selection-guide-form select,
+    .selection-guide-form input {
+      min-height: 42px;
+      padding: 8px 10px;
+      font-size: 0.88rem;
+    }
+
+    .selection-guide-summary {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .selection-species-modal-backdrop {
+      padding: 10px;
+    }
+
+    .selection-species-modal-body {
+      padding: 14px 14px 18px;
+    }
+
+    .selection-species-modal-row {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
+    .selection-guide-header {
+      gap: 10px;
+    }
+  
+    .selection-guide-header h3 {
+      font-size: 1.1rem;
+    }
+  
+    .selection-guide-header p {
+      margin-top: 4px;
+    }
+  
+    .plantacion-step-text {
+      font-size: 1rem;
+      line-height: 1.45;
+      padding: 0 4px;
+    }
+  
+    .plantacion-step-controls {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  
+    .plantacion-step-controls button {
+      width: 100%;
+    }
+  
+    .plantacion-step-dots {
+      order: 2;
+      flex-wrap: wrap;
+      row-gap: 8px;
+    }
+  }
+  
+  /* Light page-mode look for route-based guides */
+  .plantacion-guide.plantacion-guide--page {
+    margin-top: 0;
+    border-radius: 0;
+    padding: 6px 0 18px;
+    background: transparent;
+  }
+  
+  .plantacion-guide--page .plantacion-step-card.plantacion-step-card--page {
+    background: var(--aprende-panel-bg, #ffffff);
+    color: var(--aprende-panel-text, #18453f);
+    border: 1px solid var(--aprende-panel-border, #d9e7e3);
+    box-shadow: 0 14px 30px var(--aprende-panel-shadow, rgba(20, 80, 72, 0.12));
+    border-radius: 18px;
+  }
+  
+  .plantacion-guide--page .plantacion-guide-header h3,
+  .plantacion-guide--page .selection-guide-header h3,
+  .plantacion-guide--page .selection-guide-results h4,
+  .plantacion-guide--page .selection-guide-form label,
+  .plantacion-guide--page .selection-guide-name,
+  .plantacion-guide--page .plantacion-step-text {
+    color: var(--aprende-panel-text, #18453f);
+  }
+  
+  .plantacion-guide--page .selection-guide-header p,
+  .plantacion-guide--page .selection-guide-rank,
+  .plantacion-guide--page .selection-guide-score-label {
+    color: var(--aprende-panel-text-muted, #4f6b66);
+  }
+
+  .plantacion-guide--page .selection-guide-reasons li {
+    color: var(--aprende-text-body, #3f5c56);
+  }
+
+  .plantacion-guide--page .selection-guide-warnings li {
+    color: var(--aprende-warning-text, #9a6b00);
+  }
+
+  .plantacion-guide--page .selection-guide-empty {
+    background: var(--aprende-surface-empty, #f3faf8);
+    color: var(--aprende-panel-text-muted, #4f6b66);
+    border: 1px solid var(--aprende-border, #d9ebe7);
+  }
+
+  .plantacion-guide--page .selection-guide-score-help {
+    background: var(--aprende-surface-help, #f8fcfb);
+    border: 1px solid var(--aprende-border, #d9ebe7);
+    color: var(--aprende-text-body, #3f5c56);
+  }
+
+  .plantacion-guide--page .selection-guide-score-help strong {
+    color: var(--aprende-panel-text, #18453f);
+  }
+
+  .plantacion-guide--page .selection-guide-score-help li span {
+    background: var(--aprende-badge-bg, #dff0ec);
+    color: var(--aprende-badge-text, #13584f);
+  }
+
+  .plantacion-guide--page .selection-guide-score-help-note {
+    color: var(--aprende-panel-text-muted, #4f6b66);
+  }
+
+  .plantacion-guide--page .selection-guide-score-label--excelente,
+  .plantacion-guide--page .selection-guide-score-label--alta {
+    color: var(--aprende-score-good, #0f7a57);
+  }
+
+  .plantacion-guide--page .selection-guide-score-label--media {
+    color: var(--aprende-score-medium, #9a6b00);
+  }
+
+  .plantacion-guide--page .selection-guide-score-label--baja {
+    color: var(--aprende-score-low, #b04444);
+  }
+
+  .plantacion-guide--page .selection-guide-origin.nativa {
+    background: var(--aprende-origin-nativa-bg, #dff0ec);
+    color: var(--aprende-origin-nativa-text, #13584f);
+  }
+
+  .plantacion-guide--page .selection-guide-origin.introducida {
+    background: var(--aprende-origin-intro-bg, #ebf4f2);
+    color: var(--aprende-origin-intro-text, #16544b);
+  }
+  
+  .plantacion-guide--page .selection-guide-form select,
+  .plantacion-guide--page .selection-guide-form input {
+    background: var(--aprende-input-bg, #f7fbfa);
+    color: var(--aprende-input-text, #174640);
+    border: 1px solid var(--aprende-input-border, #d8e8e4);
+  }
+  
+  .plantacion-guide--page .selection-guide-form select:focus,
+  .plantacion-guide--page .selection-guide-form input:focus {
+    box-shadow: 0 0 0 3px var(--aprende-focus, rgba(22, 94, 84, 0.18));
+  }
+  
+  .plantacion-guide--page .selection-guide-card {
+    background: var(--aprende-surface-card, #f8fcfb);
+    border: 1px solid var(--aprende-border, #d9ebe7);
+  }
+
+  .plantacion-guide--page .selection-guide-card:hover {
+    border-color: var(--aprende-card-hover-border, #b8d4cc);
+    box-shadow: 0 10px 24px var(--aprende-shadow-hover, rgba(20, 80, 72, 0.1));
+  }
+
+  .plantacion-guide--page .selection-guide-results-hint {
+    color: var(--aprende-panel-text-muted, #4f6b66);
+  }
+
+  .plantacion-guide--page .selection-guide-summary {
+    color: var(--aprende-panel-text-muted, #4f6b66);
+  }
+
+  .plantacion-guide--page .selection-guide-card-cta {
+    color: var(--aprende-accent-bright, #1f7a6d);
+  }
+
+  .plantacion-guide--page .selection-guide-score-label--match {
+    color: var(--aprende-score-good, #0f7a57);
+  }
+
+  @media (hover: none) {
+    .selection-guide-card:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .selection-guide-card:active {
+      transform: scale(0.99);
+    }
+  }
+  
+  .plantacion-guide--page .selection-guide-score {
+    background: var(--aprende-badge-bg, #dff0ec);
+    color: var(--aprende-badge-text, #13584f);
+  }
+  
+  .plantacion-guide--page .plantacion-step-number {
+    background: var(--aprende-guide-step-number-bg, #dff0ec);
+    color: var(--aprende-guide-step-number-text, #16665b);
+  }
+  
+  .plantacion-guide--page .plantacion-step-visual {
+    background: var(--aprende-guide-image-bg, #f7fbfa);
+    border: 1px solid var(--aprende-guide-image-border, #d9ebe7);
+    box-shadow: none;
+  }
+  
+  .plantacion-guide--page .selection-guide-primary,
+  .plantacion-guide--page .plantacion-step-controls button {
+    background: var(--aprende-btn-primary-bg, #1f7a6d);
+    color: var(--aprende-btn-primary-text, #ffffff);
+  }
+  
+  .plantacion-guide--page .selection-guide-secondary {
+    background: var(--aprende-btn-secondary-bg, #ebf4f2);
+    color: var(--aprende-btn-secondary-text, #16544b);
+    border: 1px solid var(--aprende-btn-secondary-border, #cfe2de);
+  }
+  
+  .plantacion-guide--page .plantacion-dot {
+    background: var(--aprende-dot-idle, #c7d8d4);
+  }
+  
+  .plantacion-guide--page .plantacion-dot.active {
+    background: var(--aprende-dot-active, #1f7a6d);
+  }
+
+  .plantacion-guide--page .plantacion-close {
+    background: var(--aprende-bg-muted, #f3faf8);
+    color: var(--aprende-text, #174c44);
+  }
+  
+  @media (max-width: 768px) {
+    .plantacion-guide--page .plantacion-step-card.plantacion-step-card--page {
+      width: 94%;
+    }
+  }
+
+/* Marco fijo para imágenes de pasos — evita saltos al cambiar de slide */
+.plantacion-step-visual {
+  width: 100%;
+  height: clamp(220px, 42vw, 320px);
+  min-height: unset;
+  max-height: none;
+  aspect-ratio: unset;
+  border-radius: 12px;
+  background: var(--aprende-guide-image-bg, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.plantacion-step-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 8px;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.plantacion-guide--page .plantacion-step-visual {
+  background: var(--aprende-guide-image-bg, #f7fbfa);
+  border: 1px solid var(--aprende-guide-image-border, #d9ebe7);
+}
+
+@media (max-width: 768px) {
+  .plantacion-step-visual {
+    height: clamp(200px, 48vw, 280px);
+    padding: 10px;
+  }
+
+  .plantacion-step-text {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .plantacion-step-visual {
+    height: clamp(180px, 52vw, 240px);
+    padding: 8px;
+  }
+
+  .plantacion-step-card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .plantacion-step-number {
+    width: 52px;
+    height: 52px;
+    font-size: 1.65rem;
+  }
+
+  .plantacion-guide-header h3 {
+    font-size: 1.1rem;
+  }
+}

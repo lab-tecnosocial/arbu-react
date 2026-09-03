@@ -1,5 +1,15 @@
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc as docRef,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
-import firebase from 'firebase/compat/app';
 import { checkIsSuperAdmin } from "./checkAuthorization";
 
 /**
@@ -33,18 +43,18 @@ export const crearProyecto = async (proyectoData, userEmail) => {
     // Preparar documento
     const nuevoProyecto = {
       nombreProyecto: proyectoData.nombreProyecto.trim(),
-      fechaInicio: firebase.firestore.Timestamp.fromDate(inicio),
-      fechaFin: firebase.firestore.Timestamp.fromDate(fin),
+      fechaInicio: Timestamp.fromDate(inicio),
+      fechaFin: Timestamp.fromDate(fin),
       usuarioAutorizado: userEmail, // Auto-asignado, no editable por el usuario
       idMapeadores: proyectoData.idMapeadores || [],
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     };
 
     // Crear documento en Firestore
-    const docRef = await db.collection("proyectos").add(nuevoProyecto);
+    const nuevoDoc = await addDoc(collection(db, "proyectos"), nuevoProyecto);
 
-    return { success: true, id: docRef.id };
+    return { success: true, id: nuevoDoc.id };
   } catch (error) {
     console.error("Error al crear proyecto:", error);
     return { success: false, error: error.message };
@@ -66,14 +76,14 @@ export const actualizarProyecto = async (proyectoId, proyectoData, userEmail) =>
     }
 
     // Obtener proyecto actual para validar ownership
-    const docRef = db.collection("proyectos").doc(proyectoId);
-    const doc = await docRef.get();
+    const proyectoRef = docRef(db, "proyectos", proyectoId);
+    const snapshot = await getDoc(proyectoRef);
 
-    if (!doc.exists) {
+    if (!snapshot.exists()) {
       return { success: false, error: "Proyecto no encontrado" };
     }
 
-    const proyectoActual = doc.data();
+    const proyectoActual = snapshot.data();
 
     // Verificar si es superadmin
     const isSuperAdmin = await checkIsSuperAdmin(userEmail);
@@ -94,7 +104,7 @@ export const actualizarProyecto = async (proyectoId, proyectoData, userEmail) =>
 
     // Preparar datos actualizados
     const datosActualizados = {
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: serverTimestamp(),
     };
 
     if (proyectoData.nombreProyecto) {
@@ -102,11 +112,11 @@ export const actualizarProyecto = async (proyectoId, proyectoData, userEmail) =>
     }
 
     if (proyectoData.fechaInicio) {
-      datosActualizados.fechaInicio = firebase.firestore.Timestamp.fromDate(new Date(proyectoData.fechaInicio));
+      datosActualizados.fechaInicio = Timestamp.fromDate(new Date(proyectoData.fechaInicio));
     }
 
     if (proyectoData.fechaFin) {
-      datosActualizados.fechaFin = firebase.firestore.Timestamp.fromDate(new Date(proyectoData.fechaFin));
+      datosActualizados.fechaFin = Timestamp.fromDate(new Date(proyectoData.fechaFin));
     }
 
     if (proyectoData.idMapeadores !== undefined) {
@@ -116,7 +126,7 @@ export const actualizarProyecto = async (proyectoId, proyectoData, userEmail) =>
     // NO permitir cambiar usuarioAutorizado
 
     // Actualizar documento
-    await docRef.update(datosActualizados);
+    await updateDoc(proyectoRef, datosActualizados);
 
     return { success: true };
   } catch (error) {
@@ -139,14 +149,14 @@ export const eliminarProyecto = async (proyectoId, userEmail) => {
     }
 
     // Obtener proyecto para validar ownership
-    const docRef = db.collection("proyectos").doc(proyectoId);
-    const doc = await docRef.get();
+    const proyectoRef = docRef(db, "proyectos", proyectoId);
+    const snapshot = await getDoc(proyectoRef);
 
-    if (!doc.exists) {
+    if (!snapshot.exists()) {
       return { success: false, error: "Proyecto no encontrado" };
     }
 
-    const proyecto = doc.data();
+    const proyecto = snapshot.data();
 
     // Verificar si es superadmin
     const isSuperAdmin = await checkIsSuperAdmin(userEmail);
@@ -157,7 +167,7 @@ export const eliminarProyecto = async (proyectoId, userEmail) => {
     }
 
     // Eliminar documento
-    await docRef.delete();
+    await deleteDoc(proyectoRef);
 
     return { success: true };
   } catch (error) {
@@ -180,7 +190,7 @@ export const buscarMapeadorPorEmail = async (email) => {
     const emailLowerCase = email.toLowerCase().trim();
 
     // Obtener todos los documentos de inscripcionesMapeo
-    const snapshot = await db.collection("inscripcionesMapeo").get();
+    const snapshot = await getDocs(collection(db, "inscripcionesMapeo"));
     const mapeadores = [];
 
     snapshot.forEach((doc) => {
@@ -212,16 +222,15 @@ export const obtenerMapeadorPorId = async (mapeadorId) => {
       return null;
     }
 
-    const docRef = db.collection("inscripcionesMapeo").doc(mapeadorId);
-    const doc = await docRef.get();
+    const snapshot = await getDoc(docRef(db, "inscripcionesMapeo", mapeadorId));
 
-    if (!doc.exists) {
+    if (!snapshot.exists()) {
       return null;
     }
 
     return {
-      id: doc.id,
-      ...doc.data(),
+      id: snapshot.id,
+      ...snapshot.data(),
     };
   } catch (error) {
     console.error("Error al obtener mapeador:", error);

@@ -1,3 +1,4 @@
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
 
 /**
@@ -7,14 +8,13 @@ import { db } from "../firebase/firebase-config";
  */
 export const checkUserAuthorization = async (userEmail) => {
     try {
-        const docRef = db.collection("usuariosAutorizados").doc("accesoTablas");
-        const doc = await docRef.get();
+        const snapshot = await getDoc(doc(db, "usuariosAutorizados", "accesoTablas"));
 
-        if (!doc.exists) {
+        if (!snapshot.exists()) {
             return false;
         }
 
-        const data = doc.data();
+        const data = snapshot.data();
         const correosAutorizados = data?.correos || [];
 
         return correosAutorizados.includes(userEmail);
@@ -31,14 +31,13 @@ export const checkUserAuthorization = async (userEmail) => {
  */
 export const checkIsSuperAdmin = async (userEmail) => {
     try {
-        const docRef = db.collection("usuariosAutorizados").doc("accesoTablas");
-        const doc = await docRef.get();
+        const snapshot = await getDoc(doc(db, "usuariosAutorizados", "accesoTablas"));
 
-        if (!doc.exists) {
+        if (!snapshot.exists()) {
             return false;
         }
 
-        const data = doc.data();
+        const data = snapshot.data();
         const roles = data?.roles || {};
 
         return roles[userEmail] === 'superadmin';
@@ -55,14 +54,13 @@ export const checkIsSuperAdmin = async (userEmail) => {
  */
 export const getUserRole = async (userEmail) => {
     try {
-        const docRef = db.collection("usuariosAutorizados").doc("accesoTablas");
-        const doc = await docRef.get();
+        const snapshot = await getDoc(doc(db, "usuariosAutorizados", "accesoTablas"));
 
-        if (!doc.exists) {
+        if (!snapshot.exists()) {
             return null;
         }
 
-        const data = doc.data();
+        const data = snapshot.data();
         const roles = data?.roles || {};
 
         return roles[userEmail] || 'admin'; // Por defecto 'admin' si no tiene rol específico

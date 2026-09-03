@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../../actions/authActions";
+import { authLogout } from "../../actions/auth.actions";
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "../../firebase/firebase-config";
 import "./NoAutorizado.css";
@@ -16,7 +16,7 @@ const NoAutorizado = () => {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            dispatch(clearUser());
+            dispatch(authLogout());
             navigate("/iniciar-sesion");
         } catch (error) {
             console.error("Error al cerrar sesión:", error);

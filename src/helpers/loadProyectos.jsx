@@ -1,3 +1,4 @@
+import { collection, doc as docRef, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
 import { checkIsSuperAdmin } from "./checkAuthorization";
 
@@ -21,17 +22,18 @@ export const loadProyectos = async (userEmail) => {
 
     if (isSuperAdmin) {
       // Superadmin: cargar TODOS los proyectos
-      proyectosSnapshot = await db
-        .collection("proyectos")
-        .orderBy("createdAt", "desc")
-        .get();
+      proyectosSnapshot = await getDocs(
+        query(collection(db, "proyectos"), orderBy("createdAt", "desc"))
+      );
     } else {
       // Usuario normal: solo sus proyectos
-      proyectosSnapshot = await db
-        .collection("proyectos")
-        .where("usuarioAutorizado", "==", userEmail)
-        .orderBy("createdAt", "desc")
-        .get();
+      proyectosSnapshot = await getDocs(
+        query(
+          collection(db, "proyectos"),
+          where("usuarioAutorizado", "==", userEmail),
+          orderBy("createdAt", "desc")
+        )
+      );
     }
 
     const proyectos = [];
@@ -63,15 +65,14 @@ export const loadProyectoById = async (proyectoId, userEmail) => {
       return null;
     }
 
-    const docRef = db.collection("proyectos").doc(proyectoId);
-    const doc = await docRef.get();
+    const snapshot = await getDoc(docRef(db, "proyectos", proyectoId));
 
-    if (!doc.exists) {
+    if (!snapshot.exists()) {
       console.error("Proyecto no encontrado");
       return null;
     }
 
-    const proyecto = { id: doc.id, ...doc.data() };
+    const proyecto = { id: snapshot.id, ...snapshot.data() };
 
     // Verificar si es superadmin
     const isSuperAdmin = await checkIsSuperAdmin(userEmail);
@@ -101,7 +102,7 @@ export const loadArbolesProyecto = async (proyecto) => {
     }
 
     // Cargar todos los árboles mapeados
-    const arbolesSnapshot = await db.collection("arbolesMapeados").get();
+    const arbolesSnapshot = await getDocs(collection(db, "arbolesMapeados"));
     const arbolesMapeados = [];
 
     arbolesSnapshot.forEach((doc) => {
@@ -171,7 +172,7 @@ export const loadMapeadoresInfo = async (mapeadorIds) => {
     const mapeadores = [];
 
     // Cargar todos los mapeadores de inscripcionesMapeo
-    const inscripcionesSnapshot = await db.collection("inscripcionesMapeo").get();
+    const inscripcionesSnapshot = await getDocs(collection(db, "inscripcionesMapeo"));
 
     inscripcionesSnapshot.forEach((doc) => {
       // Solo incluir mapeadores que estén en la lista de IDs

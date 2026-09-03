@@ -23,3 +23,13 @@ package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+
+# el proyecto usa pnpm: su lockfile SÍ se versiona, el de npm no
+!pnpm-lock.yaml
+
+# artefactos del service worker en desarrollo (vite-plugin-pwa)
+/dev-dist
+
+# instrucciones locales para agentes (repo público)
+CLAUDE.md

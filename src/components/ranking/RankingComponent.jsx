@@ -1,226 +1,137 @@
-import React, {  useState } from 'react'
-
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import SportsScoreIcon from '@mui/icons-material/SportsScore';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
-import './RankingComponent.css'
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ChildComponent from './ChildComponent';
 import ThreePositionsMes from './ThreePositionsMes';
 import ThreePositionsGlobal from './ThreePositionsGlobal';
 import Footer from '../footer/Footer';
-
-import { ramasPuntos } from './ramasPuntos';
-import { ramasNombres } from './ramasNombres';
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
+import { loadScoresGlobal, loadScoresMes } from '../../actions/leaderboardActions';
+import { startLoadingUsuarios } from '../../actions/mapaActions';
+import './RankingComponent.css';
 
 const RankingComponent = () => {
   const [value, setValue] = useState(0);
-  const {usuariosMap} = useSelector(state=>state.mapa);
-  const {scoresGlobal,scoresMes} = useSelector(state=>state.leaderboard);
+  const dispatch = useDispatch();
+  const { usuariosMap } = useSelector((state) => state.mapa);
+  const { scoresGlobal, scoresMes } = useSelector((state) => state.leaderboard);
 
+  useEffect(() => {
+    dispatch(startLoadingUsuarios());
+    dispatch(loadScoresMes());
+    dispatch(loadScoresGlobal());
+  }, [dispatch]);
 
-
-
-
-
-
-
-
-
-
-  
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const getUserPhoto = (id)=>{
-      if(usuariosMap !==null){
-         if(usuariosMap.hasOwnProperty(id)){
-            return usuariosMap[id]?.imageProfile;
-          }
-      }
-    return "default";
-  }
-  const getUserInstitucion = (id)=>{
-    if(usuariosMap !==null){
-       if(usuariosMap.hasOwnProperty(id)){
-          return usuariosMap[id]?.institucion;
-        }
+  const getUserPhoto = (id) => {
+    if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
+      return usuariosMap[id]?.imageProfile || 'default';
     }
-  return "default";
-}
 
+    return 'default';
+  };
+
+  const getUserInstitucion = (id) => {
+    if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
+      return usuariosMap[id]?.institucion;
+    }
+
+    return 'default';
+  };
 
   const getFullNameUser = (id) => {
-      if(usuariosMap !==null){
-        if(usuariosMap.hasOwnProperty(id)){
-           return usuariosMap[id]?.nombre;
-         }
-     }
-    return "";
+    if (usuariosMap && Object.prototype.hasOwnProperty.call(usuariosMap, id)) {
+      return usuariosMap[id]?.nombre;
+    }
+
+    return '';
   };
 
-  const getNameRama = (id) => {
-    if(ramasNombres !==null){
-      if(ramasNombres.hasOwnProperty(id)){
-         return ramasNombres[id]?.nombreRama;
-       }
-   }
-  return "";
-};
-const getRamaImagen = (id)=>{
-  if(ramasNombres !==null){
-     if(ramasNombres.hasOwnProperty(id)){
-        return ramasNombres[id]?.imagen;
-      }
-  }
-return "default";
-}
-  const getFormatedList = (scoresList) => {
-    let array = [];
-    scoresList.forEach(element => {
-      let n = getFullNameUser(element.id);
-      let institucion = getUserInstitucion(element.id);
-      let puntos = element.puntos;
-      let foto = getUserPhoto(element.id);
-      array.push({nombre:n,foto:foto,institucion:institucion, puntos:puntos});
-    });
-    return array;
-  }
+  const getFormattedList = (scoresList) => {
+    if (!Array.isArray(scoresList) || scoresList.length === 0) {
+      return [];
+    }
+
+    return scoresList.map((element, index) => ({
+      nombre: getFullNameUser(element.id) || `Usuario ${String(index + 1).padStart(2, '0')}`,
+      foto: getUserPhoto(element.id),
+      institucion: getUserInstitucion(element.id),
+      puntos: element.puntos,
+    }));
+  };
+
+  const monthlyList = getFormattedList(scoresMes);
+  const globalList = getFormattedList(scoresGlobal);
+  const isGlobalTab = value === 0;
+  const activeList = isGlobalTab ? globalList : monthlyList;
+  const hasActiveRanking = activeList.length > 0;
+  const ActiveTopThree = isGlobalTab ? ThreePositionsGlobal : ThreePositionsMes;
+  const activeTitle = isGlobalTab ? 'Top 100' : 'Top 30';
+  const activeSubtitle = isGlobalTab
+    ? 'El tablón global se actualiza todos los días a las 00:00 A.M.'
+    : 'El ranking mensual se actualiza con la actividad del mes en curso.';
+  const emptyMessage = isGlobalTab
+    ? 'No hay usuarios compitiendo en el ranking global por el momento.'
+    : 'No hay usuarios compitiendo en el ranking mensual por el momento.';
+  const activeLimit = isGlobalTab ? 100 : 30;
+  const rowSuffix = isGlobalTab ? 'global' : 'mes';
+
+  const renderRows = (list, limit, offset, suffix) =>
+    list.slice(3, limit).map((item, index) => (
+      <ChildComponent
+        key={`${item.nombre}-${suffix}-${index}`}
+        nombre={item.nombre}
+        puntos={item.puntos}
+        foto={item.foto}
+        institucion={item.institucion}
+        index={offset + index}
+      />
+    ));
+
   return (
-    <div 
-    // style={{ padding: "1rem 0" }}
-    >
-    
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered={true}>
-              <Tab icon={<CalendarMonthIcon />} sx={{fontFamily:'Poppins'}} label={`MES`} {...a11yProps(0)} />
-          <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="GLOBAL" {...a11yProps(1)} />
-          {/* <Tab icon={<SportsScoreIcon />} sx={{fontFamily:'Poppins'}} label="SCOUTS" {...a11yProps(2)} /> */}
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        <div>
-        <center>
-          <strong>Top 30</strong><br />
-        </center>
-          <ThreePositionsMes list3Best={getFormatedList(scoresMes)} />
-        {
-          scoresMes.map((item,i)=>(
-
-            i>2 && i<30 && <ChildComponent key={`${item.id}-mes`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+1} />
-
-          ))
-        }
-        {
-          scoresMes.length===0 && (
-            <center>
-              <br />
-              No hay usuarios compitiendo aún...
-            </center>
-          )
-        }
+    <div className="ranking-page">
+      <div className="ranking-shell">
+        <div className="ranking-tabs" role="tablist" aria-label="Ranking tabs">
+          <button
+            type="button"
+            className={`ranking-tab ${isGlobalTab ? 'is-active' : ''}`}
+            onClick={() => setValue(0)}
+            aria-pressed={isGlobalTab}
+          >
+            Global
+          </button>
+          <button
+            type="button"
+            className={`ranking-tab ${!isGlobalTab ? 'is-active' : ''}`}
+            onClick={() => setValue(1)}
+            aria-pressed={!isGlobalTab}
+          >
+            Mes
+          </button>
         </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-      <div>
-        <center>
-          <strong>Top 100</strong><br />
-        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
-        </center>
-          <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} />
-        {
-          scoresGlobal.map((item,i)=>(
-            
-            i>2 && i<100 && <ChildComponent key={`${item.id}-Global`} nombre={getFullNameUser(item.id)} puntos={item.puntos} foto={getUserPhoto(item.id)} institucion={getUserInstitucion(item.id)} index={i+1} />
-            
-          ))
-        }
-        {
-          scoresGlobal.length===0 && (
-            <center>
-              <br />
-              No hay usuarios compitiendo aún...
-            </center>
-          )
-        }
-        </div>
-      </TabPanel>
-      {/* <TabPanel value={value} index={2}>
-      <div> */}
-        {/* <center>
-          <strong>Top 100 Ramas</strong><br />
-        <span style={{marginLeft:'auto',marginRight:'auto'}}>El tablón global se actualiza todos los días a las 00:00 A.M.</span>
-        </center> */}
-        {/* <ThreePositionsGlobal list3Best={getFormatedList(scoresGlobal)} /> */}
-        {
-          // ramasPuntos.map((item,i)=>(
-            
-          //   i>2 && i<100 && <ChildComponent key={`${item.id}-Scouts`} 
-          //   nombre={getNameRama(item.id)}
-          //    puntos={item.puntos} 
-          //    foto={getRamaImagen(item.id)} 
-          //   //  institucion={getUserInstitucion(item.id)} 
-          //    index={i+1} />
-            
-          // ))
-        }
-        {/* {
-          ramasPuntos.length===0 && (
-            <center>
-              <br />
-              No hay usuarios compitiendo aún...
-            </center>
-          )
-        } */}
-       
-        {/* </div>
-      </TabPanel> */}
-      <br />
-      <br />
-      <br />
-      <br />
-      
-        <Footer />
-  </div>
-  )
-}
 
-export default RankingComponent
+        <section className="ranking-panel">
+          <div className="ranking-header">
+            <h2>{activeTitle}</h2>
+            <p>{activeSubtitle}</p>
+          </div>
+
+          {!hasActiveRanking ? (
+            <div className="ranking-empty" role="status">
+              <p>{emptyMessage}</p>
+            </div>
+          ) : (
+            <>
+              <ActiveTopThree list3Best={activeList.slice(0, 3)} />
+
+              <div className="ranking-list">
+                {renderRows(activeList, activeLimit, 4, rowSuffix)}
+              </div>
+            </>
+          )}
+        </section>
+      </div>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default RankingComponent;

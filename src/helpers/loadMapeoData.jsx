@@ -1,3 +1,4 @@
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
 
 /**
@@ -7,7 +8,7 @@ import { db } from "../firebase/firebase-config";
 export const loadMapeoData = async () => {
   try {
     // Fetch inscripcionesMapeo collection
-    const inscripcionesSnapshot = await db.collection("inscripcionesMapeo").get();
+    const inscripcionesSnapshot = await getDocs(collection(db, "inscripcionesMapeo"));
     const inscripciones = [];
     inscripcionesSnapshot.forEach((doc) => {
       inscripciones.push({
@@ -17,7 +18,7 @@ export const loadMapeoData = async () => {
     });
 
     // Fetch arbolesMapeados collection
-    const arbolesSnapshot = await db.collection("arbolesMapeados").get();
+    const arbolesSnapshot = await getDocs(collection(db, "arbolesMapeados"));
     const arbolesMapeados = [];
     arbolesSnapshot.forEach((doc) => {
       arbolesMapeados.push({

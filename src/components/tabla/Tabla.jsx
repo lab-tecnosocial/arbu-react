@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./Tabla.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../../actions/authActions";
+import { authLogout } from "../../actions/auth.actions";
 
 import { getAuth, signOut } from "firebase/auth";
 import { app, db } from "../../firebase/firebase-config";
 import { setInscripciones } from "../../actions/dashboardActions";
+import { startLoadingArbolesMapeados } from "../../actions/mapaActions";
 import EditableTable from "./EditableTable"; 
 const auth = getAuth(app);
 const Tabla = () => {
@@ -15,10 +16,14 @@ const Tabla = () => {
   const user = useSelector((state) => state.auth.user);
   const arbolesMapeados = useSelector((state) => state.mapa.arbolesMapeados);
 
+  useEffect(() => {
+    dispatch(startLoadingArbolesMapeados());
+  }, [dispatch]);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      dispatch(clearUser());
+      dispatch(authLogout());
       dispatch(setInscripciones([]));
       navigate("/iniciar-sesion");
     } catch (error) {

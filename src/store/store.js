@@ -3,17 +3,21 @@ import thunk from "redux-thunk";
 import { catalogoReducer } from "../reducers/catalogoReducer";
 import { leaderboardReducer } from "../reducers/leaderboardReducer";
 import { mapaReducer } from "../reducers/mapaReducer";
+import { arbolesPlantadosReducer } from "../reducers/arbolesPlantados.reducer";
+import treeReducers from "../reducers/arboles.reducer";
+import { authReducer } from "../reducers/auth.reducer";
 import { dashboardReducer } from "../reducers/dashboardReducer";
-import { authReducer } from "../reducers/authReducer";
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const reducers = combineReducers({
-  dashboard: dashboardReducer,
+  auth: authReducer,
   mapa: mapaReducer,
   catalogo: catalogoReducer,
   leaderboard: leaderboardReducer,
-  auth: authReducer
+  arbolesPlantados: arbolesPlantadosReducer,
+  arboles: treeReducers,
+  dashboard: dashboardReducer,
 });
 export const store = createStore(reducers
   ,
- composeEnhancers(applyMiddleware(thunk)));
+  composeEnhancers(applyMiddleware(thunk)));
