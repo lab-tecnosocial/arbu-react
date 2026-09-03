@@ -11,7 +11,7 @@ export const HomePage = () => {
   return (
     <div className={styles.homePage}>
       <Hero />
-      <Alliances />
+      {/* <Alliances /> */}
       <About />
       <Features />
       <Banner />
