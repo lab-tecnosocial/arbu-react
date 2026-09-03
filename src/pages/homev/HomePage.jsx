@@ -4,6 +4,7 @@ import { Hero } from './components/Hero/Hero';
 import { Features } from './components/Fetures/Features';
 import styles from './HomePage.module.css';
 import { Banner } from './components/Banner/Banner';
+import { Editions } from './components/Editions/Editions';
 import Footer from '../../components/footer/Footer';
 
 export const HomePage = () => {
@@ -14,6 +15,7 @@ export const HomePage = () => {
       <About />
       <Features />
       <Banner />
+      <Editions />
       <Footer />
     </div>
   )

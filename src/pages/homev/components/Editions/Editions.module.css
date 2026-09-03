@@ -1,0 +1,139 @@
+.editionsSection {
+  background-color: var(--geyser-50);
+  padding-inline: var(--inner-space);
+}
+
+.editions {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  padding: 96px 0;
+}
+
+.editionsHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    font-size: 36px;
+    text-align: center;
+  }
+
+  p {
+    max-width: 800px;
+    text-align: center;
+    color: var(--geyser-700);
+  }
+}
+
+.editionsCards {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.card {
+  background-color: var(--white);
+  border: 1px solid var(--geyser-200);
+  border-radius: var(--border16);
+  padding: 32px;
+  width: 100%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: .2s ease;
+}
+
+.card:hover {
+  border-color: var(--geyser-300);
+}
+
+.cardPro {
+  border: 2px solid var(--green2);
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h3 {
+    font-size: 32px;
+    color: var(--green2);
+  }
+
+  p {
+    color: var(--geyser-700);
+    font-size: var(--font-size-medium);
+  }
+}
+
+.badge {
+  align-self: flex-start;
+  background-color: var(--geyser-100);
+  color: var(--geyser-700);
+  border-radius: var(--border24);
+  padding: 4px 12px;
+  font-size: var(--font-size-small);
+  font-weight: 500;
+}
+
+.badgePro {
+  background-color: var(--light);
+  color: var(--green);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--geyser-800);
+    font-size: var(--font-size-medium);
+    line-height: 1.5;
+  }
+}
+
+.itemIcon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border12);
+  background-color: var(--light);
+  color: var(--green2);
+}
+
+.cardButton {
+  align-self: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .editionsCards {
+    flex-direction: column;
+  }
+
+  .editions {
+    padding: 64px 0;
+  }
+
+  .cardButton {
+    align-self: stretch;
+  }
+}
