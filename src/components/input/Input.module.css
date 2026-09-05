@@ -16,7 +16,7 @@
 .fileInput {
   width: 100%;
   padding: 8px;
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   border-radius: var(--br-small);
 }
 
@@ -62,9 +62,10 @@
   width: 100%;
   padding: 0 12px;
   height: 40px;
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   border-radius: var(--br-small);
   width: fit-content;
+  background-color: var(--color-surface);
 }
 
 .larger {
@@ -98,8 +99,8 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid var(--geyser-200);
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   max-height: 200px;
   overflow-y: auto;
@@ -112,7 +113,7 @@
   cursor: pointer;
   border-radius: 8px;
   font-weight: 400;
-  color: var(--geyser-900);
+  color: var(--color-text);
   font-size: 14px;
   transition: .2s ease;
   display: flex;
@@ -122,7 +123,7 @@
 
 
   &:hover {
-    background: var(--geyser-100);
+    background: var(--color-dropdown-hover);
   }
 }
 
@@ -145,7 +146,7 @@
   display: flex;
   align-items: center;
   justify-content: start;
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   height: fit-content;
   border-radius: 10px;
   overflow: hidden;
@@ -159,7 +160,7 @@
 .previewContainer {
   position: relative;
   display: inline-block;
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   height: fit-content;
   border-radius: 10px;
   overflow: hidden;

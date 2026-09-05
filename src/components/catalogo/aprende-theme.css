@@ -93,7 +93,7 @@
 }
 
 .catalogo-main.catalogo-main--night {
-  --aprende-bg: #0b1210;
+  --aprende-bg: var(--geyser-950);
   --aprende-bg-elevated: #121f1b;
   --aprende-bg-muted: #162822;
   --aprende-bg-soft: #1a3029;

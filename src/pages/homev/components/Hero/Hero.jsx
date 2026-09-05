@@ -56,7 +56,7 @@ export const Hero = () => {
           </div>
         </div>
         <div className={styles.picture}>
-          <img src="hero.png" alt="hero pgn" />
+          <img src="hero2.png" alt="hero2 pgn" />
         </div>
       </div>
     </section>
