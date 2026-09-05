@@ -6,6 +6,8 @@
   flex-direction: column;
   gap: 2rem;
   scroll-padding-top: 10rem;
+  padding-top: 2rem;
+  color: var(--color-text);
 }
 
 .apidocs__content {
@@ -29,7 +31,7 @@
 .accordion {
   overflow: hidden;
   width: 100%;
-  color: black;
+  color: var(--color-text);
 }
 
 .accordion__header {
@@ -38,6 +40,10 @@
   align-items: center;
   font-size: 1rem;
   padding: 0rem .5rem 1rem 0rem;
+}
+
+.accordion__header a {
+  color: var(--color-text);
 }
 
 .accordion__content-inner {
@@ -66,7 +72,7 @@
   flex-direction: column;
   padding-bottom: 1.5rem;
   padding-top: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .apidocs__panel-row:first-child {
@@ -131,6 +137,14 @@
 .link {
   width: fit-content;
   position: relative;
+}
+
+.link a {
+  color: var(--color-text-secondary);
+}
+
+.active-link a {
+  color: var(--green2);
 }
 
 .link::after {
@@ -207,7 +221,7 @@
   .apidocs__sidebar {
     width: 100%;
     min-height: fit-content;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .sticky {

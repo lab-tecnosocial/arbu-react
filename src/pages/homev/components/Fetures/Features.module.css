@@ -36,8 +36,8 @@
   width: 100%;
 
   .card {
-    background-color: var(--geyser-50);
-    border: 1px solid var(--geyser-200);
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
     border-radius: 16px;
     padding: 32px;
     aspect-ratio: 5/3;
@@ -47,7 +47,9 @@
     flex-direction: column;
     justify-content: space-between;
 
-    .icon {}
+    .icon img {
+      display: block;
+    }
 
     .content {
       h3 {
@@ -76,6 +78,7 @@
     .featuresHeader {
       h2 {
         font-size: 28px;
+        text-align: center;
       }
     }
   }
@@ -83,5 +86,17 @@
   .featuresCards {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+  }
+
+  .featuresCards .card {
+    aspect-ratio: auto;
+    min-height: 180px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .featuresHeader h2 {
+    font-size: 24px;
   }
 }

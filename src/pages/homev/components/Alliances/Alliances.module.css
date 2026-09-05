@@ -1,7 +1,7 @@
 .alliances {
-  background-color: var(--geyser-50);
-  border-bottom: 1px solid var(--geyser-200);
-  border-top: 1px solid var(--geyser-200);
+  background-color: var(--color-bg-subtle);
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
   padding: 3.5rem 0;
   padding-inline: var(--inner-space);
   overflow-x: auto;
@@ -19,19 +19,52 @@
   h3 {
     font-size: 24px;
     font-weight: 500;
-    color: var(--geyser-600);
+    color: var(--color-text-muted);
   }
 
   .logos {
     display: flex;
     gap: 4rem;
+    align-items: center;
+  }
+
+  .logos img {
+    max-height: 48px;
+    width: auto;
+    object-fit: contain;
+    transition: filter 0.2s ease, opacity 0.2s ease;
   }
 }
 
+:global([data-theme="dark"]) .logos img {
+  filter: brightness(0) invert(1);
+  opacity: 0.82;
+}
+
 @media (max-width: 768px) {
+  .alliances {
+    padding: 2.5rem 0;
+  }
+
   .logosWrapper {
-    .logos {
-      gap: 2rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+
+    h3 {
+      font-size: 20px;
     }
+
+    .logos {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .logosWrapper .logos img {
+    max-height: 36px;
   }
 }

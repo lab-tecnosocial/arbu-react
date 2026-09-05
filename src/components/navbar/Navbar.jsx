@@ -5,6 +5,8 @@ import styles from "./Navbar.module.css"
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authLogout } from "../../actions/auth.actions";
+import { ThemeToggle } from "../theme/ThemeToggle";
+import { useTheme } from "../../context/ThemeContext";
 
 export const Navbar = ({
   logo = "Logo.png",
@@ -13,9 +15,10 @@ export const Navbar = ({
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { uid } = useSelector((state) => state.auth)
-  console.log({ uid });
+  const { resolvedTheme } = useTheme();
   const dispatch = useDispatch();
   const [profileOpen, setProfileOpen] = useState(false);
+  const brandLogo = resolvedTheme === "dark" ? "logodark.png" : logo;
 
   const links = [
     {
@@ -65,7 +68,7 @@ export const Navbar = ({
     <nav className={styles.navbar}>
       <div className={styles.navbarWrapperDesktop}>
         <Link to={'/'} className={styles.logo}>
-          {logo ? <img src={logo} alt="Logo Arbu" /> : <span>MiApp</span>}
+          {brandLogo ? <img src={brandLogo} alt="Logo Arbu" /> : <span>MiApp</span>}
         </Link>
         <ul className={styles.navLinks}>
           {links.map((link) => (
@@ -77,7 +80,10 @@ export const Navbar = ({
             </li>
           ))}
         </ul>
-        {getProfileOrDownload(styles.ctoButton)}
+        <div className={styles.actions}>
+          <ThemeToggle iconProps={iconProps} />
+          {getProfileOrDownload(styles.ctoButton)}
+        </div>
       </div>
     </nav>
   );
@@ -86,8 +92,14 @@ export const Navbar = ({
     <nav className={styles.navbar}>
       <div className={styles.navbarWrapperMobile}>
         <Link to={'/'} className={styles.logo}>
-          {logo ? <img src={logo} alt="Logo Arbu" /> : <span>MiApp</span>}
+          {brandLogo ? <img src={brandLogo} alt="Logo Arbu" /> : <span>MiApp</span>}
         </Link>
+        <div className={styles.mobileActions}>
+          <ThemeToggle iconProps={iconProps} />
+          <button className={styles.hamburger} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X size={iconProps.size} strokeWidth={iconProps.strokeWidth} /> : <Menu size={iconProps.size} strokeWidth={iconProps.strokeWidth} />}
+          </button>
+        </div>
         <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ''}`}>
           {links.map((link) => (
             <li key={link.href}>
@@ -99,9 +111,6 @@ export const Navbar = ({
           ))}
           {getProfileOrDownload(styles.ctoButtonMobile)}
         </ul>
-        <button className={styles.hamburger} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X size={iconProps.size} strokeWidth={iconProps.strokeWidth} /> : <Menu size={iconProps.size} strokeWidth={iconProps.strokeWidth} />}
-        </button>
       </div>
     </nav>
   );

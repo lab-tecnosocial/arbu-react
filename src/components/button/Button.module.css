@@ -44,13 +44,37 @@
 }
 
 .terciary {
-  border: 1px solid var(--geyser-200);
-  background-color: white;
+  border: 1px solid var(--green2);
+  background-color: var(--color-surface-elevated);
   color: var(--green2);
 }
 
+.terciary a {
+  color: inherit;
+}
+
+.terciary:hover:not(:disabled) {
+  background-color: rgba(38, 133, 118, 0.1);
+}
+
 .terciary-disabled {
-  color: var(--geyser-200);
+  color: var(--color-border);
+}
+
+:global([data-theme="dark"]) .terciary {
+  border: 1px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+}
+
+:global([data-theme="dark"]) .terciary:hover:not(:disabled) {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: var(--geyser-950);
+}
+
+:global([data-theme="dark"]) .terciary:hover:not(:disabled) a {
+  color: inherit;
 }
 
 .danger {
@@ -72,8 +96,8 @@
 }
 
 .spinner {
-  border: 3px solid #f3f4f6;
-  border-top: 3px solid #111827;
+  border: 3px solid var(--color-spinner-track);
+  border-top: 3px solid var(--color-spinner-head);
   border-radius: 50%;
   width: 1rem;
   height: 1rem;
@@ -87,6 +111,15 @@
 
 .fullWidth {
   width: 100%;
+}
+
+@media (max-width: 480px) {
+  .button {
+    height: 48px;
+    font-size: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
 @keyframes spin {
