@@ -9,7 +9,7 @@ import Footer from '../footer/Footer'
 import SelectionGuide from './manual/SelectionGuide'
 import PlantacionGuide from './manual/PlantacionGuide'
 import { startLoadEspeciesCatalogo } from '../../actions/catalogoActions'
-import { APRENDE_NIGHT_MODE_CLASS, APRENDE_NIGHT_MODE_ENABLED, getAprendeLabLogo } from './aprendeTheme.config'
+import { APRENDE_NIGHT_MODE_CLASS, APRENDE_NIGHT_MODE_ENABLED } from './aprendeTheme.config'
 import './aprende-theme.css'
 
 const CatalogoComponent = () => {
@@ -67,7 +67,7 @@ const CatalogoComponent = () => {
       ) : null}
       {activeEspecie ? <DetailEspecie /> : <span></span>}
       {renderContent()}
-      <Footer labLogoSrc={getAprendeLabLogo(APRENDE_NIGHT_MODE_ENABLED)} />
+      <Footer />
     </main>
   )
 }

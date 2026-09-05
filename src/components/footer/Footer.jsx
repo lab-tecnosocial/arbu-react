@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 
 const year = new Date().getFullYear();
-const Footer = ({ labLogoSrc = 'tecnolab.png' }) => {
+const Footer = () => {
   return (
     <footer>
       <div className={styles.footer}>
@@ -46,7 +46,7 @@ const Footer = ({ labLogoSrc = 'tecnolab.png' }) => {
           </div>
           <div className={styles.tecnoLabInfo}>
              <a href="https://labtecnosocial.org" target="_blank" rel="noopener noreferrer">
-              <img src={labLogoSrc} alt="tecnolab icon info" />
+              <img src="tecnolab.png" alt="tecnolab icon info" />
             </a>
           </div>
         </div>
