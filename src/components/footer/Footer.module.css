@@ -36,6 +36,23 @@
   }
 }
 
+.tecnoLabInfo {
+  display: flex;
+  align-items: center;
+
+  a {
+    display: inline-flex;
+    line-height: 0;
+  }
+
+  img {
+    width: 205px;
+    height: 138px;
+    object-fit: contain;
+    display: block;
+  }
+}
+
 .rights {
   display: flex;
   justify-content: space-between;
