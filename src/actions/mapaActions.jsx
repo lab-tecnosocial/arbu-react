@@ -1,4 +1,5 @@
 import { loadArboles } from "../helpers/loadArboles"
+import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados"
 import { loadUsuarios } from "../helpers/loadUsuarios"
 import { types } from "../types/types"
 
@@ -171,6 +172,18 @@ export const setArboles = (arboles) => {
   return {
     type: types.mapaLoadArboles,
     payload: arboles
+  }
+}
+export const startLoadingArbolesMapeados = () => {
+  return async (dispatch) => {
+    const arboles = await loadArbolesMapeados();
+    dispatch(setArbolesMapeados(arboles)); 
+  }
+}
+export const setArbolesMapeados = (arboles) => {
+  return {
+    type: types.mapaLoadArbolesMapeados,
+    payload:arboles
   }
 }
 export const hideDetailArbol = () => {

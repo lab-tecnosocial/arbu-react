@@ -4,6 +4,7 @@ import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point, polygon } from '@turf/helpers';
 import { useEffect, useState, useMemo, useRef } from "react";
 import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl, useMap, useMapEvents } from "react-leaflet";
+import { BASEMAP_URL, BASEMAP_ATTRIBUTION } from "../../../../helpers/basemap";
 // import { useMapEvents } from 'react-leaflet/hooks'
 import { MapEvents } from "./Utils/MapEvents";
 import { useSelector, useDispatch } from "react-redux";
@@ -139,7 +140,7 @@ export const MapWrapper = () => {
 
         <TileLayer
           key={resolvedTheme}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          attribution={BASEMAP_ATTRIBUTION}
           url={tileUrl}
         />
 

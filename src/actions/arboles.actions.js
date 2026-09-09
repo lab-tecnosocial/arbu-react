@@ -1,5 +1,5 @@
 import { loadArboles } from "../helpers/loadArboles";
-import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados";
+import { loadArbolesMapeadosConDemo } from "../helpers/loadArbolesMapeados";
 import { INSCRIPCIONES_MAPEO_MOCK } from "../pages/mapav/utils/inscripcionesMapeoMock";
 import { types } from "../types/types";
 
@@ -97,7 +97,7 @@ export const fetchMappedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchMappedTreesRequest());
-      const treesData = await loadArbolesMapeados();
+      const treesData = await loadArbolesMapeadosConDemo();
       dispatch(fetchMappedTreesSuccess(treesData));
     } catch (error) {
       console.log(error);

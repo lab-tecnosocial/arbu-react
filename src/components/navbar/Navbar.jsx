@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button } from "../button/Button";
-import { BookMarked, FolderCode, Map, Medal, Menu, X, User } from "lucide-react"
+import { BookMarked, FolderCode, Map, Medal, Menu, X, User, ShieldCheck } from "lucide-react"
 import styles from "./Navbar.module.css"
 import { Link, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { authLogout } from "../../actions/auth.actions";
+import { useSelector } from "react-redux";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebase-config";
 import { ThemeToggle } from "../theme/ThemeToggle";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -14,9 +15,8 @@ export const Navbar = ({
 }) => {
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { uid } = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth)
   const { resolvedTheme } = useTheme();
-  const dispatch = useDispatch();
   const [profileOpen, setProfileOpen] = useState(false);
   const brandLogo = resolvedTheme === "dark" ? "logodark.png" : logo;
 
@@ -41,9 +41,14 @@ export const Navbar = ({
       href: "/api",
       icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
+    {
+      label: "Admin",
+      href: "/admin",
+      icon: <ShieldCheck size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
+    },
   ];
 
-  const getProfileOrDownload = (className = '') => uid ? (
+  const getProfileOrDownload = (className = '') => user ? (
     <div className={styles.profileContainer}>
       <button className={`${styles.profileButton} ${className}`} onClick={() => setProfileOpen(!profileOpen)}>
         <User size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
@@ -52,7 +57,7 @@ export const Navbar = ({
       {profileOpen && (
         <div className={styles.profileDropdown}>
           <Link to="/perfil" onClick={() => { setProfileOpen(false); setIsMenuOpen(false); }}>Ver perfil</Link>
-          <button onClick={() => { dispatch(authLogout()); setProfileOpen(false); setIsMenuOpen(false); }}>Cerrar sesión</button>
+          <button onClick={() => { signOut(auth); setProfileOpen(false); setIsMenuOpen(false); }}>Cerrar sesión</button>
         </div>
       )}
     </div>

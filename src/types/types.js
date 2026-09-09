@@ -51,4 +51,17 @@ export const types = {
   catalogoHideDetailEspecie: '[CATALOGO] Hide detail especie',
   leaderboardLoadScoresMes: '[LEADERBOARD] Load scores del Mes',
   leaderboardLoadScoresGlobal: '[LEADERBOARD] Load scores Global',
+
+  // Arbu Pro: dashboard de inscripciones y tabla editable
+  dashboardLoadInscripciones: '[DASHBOARD] Load inscripciones',
+  dashboardUpdateInscripcion: '[DASHBOARD] Update inscripcion',
+  dashboardDeleteInscripcion: '[DASHBOARD] Delete inscripcion',
+  tablaUpdateNombreMapeado: '[TABLA] Update nombre mapeado',
+  mapaLoadArbolesMapeados: '[MAPA] Load arboles mapeados',
+
+  // Usados por mapaActions pero no declarados hasta ahora
+  SET_ACTIVE_GEO_SCOUTS: '[MAPA] Set active geo scouts',
+  SET_ACTIVE_GEO_OTBS: '[MAPA] Set active geo otbs',
+  MAPA_SHOW_CONTROLS: '[MAPA] Show controls',
+  MAPA_CLICK_POSITION: '[MAPA] Set click position',
 }

@@ -2,6 +2,7 @@ import { act } from "react";
 import { types } from "../types/types";
 const initialState = {
   arboles: [],
+  arbolesMapeados: [],
   arbolesFiltrados: [],
   showArbolesPlantados: true,
   showArbolesMapeados: false,
@@ -181,6 +182,11 @@ export const mapaReducer = (state = initialState, action) => {
         ...state,
         busqueda: action.payload
       }
+    case types.mapaLoadArbolesMapeados:
+      return {
+        ...state,
+        arbolesMapeados:[...action.payload]
+      }
     case types.mapaHideDetailArbol:
       return {
         ...state,
@@ -212,6 +218,15 @@ export const mapaReducer = (state = initialState, action) => {
         ...state,
         filtroAplied: action.payload
       }
+    case types.tablaUpdateNombreMapeado:
+      return {
+        ...state,
+        arbolesMapeados: state.arbolesMapeados.map((mapeado) =>
+        mapeado.id === action.payload.id
+            ? { ...mapeado, nombreComun: action.payload.nombreComun, nombreCientifico: action.payload.nombreCientifico }
+            : mapeado
+        ),
+      };
     default:
       return state;
   }

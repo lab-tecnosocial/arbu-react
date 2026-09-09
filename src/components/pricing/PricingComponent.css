@@ -1,0 +1,11 @@
+.pricing-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card:hover {
+  cursor: default;
+}
+
+.pricing-card-pro {
+  box-shadow: 0 8px 24px rgba(38, 133, 118, 0.15);
+}

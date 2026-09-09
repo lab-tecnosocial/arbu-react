@@ -24,7 +24,7 @@ export const lugarPlantacion = [
 
 export const TreeMappingForm = ({ onSubmit }) => {
   const dispatch = useDispatch();
-  const { uid } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.auth)
   const [loading, setLoading] = useState(false);
   const [selectedLugarPlantacion, setSelectedLugarPlantacion] = useState("acera");
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -272,7 +272,7 @@ export const TreeMappingForm = ({ onSubmit }) => {
   );
 
   return (
-    <div className={`${styles.formContainer} ${uid ? '' : styles.fitHeight}`}>
+    <div className={`${styles.formContainer} ${user ? '' : styles.fitHeight}`}>
       <div className={styles.header}>
         <h2 className={styles.title}>
           Formulario de Mapeo
@@ -289,7 +289,7 @@ export const TreeMappingForm = ({ onSubmit }) => {
 
       <div className={styles.formBody}>
         {
-          !uid ?
+          !user ?
             <LoginForm />
             :
             <>
@@ -435,7 +435,7 @@ export const TreeMappingForm = ({ onSubmit }) => {
       </div>
 
       {
-        !uid || currentStep === 4 ?
+        !user || currentStep === 4 ?
           null
           :
           <div className={styles.stepActions}>

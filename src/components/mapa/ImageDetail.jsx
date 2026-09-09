@@ -1,6 +1,7 @@
 import React,{useState, useCallback} from 'react'
 import ImageViewer from "react-simple-image-viewer";
-const ImageDetail = ({src}) => {
+import './ImageDetail.css';
+const ImageDetail = ({src, imageStyles, srcToOpen}) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const openImageViewer = useCallback((index) => {
@@ -15,17 +16,17 @@ const ImageDetail = ({src}) => {
   };
   return (
     <>
-    <img className='image-monitoring' style={{top:'60px'}}
+    <img className="image-monitoring" style={imageStyles}
               src={src}
               onClick={() => openImageViewer(0)}
              
-              key={src}
+              key={srcToOpen}
               
               alt=""
             />
              {isViewerOpen && (
         <ImageViewer
-          src={[src]}
+          src={[srcToOpen]}
           currentIndex={currentImage}
           onClose={closeImageViewer}
           disableScroll={false}

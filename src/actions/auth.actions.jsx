@@ -1,8 +1,8 @@
 import { types } from '../types/types';
 
-export const authLogin = (uid) => ({
+export const authLogin = (user) => ({
   type: types.AUTH_LOGIN,
-  payload: uid,
+  payload: user,
 });
 
 export const authLogout = () => ({
