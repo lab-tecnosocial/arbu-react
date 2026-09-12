@@ -96,8 +96,8 @@
   min-height: 44px;
   background-color: color-mix(
     in srgb,
-    var(--geyser-200) 60%,
-    var(--geyser-300) 40%
+    var(--color-bg-muted) 60%,
+    var(--color-border) 40%
   );
   padding: clamp(8px, 2vw, 12px);
   border-radius: 6px;
@@ -113,7 +113,7 @@
 }
 
 .estadoImgButton:hover:not(:disabled) {
-  background-color: var(--geyser-100);
+  background-color: var(--color-bg-muted);
 }
 
 .estadoImgButton:disabled {
@@ -128,7 +128,7 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  background-color: var(--geyser-100);
+  background-color: var(--color-bg-muted);
   padding: clamp(8px, 2vw, 12px);
   border-radius: 6px;
   opacity: 0.45;

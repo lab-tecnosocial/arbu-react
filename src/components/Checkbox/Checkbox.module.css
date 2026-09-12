@@ -1,6 +1,6 @@
 .checkbox {
   font-weight: 400;
-  color: var(--geyser-800);
+  color: var(--color-text);
   display: flex;
   align-items: start;
   justify-content: start;
@@ -18,12 +18,12 @@
   min-height: 16px;
   max-width: 16px;
   max-height: 16px;
-  border: 1px solid var(--geyser-300);
+  border: 1px solid var(--color-border-strong);
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--white);
+  background-color: var(--color-surface);
 
   svg {
     color: var(--white);
@@ -32,7 +32,7 @@
 
 .checkedIcon {
   border: 1px solid var(--green2);
-  background-color: var(--geyser-50);
+  background-color: var(--color-bg-subtle);
 
   svg {
     color: var(--green2);

@@ -11,20 +11,21 @@
 }
 
 .header {
-  border-bottom: 1px solid var(--geyser-200);
+  border-bottom: 1px solid var(--color-border);
   padding: 16px 24px;
   padding-right: 16px;
   display: flex;
   justify-content: space-between;
-  background-color: var(--geyser-100);
+  background-color: var(--color-bg-muted);
 
   h2 {
     font-size: 16px;
     font-weight: 500;
+    color: var(--color-text);
   }
 
   svg {
-    color: var(--geyser-400);
+    color: var(--color-text-muted);
   }
 }
 
@@ -34,6 +35,7 @@
   height: 100%;
   position: relative;
   padding: 24px;
+  background-color: var(--color-surface);
 }
 
 .formInner {
@@ -41,8 +43,6 @@
   flex-direction: column;
   gap: 24px;
 }
-
-
 
 .submitActions {
   display: flex;
@@ -54,8 +54,10 @@
 .textInput {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
+  background-color: var(--color-surface);
+  color: var(--color-input-text);
 }
 
 .preview {
@@ -73,15 +75,18 @@
 }
 
 .lugarPlantacion {
-  background: lightblue;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
 }
 
 .stepActions {
-  border-top: 1px solid var(--geyser-200);
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   gap: 16px;
   padding: 24px;
+  background-color: var(--color-surface);
 }
 
 .successContainer {

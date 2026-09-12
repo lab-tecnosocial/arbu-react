@@ -2,27 +2,28 @@
   display: flex;
   flex-direction: row;
   height: calc(100vh - 100px);
+  height: calc(100dvh - 100px);
+  min-height: 0;
   padding-inline: 24px;
   padding-bottom: 24px;
   gap: var(--spacing-larger);
-  /* position: relative; */
+  background-color: var(--color-bg);
 }
 
 .card {
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   border-radius: 16px;
   overflow: hidden;
   transition: 0.3s ease;
-  background: white;
+  background: var(--color-surface);
   width: 0px;
-  /* opacity: 0; */
   display: none;
 }
 
 .inner {
   padding: 12px;
   min-width: 500px;
-  background-color: lightgrey;
+  background-color: var(--color-bg-muted);
 }
 
 .map {
@@ -30,14 +31,22 @@
   height: 100%;
   overflow: hidden;
   border-radius: var(--br-medium);
-  border: 1px solid #E1E9E9;
+  border: 1px solid var(--color-border);
 }
 
 @media (max-width: 768px) {
   .mainGrid {
-    display: flex;
     flex-direction: column;
-    min-height: 780px;
-    padding-bottom: 24px;
+    height: calc(100vh - 100px);
+    height: calc(100dvh - 100px);
+    padding-inline: 16px;
+    padding-bottom: 16px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainGrid {
+    padding-inline: 12px;
   }
 }

@@ -16,9 +16,14 @@ import { ClickableMarker } from "./Utils/ClickableMarker";
 import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
 import ClusterArbolesMapeados from "./Utils/ClusterArbolesMapeados";
 import { TreeMappingForm } from "../TreeMappingForm/TreeMappingForm";
+import { useTheme } from "../../../../context/ThemeContext";
 
 export const MapWrapper = () => {
   const dispatch = useDispatch();
+  const { resolvedTheme } = useTheme();
+  const tileUrl = resolvedTheme === "dark"
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
   const layersRef = useRef(new Map());
   const {
     geoScouts,
@@ -129,12 +134,14 @@ export const MapWrapper = () => {
         zoom={13}
         zoomControl={false}
         scrollWheelZoom={true}
+        style={{ height: "100%", width: "100%" }}
       >
         <ZoomControl position="bottomright" />
 
         <TileLayer
+          key={resolvedTheme}
           attribution={BASEMAP_ATTRIBUTION}
-          url={BASEMAP_URL}
+          url={tileUrl}
         />
 
         <MapEvents />
