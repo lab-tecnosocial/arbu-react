@@ -138,6 +138,15 @@ reactivara, produciría documentos que el mapa no puede pintar ni atribuir a
 nadie. Para revivirlo hay que escribir en `arbolesMapeados` con el esquema real
 (incluido el envoltorio `monitoreos`) y añadir su regla de Firestore.
 
+## Imágenes y caché
+
+Las fotos de los árboles viven en Firebase Storage y se piden sin CORS, así que
+el service worker solo ve respuestas opacas. Por eso se cachean con
+`NetworkFirst` (`vite.config.mjs`): con `StaleWhileRevalidate` una descarga
+fallida se guardaba como si fuera válida y la foto quedaba rota durante 30 días
+en ese dispositivo. Ante un reporte de "no se ven las fotos", el primer paso es
+limpiar los datos del sitio.
+
 ## Privacidad
 
 El mapa público consume de `inscripcionesMapeo` **solo** `{id, grupo, rama}`, vía

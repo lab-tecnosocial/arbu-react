@@ -31,6 +31,7 @@ import {
   selectCampaniasActivas,
   selectCampaniasPasadas,
 } from "../../../../selectors/campanias";
+import { ESTADO_CAMPANIA } from "../../../../helpers/campanias/campaniaModel";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { Input } from "../../../../components/input/Input";
 
@@ -133,28 +134,9 @@ export const Sidebar = () => {
     dispatch(resetPlantedTreesFilter());
   };
 
-  const renderCampanias = (titulo, campanias, conChip) => {
-    if (!campanias.length) return null;
-
-    return (
-      <div className={styles.rowSidebar}>
-        <h3>{titulo}</h3>
-        <div className={styles.options}>
-          {campanias.map((campania) => (
-            <OptionChip
-              key={campania.id}
-              fullWidth
-              onClick={() => handleToggleCampania(campania.id)}
-              checked={campaniaSeleccionadaId === campania.id}
-            >
-              {campania.nombre}
-              {conChip && <span className={styles.chipEnCurso}>En curso</span>}
-            </OptionChip>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  // Un solo bloque: las que están en curso primero, con su distintivo, y
+  // debajo las que ya terminaron.
+  const actividades = [...campaniasActivas, ...campaniasPasadas];
 
   const hayResultados = arbolesPlantados.visibleData.length > 0;
 
@@ -335,8 +317,26 @@ export const Sidebar = () => {
 
               </div>
             </div>
-            {renderCampanias("Campañas activas", campaniasActivas, true)}
-            {renderCampanias("Actividades pasadas", campaniasPasadas, false)}
+            {actividades.length > 0 && (
+              <div className={styles.rowSidebar}>
+                <h3>Actividades</h3>
+                <div className={`${styles.options} ${styles.optionsColumna}`}>
+                  {actividades.map((campania) => (
+                    <OptionChip
+                      key={campania.id}
+                      fullWidth
+                      onClick={() => handleToggleCampania(campania.id)}
+                      checked={campaniaSeleccionadaId === campania.id}
+                    >
+                      {campania.nombre}
+                      {campania.estado === ESTADO_CAMPANIA.ACTIVA && (
+                        <span className={styles.chipEnCurso}>En curso</span>
+                      )}
+                    </OptionChip>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
 

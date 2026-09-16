@@ -74,6 +74,13 @@
     gap: 8px;
   }
 
+  /* Las actividades son chips a ancho completo: en fila, la segunda se salía
+     del sidebar y no se veía. Una debajo de otra. */
+  .optionsColumna {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .accordionFilters {
     display: flex;
     flex-direction: column;
