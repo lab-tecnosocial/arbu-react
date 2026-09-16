@@ -29,8 +29,11 @@ import {
 import {
   selectCampaniaSeleccionadaId,
   selectCampaniasActivas,
+  selectCampaniasLoading,
   selectCampaniasPasadas,
 } from "../../../../selectors/campanias";
+import { selectArbolesCargando } from "../../../../selectors/arboles";
+import { Skeleton } from "../../../../components/Skeleton/Skeleton";
 import { ESTADO_CAMPANIA } from "../../../../helpers/campanias/campaniaModel";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { Input } from "../../../../components/input/Input";
@@ -51,6 +54,8 @@ export const Sidebar = () => {
   const campaniasActivas = useSelector(selectCampaniasActivas);
   const campaniasPasadas = useSelector(selectCampaniasPasadas);
   const campaniaSeleccionadaId = useSelector(selectCampaniaSeleccionadaId);
+  const campaniasCargando = useSelector(selectCampaniasLoading);
+  const arbolesCargando = useSelector(selectArbolesCargando);
 
   useEffect(() => {
     const handleResize = () => {
@@ -317,7 +322,16 @@ export const Sidebar = () => {
 
               </div>
             </div>
-            {actividades.length > 0 && (
+            {campaniasCargando && (
+              <div className={styles.rowSidebar} role="status" aria-label="Cargando actividades">
+                <h3>Actividades</h3>
+                <div className={`${styles.options} ${styles.optionsColumna}`}>
+                  <Skeleton height={48} radius="var(--br-medium)" />
+                  <Skeleton height={48} radius="var(--br-medium)" />
+                </div>
+              </div>
+            )}
+            {!campaniasCargando && actividades.length > 0 && (
               <div className={styles.rowSidebar}>
                 <h3>Actividades</h3>
                 <div className={`${styles.options} ${styles.optionsColumna}`}>
@@ -366,7 +380,12 @@ export const Sidebar = () => {
           disabled={!hayFiltros}
           onClick={handleDeshacer}
         >Deshacer</Button>
-        <Button variant="secondary" fullWidth onClick={handleAplicar}>Buscar</Button>
+        <Button
+          variant="secondary"
+          fullWidth
+          isLoading={arbolesCargando}
+          onClick={handleAplicar}
+        >Buscar</Button>
       </div>
     </div >
   )

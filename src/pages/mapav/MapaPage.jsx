@@ -5,24 +5,14 @@ import styles from "./MapaPage.module.css";
 import { MapWrapper } from "./components/MapWrapper/MapWrapper";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
-import { startLoadingUsuarios } from "../../actions/mapaActions";
-import {
-  fetchInscripcionesMapeo,
-  fetchMappedTrees,
-  fetchPlantedTrees,
-} from "../../actions/arboles.actions";
-import { fetchCampaniasPublicas } from "../../actions/campanias.actions";
+import { cargarDatosMapaPublico } from "../../actions/mapaPublico.actions";
 import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
 
 const MapaComponent = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchPlantedTrees());
-    dispatch(fetchMappedTrees());
-    dispatch(fetchInscripcionesMapeo());
-    dispatch(fetchCampaniasPublicas());
-    dispatch(startLoadingUsuarios());
+    dispatch(cargarDatosMapaPublico());
   }, [dispatch]);
 
   return (

@@ -47,10 +47,12 @@ src/
     navbar/ ranking/ catalogo/ api/ acerca/   # público
     admin/ dashboard/ tabla/ mapeo-scout/ proyectos/ autenticacion/  # Arbu Pro
     concurso/       # panel de campañas y concursos (Arbu Pro)
+    Spinner/ Skeleton/   # piezas compartidas de estado de carga
   helpers/campanias/  # modelo de campaña, registros, evaluación, ranking
   helpers/geo/        # municipios del área metropolitana (punto en polígono)
   assets/geo/         # GeoJSON de los 7 municipios (16 KB, versionado)
   actions/ reducers/ store/    # Redux (auth, mapa, catalogo, leaderboard, ...)
+  selectors/        # lecturas derivadas del estado (campañas, carga de árboles)
   helpers/          # acceso a Firestore y utilidades compartidas
   firebase/         # inicialización de Firebase (API modular v9)
 ```
@@ -68,7 +70,32 @@ src/
 - **Arbu Pro** se carga con `React.lazy` desde `App.jsx`: arrastra
   material-react-table, xlsx y swagger-ui, que no deben pesar en el bundle que
   descarga cualquier visitante.
+- **Estados de carga**: ninguna vista que dependa de Firestore se deja en
+  blanco. Hay dos piezas compartidas, `<Spinner>` y `<Skeleton>`
+  (`src/components/`), y el estado se lee de selectores derivados, nunca de
+  `data.length === 0` —que no distingue "todavía no llegó" de "no hay nada".
 
+## Estados de carga del mapa público
+
+El mapa base se pinta en menos de un segundo, pero los árboles tardan entre tres
+y cinco (dos `getDocs` de colección completa, más en red móvil). Antes ese hueco
+no se señalaba de ninguna forma: el mapa vacío parecía el resultado final.
+
+- `src/actions/mapaPublico.actions.js` — `cargarDatosMapaPublico()` agrupa las
+  cinco cargas del mapa público. Es `allSettled`: que falle la de usuarios (solo
+  aporta el nombre del mapeador) no puede impedir que se pinten los árboles. Al
+  estar en un solo sitio, el botón "Reintentar" repite exactamente la carga
+  inicial.
+- `src/selectors/arboles.js` — `selectArbolesCargando`, `selectArbolesError`,
+  `selectHayArbolesCargados`. Las dos capas (plantados y mapeados) son dos
+  peticiones, pero para quien mira son "los árboles".
+- `EstadoMapa` (junto a `MapWrapper`) — aviso flotante sobre el mapa. **Cargar
+  manda sobre fallar**: si una capa ya falló pero la otra sigue en vuelo se
+  muestra "Cargando", porque avisar del error antes de tiempo lo haría
+  parpadear. El aviso no bloquea: se puede arrastrar y hacer zoom mientras
+  tanto.
+- El sidebar pone un `<Skeleton>` en el bloque Actividades mientras llegan las
+  campañas, para que no aparezca de golpe y empuje el resto.
 
 ## Campañas de mapeo
 

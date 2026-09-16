@@ -12,6 +12,7 @@ import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 import { coincideEspecie } from "../../../../helpers/campanias/especies";
 import { exportarGeoJsonMunicipios } from "../../../../helpers/geo/municipios";
 import { useTheme } from "../../../../context/ThemeContext";
+import { EstadoMapa } from "./EstadoMapa";
 
 const estiloMunicipios = {
   fill: false,
@@ -41,6 +42,8 @@ export const MapWrapper = () => {
 
   return (
     <div className={styles.map}>
+      <EstadoMapa />
+
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
