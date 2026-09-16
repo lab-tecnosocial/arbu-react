@@ -12,7 +12,11 @@ export default defineConfig(() => {
       VitePWA({
         registerType: 'autoUpdate',
         devOptions: {
-          enabled: true, // Nos permite validar el funcionamiento en localhost
+          // Desactivado a propósito. Con el service worker activo en `pnpm start`
+          // el navegador sirve una mezcla de código nuevo y cacheado, y uno acaba
+          // depurando un bug que ya no existe. La PWA se valida donde es real:
+          // `pnpm build && pnpm serve`, o directamente en producción.
+          enabled: false,
         },
         workbox: {
           runtimeCaching: [

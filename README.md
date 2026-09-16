@@ -138,6 +138,28 @@ reactivara, produciría documentos que el mapa no puede pintar ni atribuir a
 nadie. Para revivirlo hay que escribir en `arbolesMapeados` con el esquema real
 (incluido el envoltorio `monitoreos`) y añadir su regla de Firestore.
 
+## Service worker, caché y "no veo mis cambios"
+
+La app es una PWA: en producción un service worker precachea el bundle y lo
+sirve desde caché. Eso es lo que hace que a veces parezca que un despliegue no
+llegó, y conviene entender el reparto:
+
+- **`pnpm start` (dev, :3000)** — sin service worker. Además, si quedaba uno
+  instalado de antes, `src/index.jsx` lo desregistra y borra sus cachés: basta
+  con cargar la página una vez. Es donde hay que trabajar día a día.
+- **`pnpm build && pnpm serve` (preview, :4173)** — service worker real. Sirve
+  para validar la PWA, y es correcto usarlo, pero recuerda que **cada puerto es
+  un origen distinto con su propio service worker y su propia caché**: `:3000`,
+  `:4173` y `arbu.app` pueden enseñarte tres versiones diferentes a la vez. Si
+  vas a mirar preview, cierra el dev, o al menos no los compares entre sí.
+- **Producción** — al desplegar, el service worker nuevo toma el control y
+  `src/index.jsx` recarga la pestaña una vez, así que la versión nueva entra
+  sola. Antes hacían falta dos recargas manuales.
+
+Si aun así ves algo viejo: DevTools → Application → Clear site data. Y para
+trabajar cómodo contra preview, marca "Update on reload" en Application →
+Service Workers.
+
 ## Imágenes y caché
 
 Las fotos de los árboles viven en Firebase Storage y se piden sin CORS, así que
