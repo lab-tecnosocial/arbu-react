@@ -48,6 +48,9 @@
 
 .fullWidth {
   width: 100%;
+  /* A ancho completo el contenido se centraba y cada chip quedaba alineado de
+     una forma distinta según lo largo que fuera su texto. */
+  justify-content: flex-start;
 }
 
 /* Mismo dibujo que el del componente Checkbox: un solo control visual en todo el sitio. */

@@ -329,8 +329,14 @@ export const Sidebar = () => {
                       checked={campaniaSeleccionadaId === campania.id}
                     >
                       {campania.nombre}
-                      {campania.estado === ESTADO_CAMPANIA.ACTIVA && (
-                        <span className={styles.chipEnCurso}>En curso</span>
+                      {campania.estado === ESTADO_CAMPANIA.ACTIVA ? (
+                        <span className={`${styles.chipEstado} ${styles.chipEnCurso}`}>
+                          En curso
+                        </span>
+                      ) : (
+                        <span className={`${styles.chipEstado} ${styles.chipConcluido}`}>
+                          Concluido
+                        </span>
                       )}
                     </OptionChip>
                   ))}
