@@ -23,14 +23,16 @@ export const types = {
   FETCH_INSCRIPCIONES_MAPEO_SUCCESS: '[ARBOL] fetch inscripciones mapeo success',
   FETCH_INSCRIPCIONES_MAPEO_FAILURE: '[ARBOL] fetch inscripciones mapeo failure',
 
-  LOAD_GEO_SCOUTS: '[MAPA] Load geo scouts',
-  LOAD_GEO_OTBS: '[MAPA] Load geo otbs',
-  SET_GEO_MODE: '[MAPA] Set geo mode',
+  FETCH_CAMPANIAS_REQUEST: '[CAMPANIA] fetch campanias request',
+  FETCH_CAMPANIAS_SUCCESS: '[CAMPANIA] fetch campanias success',
+  FETCH_CAMPANIAS_FAILURE: '[CAMPANIA] fetch campanias failure',
+  SELECT_CAMPANIA: '[CAMPANIA] select campania',
+  CLEAR_CAMPANIA: '[CAMPANIA] clear campania',
+
   SET_MODAL_STATE: '[MAPA] Set show modal',
   SET_PANEL_STATE: '[MAPA] Set show panel',
   SET_SELECTED_TREE: '[MAPA] Set selected tree',
   SET_SELECTED_COORDS: '[MAPA] Set selected coords',
-  MAPA_SHOW_TREE_MAPPING_FORM: '[MAPA] Show tree mapping form',
 
   mapaActiveArbol: '[MAPA] Set active arbol',
   mapaArbolSeleccionado: '[MAPA] Set arbol selected',
@@ -60,8 +62,6 @@ export const types = {
   mapaLoadArbolesMapeados: '[MAPA] Load arboles mapeados',
 
   // Usados por mapaActions pero no declarados hasta ahora
-  SET_ACTIVE_GEO_SCOUTS: '[MAPA] Set active geo scouts',
-  SET_ACTIVE_GEO_OTBS: '[MAPA] Set active geo otbs',
   MAPA_SHOW_CONTROLS: '[MAPA] Show controls',
   MAPA_CLICK_POSITION: '[MAPA] Set click position',
 }

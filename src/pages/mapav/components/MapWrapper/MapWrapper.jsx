@@ -1,129 +1,44 @@
-import styles from "./MapWrapper.module.css"
-import { loadGeoScouts, setModalState, setSelectedCoords, setShowTreeMappingForm } from "../../../../actions/mapaActions";
-import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import { point, polygon } from '@turf/helpers';
-import { useEffect, useState, useMemo, useRef } from "react";
-import { MapContainer, Marker, TileLayer, GeoJSON, ZoomControl, useMap, useMapEvents } from "react-leaflet";
+import { useCallback, useMemo } from "react";
+import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
+import { useSelector } from "react-redux";
+
+import styles from "./MapWrapper.module.css";
 import { BASEMAP_URL, BASEMAP_ATTRIBUTION } from "../../../../helpers/basemap";
-// import { useMapEvents } from 'react-leaflet/hooks'
 import { MapEvents } from "./Utils/MapEvents";
-import { useSelector, useDispatch } from "react-redux";
-import MarkerClusterGroup from "react-leaflet-cluster";
-import { seleccionarPoligono } from '../../utils/selectPolygon';
-import { X } from "lucide-react"
-import { customIcon } from "./Utils/CustomIcon";
-import { ClickableMarker } from "./Utils/ClickableMarker";
+import { customIcon, jacarandaIcon } from "./Utils/CustomIcon";
 import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
 import ClusterArbolesMapeados from "./Utils/ClusterArbolesMapeados";
-import { TreeMappingForm } from "../TreeMappingForm/TreeMappingForm";
+import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
+import { coincideEspecie } from "../../../../helpers/campanias/especies";
+import { exportarGeoJsonMunicipios } from "../../../../helpers/geo/municipios";
+
+const estiloMunicipios = {
+  fill: false,
+  color: "#268576",
+  weight: 2,
+  dashArray: "4 4",
+};
 
 export const MapWrapper = () => {
-  const dispatch = useDispatch();
-  const layersRef = useRef(new Map());
-  const {
-    geoScouts,
-    geoMode,
-    selectedCoords,
-    showTreeMappingForm
-  } = useSelector((state) => state.mapa);
+  const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles);
+  const campania = useSelector(selectCampaniaSeleccionada);
 
-  const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles)
+  // Los árboles que cumplen la especie de la campaña llevan su propio icono.
+  // La especie no oculta nada: solo cambia el pin.
+  const reglasEspecie = campania?.reglas?.especies ?? null;
+  const iconoDe = useCallback(
+    (arbol) => (reglasEspecie && coincideEspecie(arbol, reglasEspecie) ? jacarandaIcon : customIcon),
+    [reglasEspecie]
+  );
 
-  const onEachFeature = (feature, layer) => {
-    const map = useMap();
-    const idFeature = feature.id
-
-    layersRef.current.set(idFeature, layer);
-
-    // layer.on('mouseover', () => {
-    //   if (poligonoActivoRef.current !== layer) {
-    //     layer.setStyle({
-    //       fillColor: '#74CE82',
-    //       // color: '#ff3300',
-    //       fillOpacity: 0.7,
-    //       weight: 2
-    //     });
-    //   }
-    // });
-    //
-    // layer.on('mouseout', () => {
-    //   if (poligonoActivoRef.current !== layer) {
-    //     layer.setStyle(
-    //       {
-    //         fillColor: '#BED9FF',
-    //         "stroke": "#555555",
-    //         "stroke-width": 2,
-    //         "stroke-opacity": 1,
-    //         "fill": "#eefe0b",
-    //         "fill-opacity": 0.5
-    //       }
-    //     );
-    //   }
-    // });
-
-    layer.on('click', () => {
-      const poligono = polygon(feature.geometry.coordinates);
-
-      const markers_ArbolesPlantadosDentro = arbolesPlantados.data.filter((marker) => {
-        const punto = point([marker.longitud, marker.latitud]);
-        return booleanPointInPolygon(punto, poligono);
-      });
-
-      const markers_ArbolesMapeadosDentro = arbolesMapeados.data.filter((marker) => {
-        const punto = point([marker.longitud, marker.latitud]);
-        return booleanPointInPolygon(punto, poligono);
-      });
-
-      const contenido = markers_ArbolesPlantadosDentro.length
-        ? `<div class="marker-wrapper"> 
-            <div class="marker-dentro">Arboles Plantados dentro la zona:</div>${markers_ArbolesPlantadosDentro
-          .map((m, i) => {
-            return `<div class="marker-row">${i + 1}. ${m.nombrePropio} - ${m.nombreCientifico}</div>`
-          }).join('')}
-          </div>`
-        : 'No hay arboles plantados dentro de esta área.';
-
-      const contenido2 = markers_ArbolesMapeadosDentro.length
-        ? `<div class="marker-wrapper"> 
-            <div class="marker-dentro">Arboles Mapeados dentro la zona:</div>${markers_ArbolesMapeadosDentro
-          .map((m, i) => {
-            return `<div class="marker-row">${i + 1}. ${m.nombrePropio} - ${m.nombreCientifico}</div>`
-          }).join('')}
-          </div>`
-        : 'No hay arboles Mapeados dentro de esta área.';
-
-      layer.bindPopup(`
-        <div class="popup-card">
-          <div class="popup-title">
-            <span>Grupo Scout:</span><span>${feature.properties['GRUPO SCOUT']}</span>
-          </div> 
-          ${contenido}
-          ${contenido2}
-        </div>
-      `).openPopup();
-
-      const bounds = layer.getBounds();
-
-    });
-  };
-
-  useEffect(() => {
-    if (!geoScouts) dispatch(loadGeoScouts());
-  }, [geoScouts]);
+  // El contorno de los municipios solo se pinta si la campaña los restringe.
+  const municipios = useMemo(
+    () => (campania?.reglas?.municipios?.length ? exportarGeoJsonMunicipios() : null),
+    [campania]
+  );
 
   return (
     <div className={styles.map}>
-      
-      {/*
-        selectedCoords && (
-          <div className={styles.mapControls}>
-            <button onClick={() => dispatch(setModalState("OPEN"))} >Mapear Arbol</button>
-            <button onClick={() => dispatch(setSelectedCoords(null))}><X /></button>
-          </div>
-        )
-      */}
-      
-
       <MapContainer
         center={[-17.3917, -66.1448]}
         zoom={13}
@@ -132,15 +47,13 @@ export const MapWrapper = () => {
       >
         <ZoomControl position="bottomright" />
 
-        <TileLayer
-          attribution={BASEMAP_ATTRIBUTION}
-          url={BASEMAP_URL}
-        />
+        <TileLayer attribution={BASEMAP_ATTRIBUTION} url={BASEMAP_URL} />
 
         <MapEvents />
-        {/* <ClickableMarker position={selectedCoords} icon={customIcon} /> */}
 
-        {geoMode === "scouts" && <GeoJSON data={geoScouts} onEachFeature={onEachFeature} />}
+        {municipios && (
+          <GeoJSON key={campania.id} data={municipios} style={estiloMunicipios} interactive={false} />
+        )}
 
         <ClusterArbolesPlantados
           arbolesPlantados={arbolesPlantados}
@@ -149,8 +62,9 @@ export const MapWrapper = () => {
         <ClusterArbolesMapeados
           arbolesMapeados={arbolesMapeados}
           customIcon={customIcon}
+          iconoDe={iconoDe}
         />
       </MapContainer>
     </div>
-  )
-}
+  );
+};

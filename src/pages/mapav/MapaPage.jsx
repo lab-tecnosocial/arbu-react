@@ -1,32 +1,39 @@
-import styles from "./MapaPage.module.css";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import { MapWrapper } from './components/MapWrapper/MapWrapper';
+import styles from "./MapaPage.module.css";
+import { MapWrapper } from "./components/MapWrapper/MapWrapper";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { loadGeoScouts, startLoadingUsuarios } from "../../actions/mapaActions";
-import { fetchInscripcionesMapeo, fetchMappedTrees, fetchPlantedTrees } from "../../actions/arboles.actions";
-import Modal from "./components/Modal/Modal";
+import { startLoadingUsuarios } from "../../actions/mapaActions";
+import {
+  fetchInscripcionesMapeo,
+  fetchMappedTrees,
+  fetchPlantedTrees,
+} from "../../actions/arboles.actions";
+import { fetchCampaniasPublicas } from "../../actions/campanias.actions";
+import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
 
 const MapaComponent = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // NOTE: fetch data, load archivos
-    dispatch(fetchPlantedTrees())
-    dispatch(fetchMappedTrees())
-    dispatch(fetchInscripcionesMapeo())
-    dispatch(loadGeoScouts())
+    dispatch(fetchPlantedTrees());
+    dispatch(fetchMappedTrees());
+    dispatch(fetchInscripcionesMapeo());
+    dispatch(fetchCampaniasPublicas());
     dispatch(startLoadingUsuarios());
-  }, [dispatch])
+  }, [dispatch]);
 
   return (
-    <div className={styles.mainGrid} >
+    <div className={styles.mainGrid}>
       <Sidebar />
-      <CardTree />
-      <MapWrapper />
-      <Modal />
+      <ErrorBoundary>
+        <CardTree />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<div style={{ padding: "1rem" }}>No se pudo cargar el mapa.</div>}>
+        <MapWrapper />
+      </ErrorBoundary>
     </div>
   );
 };

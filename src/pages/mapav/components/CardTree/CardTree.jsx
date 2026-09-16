@@ -13,12 +13,14 @@ import {
   MAPPED_PARTS_UI,
 } from "./treePhotos";
 import { getScoutInfoByMapeadoPor } from "../../utils/scoutEscudos";
+import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 
 export const CardTree = () => {
   const dispatch = useDispatch()
   const contentRef = useRef(null)
   const { usuarios, panelState, selectedTree, index } = useSelector((state) => state.mapa)
   const { arbolesPlantados, arbolesMapeados, inscripcionesMapeo } = useSelector((state) => state.arboles)
+  const campaniaSeleccionada = useSelector(selectCampaniaSeleccionada)
   const [monitoreos, setMonitoreos] = useState([])
   const [riegos, setRiegos] = useState([])
   const [isLargeScreen, setIsLargeScreen] = useState(
@@ -106,7 +108,9 @@ export const CardTree = () => {
   }, [panelState, selectedTree, isLargeScreen])
 
   const isMapped = selectedTree && Object.hasOwn(selectedTree, "mapeadoPor");
-  const showScoutInfo = arbolesMapeados.activityFilter === "scouts2025";
+  // El escudo scout se muestra cuando hay una campaña seleccionada que tiene
+  // mapeadores inscritos (las campañas abiertas, como el concurso, no los tienen).
+  const showScoutInfo = Boolean(campaniaSeleccionada?.idMapeadores?.length);
   const scoutInfo = useMemo(() => {
     if (!showScoutInfo || !isMapped || !selectedTree?.mapeadoPor) return null;
     return getScoutInfoByMapeadoPor(
@@ -148,24 +152,24 @@ export const CardTree = () => {
           <span>Detalles de Árbol</span>
           <div className={styles.topBarOptions}>
             {/* <span className={styles.topBarIndicator}>
-              {index + 1} de {arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length}
+              {index + 1} de {arbolesPlantados.visibleData.length}
             </span>
             <div className={styles.buttons}>
               <button
                 onClick={() => {
                   if (index > 0) {
                     const newIndex = index - 1;
-                    const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
+                    const newTree = arbolesPlantados.visibleData[newIndex];
                     dispatch(setSelectedTree(newIndex, newTree));
                   }
                 }}
               ><ChevronLeft size={20} strokeWidth={1.75} /></button>
               <button
                 onClick={() => {
-                  const maxIndex = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length;
+                  const maxIndex = arbolesPlantados.visibleData.length;
                   if (index < maxIndex - 1) {
                     const newIndex = index + 1;
-                    const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
+                    const newTree = arbolesPlantados.visibleData[newIndex];
                     dispatch(setSelectedTree(newIndex, newTree));
                   }
                 }}

@@ -1,9 +1,7 @@
 import { loadArboles } from "../helpers/loadArboles";
-import { loadArbolesMapeadosConDemo } from "../helpers/loadArbolesMapeados";
-import { INSCRIPCIONES_MAPEO_MOCK } from "../pages/mapav/utils/inscripcionesMapeoMock";
+import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados";
+import { loadInscripcionesMapeoPublic } from "../helpers/loadInscripciones";
 import { types } from "../types/types";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 // Action creators for mapped trees (árboles mapeados)
 export const fetchMappedTreesRequest = () => ({
@@ -54,15 +52,6 @@ export const resetPlantedTreesFilter = () => ({
   type: types.RESET_PLANTADOS_FILTRADOS,
 });
 
-export const setMappedTreesActivityFilter = (activity) => ({
-  type: types.FILTRAR_ARBOLES_MAPEADOS,
-  payload: activity,
-});
-
-export const resetMappedTreesActivityFilter = () => ({
-  type: types.RESET_MAPEADOS_FILTRADOS,
-});
-
 export const fetchInscripcionesMapeoRequest = () => ({
   type: types.FETCH_INSCRIPCIONES_MAPEO_REQUEST,
 });
@@ -97,10 +86,10 @@ export const fetchMappedTrees = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchMappedTreesRequest());
-      const treesData = await loadArbolesMapeadosConDemo();
+      const treesData = await loadArbolesMapeados();
       dispatch(fetchMappedTreesSuccess(treesData));
     } catch (error) {
-      console.log(error);
+      console.error("[arboles mapeados] no se pudieron cargar:", error);
 
       dispatch(fetchMappedTreesFailure(error.message));
     }
@@ -114,7 +103,7 @@ export const fetchPlantedTrees = () => {
       const treesData = await loadArboles();
       dispatch(fetchPlantedTreesSuccess(treesData));
     } catch (error) {
-      console.log(error)
+      console.error("[arboles plantados] no se pudieron cargar:", error);
       dispatch(fetchPlantedTreesFailure(error.message));
     }
   };
@@ -134,9 +123,10 @@ export const fetchInscripcionesMapeo = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchInscripcionesMapeoRequest());
-      dispatch(fetchInscripcionesMapeoSuccess(INSCRIPCIONES_MAPEO_MOCK));
+      // Proyección sin PII: solo {id, grupo, rama}, lo justo para el escudo scout.
+      dispatch(fetchInscripcionesMapeoSuccess(await loadInscripcionesMapeoPublic()));
     } catch (error) {
-      console.log(error);
+      console.error("[inscripciones] no se pudieron cargar:", error);
       dispatch(fetchInscripcionesMapeoFailure(error.message));
     }
   };

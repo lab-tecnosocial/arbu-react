@@ -3,7 +3,6 @@ import thunk from "redux-thunk";
 import { catalogoReducer } from "../reducers/catalogoReducer";
 import { leaderboardReducer } from "../reducers/leaderboardReducer";
 import { mapaReducer } from "../reducers/mapaReducer";
-import { arbolesPlantadosReducer } from "../reducers/arbolesPlantados.reducer";
 import treeReducers from "../reducers/arboles.reducer";
 import { authReducer } from "../reducers/auth.reducer";
 import { dashboardReducer } from "../reducers/dashboardReducer";
@@ -14,7 +13,6 @@ const reducers = combineReducers({
   mapa: mapaReducer,
   catalogo: catalogoReducer,
   leaderboard: leaderboardReducer,
-  arbolesPlantados: arbolesPlantadosReducer,
   arboles: treeReducers,
   dashboard: dashboardReducer,
 });
