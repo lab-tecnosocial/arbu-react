@@ -13,6 +13,11 @@ const CARTO_API_KEY = "cb1_2i09_1_c1733caff4f6b0fa830d7eeb";
 
 export const BASEMAP_URL = `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`;
 
+export const BASEMAP_URL_DARK = `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`;
+
+/** El basemap que corresponde al tema activo. La key va en ambos. */
+export const basemapPorTema = (tema) => (tema === "dark" ? BASEMAP_URL_DARK : BASEMAP_URL);
+
 // El tier gratuito obliga a mantener visible la atribución de CARTO y OSM.
 export const BASEMAP_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';

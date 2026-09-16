@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import { useSelector } from "react-redux";
 
 import styles from "./MapWrapper.module.css";
-import { BASEMAP_URL, BASEMAP_ATTRIBUTION } from "../../../../helpers/basemap";
+import { BASEMAP_ATTRIBUTION, basemapPorTema } from "../../../../helpers/basemap";
 import { MapEvents } from "./Utils/MapEvents";
 import { customIcon, jacarandaIcon } from "./Utils/CustomIcon";
 import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
@@ -11,6 +11,7 @@ import ClusterArbolesMapeados from "./Utils/ClusterArbolesMapeados";
 import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 import { coincideEspecie } from "../../../../helpers/campanias/especies";
 import { exportarGeoJsonMunicipios } from "../../../../helpers/geo/municipios";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const estiloMunicipios = {
   fill: false,
@@ -22,6 +23,7 @@ const estiloMunicipios = {
 export const MapWrapper = () => {
   const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles);
   const campania = useSelector(selectCampaniaSeleccionada);
+  const { resolvedTheme } = useTheme();
 
   // Los árboles que cumplen la especie de la campaña llevan su propio icono.
   // La especie no oculta nada: solo cambia el pin.
@@ -44,10 +46,15 @@ export const MapWrapper = () => {
         zoom={13}
         zoomControl={false}
         scrollWheelZoom={true}
+        style={{ height: "100%", width: "100%" }}
       >
         <ZoomControl position="bottomright" />
 
-        <TileLayer attribution={BASEMAP_ATTRIBUTION} url={BASEMAP_URL} />
+        <TileLayer
+          key={resolvedTheme}
+          attribution={BASEMAP_ATTRIBUTION}
+          url={basemapPorTema(resolvedTheme)}
+        />
 
         <MapEvents />
 

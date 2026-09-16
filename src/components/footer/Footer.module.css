@@ -10,6 +10,18 @@
   gap: 32px;
 }
 
+.logo img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+.tecnoLabInfo img {
+  max-height: 150px;
+  width: auto;
+  object-fit: contain;
+}
+
 .main {
   display: flex;
   justify-content: space-between;
@@ -39,7 +51,7 @@
 .rights {
   display: flex;
   justify-content: space-between;
-  color: var(--geyser-600);
+  color: var(--color-text-muted);
 
   .rightsLinks {
     display: flex;
@@ -77,6 +89,23 @@
 
     .rightsLinks {
       gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .logo img {
+    height: 40px;
+  }
+
+  .tecnoLabInfo img {
+    max-height: 110px;
   }
 }
