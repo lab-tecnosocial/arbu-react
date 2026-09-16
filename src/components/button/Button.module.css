@@ -95,16 +95,6 @@
   position: relative;
 }
 
-.spinner {
-  border: 3px solid var(--color-spinner-track);
-  border-top: 3px solid var(--color-spinner-head);
-  border-radius: 50%;
-  width: 1rem;
-  height: 1rem;
-  animation: spin 0.8s linear infinite;
-  display: inline-block;
-}
-
 .spaceIcon {
   padding-left: 14px;
 }
@@ -119,11 +109,5 @@
     font-size: 14px;
     padding-left: 16px;
     padding-right: 16px;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }
