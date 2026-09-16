@@ -9,11 +9,27 @@ import {
   Box,
   Alert,
   CircularProgress,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+  Typography,
+  Divider,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SelectorMapeadores from "./SelectorMapeadores";
 import { useProyectos } from "../../context/ProyectosContext";
+import {
+  PARTICIPACION,
+  REGLAS_CONCURSO_PRIMAVERA,
+  TIPO_CAMPANIA,
+  slugify,
+} from "../../helpers/campanias/campaniaModel";
+import { CODIGOS_METROPOLITANOS_CBBA } from "../../helpers/geo/municipios";
+import { toInputDate } from "../../helpers/fechaArbol";
 
 const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
   const { crear, actualizar } = useProyectos();
@@ -21,6 +37,13 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
     nombreProyecto: "",
     fechaInicio: "",
     fechaFin: "",
+    tipo: TIPO_CAMPANIA.PROYECTO,
+    descripcion: "",
+    publica: false,
+    destacada: false,
+    participacion: PARTICIPACION.MAPEADORES,
+    soloJacaranda: false,
+    restringirMunicipios: false,
   });
   const [mapeadoresSeleccionados, setMapeadoresSeleccionados] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,22 +55,17 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
   // Cargar datos del proyecto si es edición
   useEffect(() => {
     if (proyecto) {
-      // Convertir timestamps de Firebase a formato de fecha
-      const formatDate = (timestamp) => {
-        if (!timestamp) return "";
-        let date;
-        if (timestamp.seconds) {
-          date = new Date(timestamp.seconds * 1000);
-        } else {
-          date = new Date(timestamp);
-        }
-        return date.toISOString().split("T")[0];
-      };
-
       setFormData({
-        nombreProyecto: proyecto.nombreProyecto || "",
-        fechaInicio: formatDate(proyecto.fechaInicio),
-        fechaFin: formatDate(proyecto.fechaFin),
+        nombreProyecto: proyecto.nombreProyecto || proyecto.nombre || "",
+        fechaInicio: toInputDate(proyecto.fechaInicio),
+        fechaFin: toInputDate(proyecto.fechaFin),
+        tipo: proyecto.tipo || TIPO_CAMPANIA.PROYECTO,
+        descripcion: proyecto.descripcion || "",
+        publica: proyecto.publica === true,
+        destacada: proyecto.destacada === true,
+        participacion: proyecto.participacion || PARTICIPACION.MAPEADORES,
+        soloJacaranda: Boolean(proyecto.reglas?.especies),
+        restringirMunicipios: Boolean(proyecto.reglas?.municipios?.length),
       });
 
       // Cargar mapeadores (convertir IDs a objetos con datos mínimos)
@@ -66,6 +84,13 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
         nombreProyecto: "",
         fechaInicio: "",
         fechaFin: "",
+        tipo: TIPO_CAMPANIA.PROYECTO,
+        descripcion: "",
+        publica: false,
+        destacada: false,
+        participacion: PARTICIPACION.MAPEADORES,
+        soloJacaranda: false,
+        restringirMunicipios: false,
       });
       setMapeadoresSeleccionados([]);
     }
@@ -109,12 +134,34 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
       return;
     }
 
-    // Preparar datos
+    // Preparar datos. schemaVersion 2 activa la semántica corregida de fechas
+    // (cuenta cualquier monitoreo en ventana); los documentos sin él conservan
+    // la de antes, para no mover los números de los proyectos ya existentes.
     const datosProyecto = {
       nombreProyecto: formData.nombreProyecto.trim(),
       fechaInicio: formData.fechaInicio,
       fechaFin: formData.fechaFin,
-      idMapeadores: mapeadoresSeleccionados.map((m) => m.id),
+      idMapeadores:
+        formData.participacion === PARTICIPACION.MAPEADORES
+          ? mapeadoresSeleccionados.map((m) => m.id)
+          : [],
+      schemaVersion: 2,
+      slug: slugify(formData.nombreProyecto),
+      tipo: formData.tipo,
+      descripcion: formData.descripcion.trim(),
+      publica: formData.publica,
+      destacada: formData.destacada,
+      participacion: formData.participacion,
+      reglas: {
+        criterioFecha: REGLAS_CONCURSO_PRIMAVERA.criterioFecha,
+        especies: formData.soloJacaranda ? REGLAS_CONCURSO_PRIMAVERA.especies : null,
+        municipios: formData.restringirMunicipios ? CODIGOS_METROPOLITANOS_CBBA : null,
+        fotos: formData.soloJacaranda ? REGLAS_CONCURSO_PRIMAVERA.fotos : null,
+        requiereUbicacion: true,
+        revisionHumana: formData.tipo === TIPO_CAMPANIA.CONCURSO,
+        criterioDesempate1: REGLAS_CONCURSO_PRIMAVERA.criterioDesempate1,
+      },
+      iconoMarcador: formData.soloJacaranda ? "/jacaranda.png" : null,
     };
 
     try {
@@ -216,10 +263,94 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
             />
           </Box>
 
-          <SelectorMapeadores
-            mapeadoresSeleccionados={mapeadoresSeleccionados}
-            onMapeadoresChange={setMapeadoresSeleccionados}
+          <TextField
+            fullWidth
+            label="Descripción"
+            name="descripcion"
+            value={formData.descripcion}
+            onChange={handleChange}
+            multiline
+            rows={2}
+            sx={{ mb: 2 }}
+            InputLabelProps={{ sx: { fontFamily: "Poppins" } }}
           />
+
+          <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel sx={{ fontFamily: "Poppins" }}>Tipo</InputLabel>
+              <Select
+                label="Tipo"
+                name="tipo"
+                value={formData.tipo}
+                onChange={handleChange}
+                sx={{ fontFamily: "Poppins" }}
+              >
+                <MenuItem value={TIPO_CAMPANIA.PROYECTO} sx={{ fontFamily: "Poppins" }}>Proyecto</MenuItem>
+                <MenuItem value={TIPO_CAMPANIA.CAMPANIA} sx={{ fontFamily: "Poppins" }}>Campaña</MenuItem>
+                <MenuItem value={TIPO_CAMPANIA.CONCURSO} sx={{ fontFamily: "Poppins" }}>Concurso</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel sx={{ fontFamily: "Poppins" }}>Participación</InputLabel>
+              <Select
+                label="Participación"
+                name="participacion"
+                value={formData.participacion}
+                onChange={handleChange}
+                sx={{ fontFamily: "Poppins" }}
+              >
+                <MenuItem value={PARTICIPACION.MAPEADORES} sx={{ fontFamily: "Poppins" }}>
+                  Solo mapeadores inscritos
+                </MenuItem>
+                <MenuItem value={PARTICIPACION.ABIERTO} sx={{ fontFamily: "Poppins" }}>
+                  Abierta a cualquiera con la app
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 1 }}>
+            <FormControlLabel
+              control={<Switch checked={formData.publica} onChange={(e) => setFormData({ ...formData, publica: e.target.checked })} />}
+              label="Visible en el mapa público"
+              sx={{ ".MuiFormControlLabel-label": { fontFamily: "Poppins" } }}
+            />
+            <FormControlLabel
+              control={<Switch checked={formData.destacada} onChange={(e) => setFormData({ ...formData, destacada: e.target.checked })} />}
+              label="Destacada"
+              sx={{ ".MuiFormControlLabel-label": { fontFamily: "Poppins" } }}
+            />
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle2" sx={{ fontFamily: "Poppins", fontWeight: "bold", mb: 1 }}>
+            Reglas de validez
+          </Typography>
+
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 2 }}>
+            <FormControlLabel
+              control={<Switch checked={formData.soloJacaranda} onChange={(e) => setFormData({ ...formData, soloJacaranda: e.target.checked })} />}
+              label="Jacarandás en flor (icono propio en el mapa)"
+              sx={{ ".MuiFormControlLabel-label": { fontFamily: "Poppins" } }}
+            />
+            <FormControlLabel
+              control={<Switch checked={formData.restringirMunicipios} onChange={(e) => setFormData({ ...formData, restringirMunicipios: e.target.checked })} />}
+              label="Solo los 7 municipios del área metropolitana"
+              sx={{ ".MuiFormControlLabel-label": { fontFamily: "Poppins" } }}
+            />
+          </Box>
+          <Typography variant="caption" sx={{ fontFamily: "Poppins", color: "#6b7a7a", display: "block", mb: 2 }}>
+            La especie no oculta árboles del mapa ni descarta registros por sí sola: marca el icono
+            y cuenta para la validez, y lo dudoso pasa por la cola de revisión.
+          </Typography>
+
+          {formData.participacion === PARTICIPACION.MAPEADORES && (
+            <SelectorMapeadores
+              mapeadoresSeleccionados={mapeadoresSeleccionados}
+              onMapeadoresChange={setMapeadoresSeleccionados}
+            />
+          )}
         </Box>
       </DialogContent>
 
