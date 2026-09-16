@@ -95,8 +95,16 @@
   transition: .2s ease;
 }
 
-.disabled {
+/* Se llamaba .disabled pero nunca deshabilitó nada: solo pinta el texto de
+   rojo. Y se aplicaba justo cuando había filtro que borrar, o sea al revés.
+   El nombre ahora dice lo que hace: el botón está ACTIVO. */
+.clearActive {
   color: var(--persian-red-500);
+}
+
+.clearOptions:disabled {
+  opacity: .45;
+  cursor: default;
 }
 
 .headerActions {
@@ -134,4 +142,14 @@
   .toggleBtn {
     display: flex;
   }
+}
+
+.chipEnCurso {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white);
+  background-color: var(--green2);
 }

@@ -6,9 +6,16 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import MapIcon from '@mui/icons-material/Map';
 import ApiIcon from '@mui/icons-material/Api';
 import FolderIcon from '@mui/icons-material/Folder';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 const AdminDashboard = () => {
   const adminTools = [
+    {
+      title: 'Campañas y concursos',
+      description: 'Seguimiento, revisión de registros y tabla de posiciones.',
+      icon: <EmojiEventsIcon sx={{ fontSize: 60, color: '#268576' }} />,
+      path: '/campanas'
+    },
     {
       title: 'Gestión de Proyectos',
       description: 'Gestión de proyectos, mapeadores y árboles.',
@@ -23,7 +30,7 @@ const AdminDashboard = () => {
     },
     {
       title: 'Mapeo Scout',
-      description: 'Gestión de campañas de mapeo, metas y mapeadores.',
+      description: 'Participantes, grupos y árboles del mapeo scout.',
       icon: <MapIcon sx={{ fontSize: 60, color: '#268576' }} />,
       path: '/mapeo-scout'
     },

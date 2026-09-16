@@ -1,5 +1,6 @@
 import { collection, doc as docRef, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
+import { getFechaArbol, toDate } from "./fechaArbol";
 import { checkIsSuperAdmin } from "./checkAuthorization";
 
 /**
@@ -112,26 +113,9 @@ export const loadArbolesProyecto = async (proyecto) => {
       });
     });
 
-    // Convertir timestamp de Firebase a Date
-    const convertTimestamp = (timestamp) => {
-      if (!timestamp) return null;
-      if (timestamp.seconds) {
-        return new Date(timestamp.seconds * 1000);
-      }
-      return new Date(timestamp);
-    };
-
-    // Obtener timestamp del primer monitoreo
-    const getArbolTimestamp = (arbol) => {
-      if (!arbol.monitoreos || typeof arbol.monitoreos !== 'object') return null;
-      const monitoreoKeys = Object.keys(arbol.monitoreos);
-      if (monitoreoKeys.length === 0) return null;
-      return arbol.monitoreos[monitoreoKeys[0]].timestamp;
-    };
-
     // Filtrar árboles por mapeadores y fechas del proyecto
-    const fechaInicio = convertTimestamp(proyecto.fechaInicio);
-    const fechaFin = convertTimestamp(proyecto.fechaFin);
+    const fechaInicio = toDate(proyecto.fechaInicio);
+    const fechaFin = toDate(proyecto.fechaFin);
 
     const arbolesFiltrados = arbolesMapeados.filter((arbol) => {
       // Filtrar por mapeador
@@ -139,9 +123,9 @@ export const loadArbolesProyecto = async (proyecto) => {
         return false;
       }
 
-      // Filtrar por fecha si está disponible
-      const timestamp = getArbolTimestamp(arbol);
-      const fechaArbol = convertTimestamp(timestamp);
+      // Filtrar por fecha si está disponible. getFechaArbol ordena por el
+      // timestamp real, no por el orden arbitrario de Object.keys.
+      const fechaArbol = getFechaArbol(arbol);
 
       if (fechaArbol) {
         if (fechaInicio && fechaArbol < fechaInicio) return false;

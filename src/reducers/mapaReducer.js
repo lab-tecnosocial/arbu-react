@@ -1,4 +1,3 @@
-import { act } from "react";
 import { types } from "../types/types";
 const initialState = {
   arboles: [],
@@ -22,27 +21,15 @@ const initialState = {
 
   selectedTree: {},
 
-  geoScouts: null,
-  isActiveGeoScouts: false,
-
-  geoOtbs: null,
-  isActiveGeoOtbs: false,
-  geoMode: "normal",
   index: null,
 
   selectedCoords: null,
   zoom: 15,
   duration: 1.5,
-  showTreeMappingForm: false,
 }
 
 export const mapaReducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.MAPA_SHOW_TREE_MAPPING_FORM:
-      return {
-        ...state,
-        showTreeMappingForm: action.payload
-      }
     case types.SET_SELECTED_COORDS:
       return {
         ...state,
@@ -50,35 +37,6 @@ export const mapaReducer = (state = initialState, action) => {
         zoom: action.payload.zoom,
         duration: action.payload.duration
       }
-    case types.SET_GEO_MODE:
-      return {
-        ...state,
-        geoMode: action.payload
-      }
-    // GeoScouts
-    case types.SET_ACTIVE_GEO_SCOUTS:
-      return {
-        ...state,
-        isActiveGeoScouts: action.payload
-      }
-    case types.LOAD_GEO_SCOUTS:
-      return {
-        ...state,
-        geoScouts: action.payload
-      }
-
-    // GeoOtbs
-    case types.SET_ACTIVE_GEO_OTBS:
-      return {
-        ...state,
-        isActiveGeoOtbs: action.payload
-      }
-    case types.LOAD_GEO_OTBS:
-      return {
-        ...state,
-        geoOtbs: action.payload
-      }
-
     // Modal
     case types.SET_MODAL_STATE:
       return {
@@ -166,7 +124,6 @@ export const mapaReducer = (state = initialState, action) => {
 
         return coincideTexto && coincideEspecie && coincideRiego && coincideMonitoreo;
       });
-      console.log("filtrados", filtrados)
 
       return {
         ...state,

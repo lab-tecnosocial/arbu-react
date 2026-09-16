@@ -11,6 +11,22 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
 import { checkIsSuperAdmin } from "./checkAuthorization";
+import { parseFechaLocal } from "./fechaArbol";
+
+/**
+ * Campos del modelo de campaña (v2). Solo se escriben los que vengan
+ * definidos: así un formulario antiguo no borra lo que no conoce, y un
+ * documento v1 sigue leyéndose con su semántica original.
+ */
+const camposCampania = (datos) => {
+  const campos = {};
+  const copiar = (clave) => {
+    if (datos[clave] !== undefined) campos[clave] = datos[clave];
+  };
+  ["schemaVersion", "slug", "tipo", "descripcion", "publica", "destacada",
+    "participacion", "reglas", "iconoMarcador"].forEach(copiar);
+  return campos;
+};
 
 /**
  * Crea un nuevo proyecto
@@ -33,9 +49,10 @@ export const crearProyecto = async (proyectoData, userEmail) => {
       return { success: false, error: "Las fechas de inicio y fin son requeridas" };
     }
 
-    // Validar que fechaFin >= fechaInicio
-    const inicio = new Date(proyectoData.fechaInicio);
-    const fin = new Date(proyectoData.fechaFin);
+    // Fechas en hora LOCAL (UTC-4), no UTC: `new Date("2026-09-30")` es medianoche
+    // UTC, o sea el 29 a las 20:00 en Bolivia. El fin de día es inclusivo.
+    const inicio = parseFechaLocal(proyectoData.fechaInicio);
+    const fin = parseFechaLocal(proyectoData.fechaFin, { finDeDia: true });
     if (fin < inicio) {
       return { success: false, error: "La fecha de fin debe ser posterior a la fecha de inicio" };
     }
@@ -47,6 +64,7 @@ export const crearProyecto = async (proyectoData, userEmail) => {
       fechaFin: Timestamp.fromDate(fin),
       usuarioAutorizado: userEmail, // Auto-asignado, no editable por el usuario
       idMapeadores: proyectoData.idMapeadores || [],
+      ...camposCampania(proyectoData),
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -95,8 +113,8 @@ export const actualizarProyecto = async (proyectoId, proyectoData, userEmail) =>
 
     // Validar datos
     if (proyectoData.fechaInicio && proyectoData.fechaFin) {
-      const inicio = new Date(proyectoData.fechaInicio);
-      const fin = new Date(proyectoData.fechaFin);
+      const inicio = parseFechaLocal(proyectoData.fechaInicio);
+      const fin = parseFechaLocal(proyectoData.fechaFin, { finDeDia: true });
       if (fin < inicio) {
         return { success: false, error: "La fecha de fin debe ser posterior a la fecha de inicio" };
       }
@@ -112,16 +130,20 @@ export const actualizarProyecto = async (proyectoId, proyectoData, userEmail) =>
     }
 
     if (proyectoData.fechaInicio) {
-      datosActualizados.fechaInicio = Timestamp.fromDate(new Date(proyectoData.fechaInicio));
+      datosActualizados.fechaInicio = Timestamp.fromDate(parseFechaLocal(proyectoData.fechaInicio));
     }
 
     if (proyectoData.fechaFin) {
-      datosActualizados.fechaFin = Timestamp.fromDate(new Date(proyectoData.fechaFin));
+      datosActualizados.fechaFin = Timestamp.fromDate(
+        parseFechaLocal(proyectoData.fechaFin, { finDeDia: true })
+      );
     }
 
     if (proyectoData.idMapeadores !== undefined) {
       datosActualizados.idMapeadores = proyectoData.idMapeadores;
     }
+
+    Object.assign(datosActualizados, camposCampania(proyectoData));
 
     // NO permitir cambiar usuarioAutorizado
 
