@@ -145,6 +145,32 @@ mientras llega lo fresco.
 | Abrir la ficha de un árbol | 0 | 1-3 |
 | Encender la capa de mapeados | 0 | 196 (una vez) |
 
+### Hallazgo: el cuello de botella se mudó
+
+Con A implementado, medido en producción con todo limpio y otra vez en la
+segunda visita:
+
+| | Primera visita | Segunda visita (caché) |
+| --- | ---: | ---: |
+| Hasta ver los primeros árboles | ~6,0 s | ~5,3 s |
+
+El tiempo bajó mucho menos que las lecturas, y la instrumentación dice por qué:
+
+```
+[lecturas] arbolesPlantados: 1632 docs (caché) en 268 ms
+[lecturas] arbolesMapeados: 3153 docs (caché) en 523 ms
+```
+
+Los datos están en el store en menos de un segundo, y el bundle entra en 71 ms
+desde el service worker. **Los cuatro segundos que quedan son el render**: 4.785
+marcadores como componentes de react-leaflet, más el agrupado del cluster.
+
+Esto cambia lo que hay que esperar de la opción B: bajará las lecturas a cero y
+la descarga a ~120 KB, pero **no** arreglará sola el tiempo hasta ver el mapa.
+La pieza que falta para eso es pintar los marcadores como capa imperativa sobre
+canvas en vez de como componentes React —el patrón habitual cuando son miles—.
+Conviene hacer las dos cosas, y medir cada una por separado.
+
 ## Pendiente barato, fuera del alcance de A
 
 - **El ranking lee `usuarios_public` entera** (1.255 docs por visita a
@@ -219,7 +245,7 @@ en vez de cero, y depende de que alguien lo dispare.
 | --- | ---: | ---: |
 | Lecturas, primera visita | 4.787 | ~0 |
 | Descarga | ~1,1 MB gzip | ~120 KB |
-| Tiempo hasta ver árboles | 3-5 s | < 1 s |
+| Tiempo hasta ver árboles | ~6 s | sigue mandando el render (ver *Hallazgo*) |
 
 Cuesta una función que mantener, algo de retraso en la frescura, y aceptar que
 el mapa y la ficha leen de sitios distintos. A cambio, el coste deja de crecer

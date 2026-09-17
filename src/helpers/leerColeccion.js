@@ -9,9 +9,10 @@ const mapear = (snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.da
  * anota en consola para que el coste de una pantalla sea visible mientras se
  * programa, en vez de descubrirse en la factura. Filtra por "[lecturas]".
  */
-export const anotarLecturas = (origen, coleccion, cantidad) => {
+export const anotarLecturas = (origen, coleccion, cantidad, ms) => {
   if (import.meta.env.DEV) {
-    console.info(`[lecturas] ${coleccion}: ${cantidad} docs (${origen})`);
+    const tiempo = ms == null ? "" : ` en ${Math.round(ms)} ms`;
+    console.info(`[lecturas] ${coleccion}: ${cantidad} docs (${origen})${tiempo}`);
   }
 };
 
@@ -69,10 +70,11 @@ export const leerColeccionConCache = async (nombre, { alRefrescar, frescuraMs = 
 
   let desdeCache = null;
   try {
+    const t0 = performance.now();
     const snapshot = await getDocsFromCache(ref);
     if (!snapshot.empty) {
       desdeCache = mapear(snapshot);
-      anotarLecturas("caché", nombre, desdeCache.length);
+      anotarLecturas("caché", nombre, desdeCache.length, performance.now() - t0);
     }
   } catch {
     // Sin caché disponible: se sigue por el camino normal.
@@ -81,8 +83,9 @@ export const leerColeccionConCache = async (nombre, { alRefrescar, frescuraMs = 
   const esReciente = frescuraMs > 0 && Date.now() - leerMarca(nombre) < frescuraMs;
   if (desdeCache && esReciente) return desdeCache;
 
+  const tServidor = performance.now();
   const fresco = getDocs(ref).then((snapshot) => {
-    anotarLecturas("servidor", nombre, snapshot.size);
+    anotarLecturas("servidor", nombre, snapshot.size, performance.now() - tServidor);
     escribirMarca(nombre);
     return mapear(snapshot);
   });
