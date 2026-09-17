@@ -401,10 +401,19 @@ service cloud.firestore {
         allow write: if false; // Solo lectura para prueba
       }
       
-      // Permitir lectura del documento de usuarios autorizados
+      // Documento único de accesos a Arbu Pro:
+      //   correos  -> quién entra al back-office
+      //   roles    -> { email: 'superadmin' | 'admin' }  ('admin' es etiqueta)
+      //   permisos -> { email: ['campanas', 'tabla', ...] }  las áreas
+      // Lo edita un superadmin desde /admin/accesos; antes solo se podía
+      // tocar desde la consola de Firebase.
     match /usuariosAutorizados/accesoTablas {
       allow read: if request.auth != null;
-      allow write: if false; // Solo administradores pueden modificar (usa Firebase Console)
+      allow write: if request.auth != null && isSuperAdmin() &&
+        // Un superadmin no puede dejarse fuera de la lista: sin él, nadie
+        // podría volver a repartir accesos.
+        request.auth.token.email in request.resource.data.correos &&
+        request.resource.data.roles[request.auth.token.email] == 'superadmin';
     }
 
  // proyectos
@@ -420,6 +429,20 @@ service cloud.firestore {
   get(/databases/$(database)/documents/usuariosAutorizados/accesoTablas).data.correos;
       }
 
+      // Permiso de área: 'campanas', 'proyectos', 'tabla', 'mapeoScout',
+      // 'dashboard'. Un superadmin los tiene todos sin figurar en la lista.
+      //
+      // Clave: esta condición NO mira `resource`, así que Firestore puede
+      // resolver con ella una consulta de listado entera. Las condiciones que
+      // dependen del documento (ser su dueño) solo sirven para leerlo de a uno.
+      function tienePermiso(area) {
+        return isSuperAdmin() || (
+          isAuthorized() &&
+          area in get(/databases/$(database)/documents/usuariosAutorizados/accesoTablas)
+                    .data.get('permisos', {}).get(request.auth.token.email, [])
+        );
+      }
+
       // "proyectos" es también la colección de CAMPAÑAS de mapeo: el nombre es
       // histórico, el concepto se generalizó sin migrar documentos.
       match /proyectos/{proyectoId} {
@@ -431,6 +454,8 @@ service cloud.firestore {
         allow read: if resource.data.publica == true || (
           request.auth != null && (
             isSuperAdmin() ||
+            tienePermiso('campanas') ||
+            tienePermiso('proyectos') ||
             resource.data.usuarioAutorizado == request.auth.token.email
           )
         );
@@ -439,6 +464,8 @@ service cloud.firestore {
           isAuthorized() &&
           request.resource.data.usuarioAutorizado == request.auth.token.email;
 
+        // Editar o cerrar una campaña ajena sigue siendo cosa del superadmin:
+        // el permiso de área da acceso a la sección, no al mando.
         allow update, delete: if request.auth != null && (
           isSuperAdmin() ||
           resource.data.usuarioAutorizado == request.auth.token.email
@@ -446,18 +473,18 @@ service cloud.firestore {
 
         // Juicio humano del concurso. Nunca es público: solo el back-office.
         match /revisiones/{revisionId} {
-          allow read: if request.auth != null && isAuthorized();
-          allow write: if request.auth != null && isAuthorized() &&
+          allow read: if request.auth != null && tienePermiso('campanas');
+          allow write: if request.auth != null && tienePermiso('campanas') &&
             request.resource.data.revisadoPor == request.auth.token.email;
         }
 
         match /participantes/{uid} {
-          allow read: if request.auth != null && isAuthorized();
-          allow write: if request.auth != null && isAuthorized();
+          allow read: if request.auth != null && tienePermiso('campanas');
+          allow write: if request.auth != null && tienePermiso('campanas');
         }
 
         match /resultados/{resultadoId} {
-          allow read: if request.auth != null && isAuthorized();
+          allow read: if request.auth != null && tienePermiso('campanas');
           allow write: if request.auth != null && isSuperAdmin();
         }
       }

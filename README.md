@@ -54,7 +54,8 @@ src/
   actions/ reducers/ store/    # Redux (auth, mapa, catalogo, leaderboard, ...)
   selectors/        # lecturas derivadas del estado (campañas, carga de árboles)
   helpers/          # acceso a Firestore y utilidades compartidas
-docs/               # notas técnicas (lecturas de Firestore y su plan)
+docs/               # notas técnicas (lecturas de Firestore, permisos de Arbu Pro)
+scripts/            # utilidades puntuales (migración de permisos)
   firebase/         # inicialización de Firebase (API modular v9)
 ```
 
@@ -62,6 +63,12 @@ docs/               # notas técnicas (lecturas de Firestore y su plan)
 
 - **Firebase**: solo la API modular v9 (`collection(db, ...)`, `getDocs`,
   `updateDoc`). No se usa `firebase/compat`.
+- **Permisos**: todo sale de `usuariosAutorizados/accesoTablas` — `correos`
+  (entrar al back-office), `permisos` (las áreas: `campanas`, `proyectos`,
+  `tabla`, `mapeoScout`, `dashboard`) y `roles` (`superadmin` entra a todo y
+  reparte accesos; `admin` es solo una etiqueta). El catálogo de áreas vive en
+  `src/helpers/permisos.js` y se gestiona desde `/admin/accesos`. Ver
+  [`docs/permisos-arbu-pro.md`](docs/permisos-arbu-pro.md).
 - **Sesión**: el estado vive en `state.auth = { checking, user }`. `checking` es
   `true` hasta que Firebase resuelve si hay sesión; las guardias
   (`ProtectedRoute`, `PublicRoute`) esperan a que termine antes de redirigir.
