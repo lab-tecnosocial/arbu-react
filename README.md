@@ -21,9 +21,10 @@ El sitio tiene dos mitades:
 
 ```bash
 pnpm install
-pnpm start     # http://localhost:3000
-pnpm build     # genera build/
-pnpm deploy    # build + firebase deploy --only hosting
+pnpm start        # http://localhost:3000  (`pnpm dev` es lo mismo)
+pnpm build        # genera build/
+pnpm deploy       # build + firebase deploy --only hosting
+pnpm deploy:rules # despliega firestore.rules (NO va en pnpm deploy)
 ```
 
 ## Variables de entorno

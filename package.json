@@ -42,6 +42,7 @@
   },
   "scripts": {
     "start": "vite --port 3000",
+    "dev": "pnpm start",
     "build": "vite build",
     "serve": "vite preview",
     "deploy": "pnpm run build && firebase deploy --only hosting",
