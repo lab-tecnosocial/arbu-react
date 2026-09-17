@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Calendar, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
 import { Chip } from "../../../../components/Chip/Chip";
-import { setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
+import { asegurarUsuarios, setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
 import { TreePhotoGallery, TreePhotoTrigger } from "./TreePhotoGallery";
 import {
   formatMonitoreoDateLong,
@@ -18,7 +18,7 @@ import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 export const CardTree = () => {
   const dispatch = useDispatch()
   const contentRef = useRef(null)
-  const { usuarios, panelState, selectedTree, index } = useSelector((state) => state.mapa)
+  const { usuariosMap, panelState, selectedTree, index } = useSelector((state) => state.mapa)
   const { arbolesPlantados, arbolesMapeados, inscripcionesMapeo } = useSelector((state) => state.arboles)
   const campaniaSeleccionada = useSelector(selectCampaniaSeleccionada)
   const [monitoreos, setMonitoreos] = useState([])
@@ -27,16 +27,7 @@ export const CardTree = () => {
     window.matchMedia('(min-width: 768px)').matches
   );
 
-  const getFullNameUser = (id) => {
-    if (selectedTree && usuarios) {
-      for (const [_, value] of Object.entries(usuarios)) {
-        if (value.id === id) {
-          return value.nombre;
-        }
-      }
-    }
-    return "";
-  };
+  const getFullNameUser = (id) => usuariosMap?.[id]?.nombre ?? "";
 
   const toDate = (timestamp, locale = "es-BO") => {
     if (!timestamp || typeof timestamp.seconds !== "number") {
@@ -65,6 +56,19 @@ export const CardTree = () => {
       }
     }
   }, [selectedTree])
+
+  // Los nombres se piden por árbol abierto, no de antemano: son los únicos
+  // usuarios que esta ficha va a mostrar.
+  useEffect(() => {
+    if (!selectedTree) return;
+
+    const ids = [
+      ...(selectedTree.usuariosQueAdoptaron ?? []),
+      ...Object.values(selectedTree.monitoreos ?? {}).map((m) => m?.monitoreoRealizadoPor),
+    ];
+
+    if (ids.filter(Boolean).length > 0) dispatch(asegurarUsuarios(ids));
+  }, [selectedTree, dispatch])
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');

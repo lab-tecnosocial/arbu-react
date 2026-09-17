@@ -1,6 +1,6 @@
 import { loadArboles } from "../helpers/loadArboles"
 import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados"
-import { loadUsuarios } from "../helpers/loadUsuarios"
+import { loadUsuarios, loadUsuariosPorIds } from "../helpers/loadUsuarios"
 import { types } from "../types/types"
 
 export const setPanelState = (panelState) => {
@@ -112,6 +112,32 @@ export const startLoadingUsuarios = () => {
     dispatch(setUsuarios(usuarios));
   }
 }
+/**
+ * Se asegura de tener en el store los usuarios de esos ids, pidiendo solo los
+ * que falten. Lo llama la ficha del árbol al abrirse: ahí es donde de verdad
+ * hace falta un nombre.
+ */
+export const asegurarUsuarios = (ids) => {
+  return async (dispatch, getState) => {
+    const { usuariosMap } = getState().mapa;
+    const faltan = [...new Set(ids.filter(Boolean))].filter((id) => !usuariosMap?.[id]);
+    if (faltan.length === 0) return;
+
+    try {
+      dispatch(addUsuarios(await loadUsuariosPorIds(faltan)));
+    } catch (error) {
+      console.error("[usuarios] no se pudieron cargar:", error);
+    }
+  };
+};
+
+export const addUsuarios = (usuarios) => {
+  return {
+    type: types.mapaAddUsuarios,
+    payload: usuarios
+  }
+}
+
 export const setUsuarios = (usuarios) => {
   return {
     type: types.mapaLoadUsuarios,

@@ -45,7 +45,7 @@ export const EstadoMapa = () => {
         <button
           type="button"
           className={styles.reintentar}
-          onClick={() => dispatch(cargarDatosMapaPublico())}
+          onClick={() => dispatch(cargarDatosMapaPublico({ forzar: true }))}
         >
           <RotateCw size={16} strokeWidth={1.75} aria-hidden="true" />
           Reintentar

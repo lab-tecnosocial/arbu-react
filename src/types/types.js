@@ -45,6 +45,7 @@ export const types = {
   mapaLoadArboles: '[MAPA] Load arboles',
   mapaHideDetailArbol: '[MAPA] Hide detail arbol',
   mapaLoadUsuarios: '[MAPA] Load usuarios',
+  mapaAddUsuarios: '[MAPA] Add usuarios',
   mapaSetActiveMonitoreo: '[MAPA] Set active monitoreo',
   mapaFilterArboles: '[MAPA] Filter arboles',
   mapaIsFiltered: '[MAPA] Se aplico filtro',

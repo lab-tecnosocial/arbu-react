@@ -160,6 +160,19 @@ export const mapaReducer = (state = initialState, action) => {
         usuarios: [...action.payload],
         usuariosMap: result
       }
+    case types.mapaAddUsuarios: {
+      // Fusión, no reemplazo: los usuarios llegan de a poco, según qué ficha
+      // se abra. `usuariosMap` es el contrato que leen la ficha y el ranking.
+      const agregados = action.payload.reduce(
+        (map, usuario) => ({ ...map, [usuario.id]: usuario }),
+        { ...(state.usuariosMap ?? {}) }
+      );
+      return {
+        ...state,
+        usuarios: Object.values(agregados),
+        usuariosMap: agregados
+      }
+    }
     case types.mapaSetActiveMonitoreo:
       return {
         ...state,

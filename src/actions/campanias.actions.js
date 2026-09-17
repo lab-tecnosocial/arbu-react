@@ -1,6 +1,6 @@
 import { loadCampaniasPublicas } from "../helpers/campanias/loadCampanias";
 import { types } from "../types/types";
-import { setActiveMappedTrees, setActivePlantedTrees } from "./arboles.actions";
+import { mostrarArbolesMapeados, setActivePlantedTrees } from "./arboles.actions";
 
 export const fetchCampaniasRequest = () => ({ type: types.FETCH_CAMPANIAS_REQUEST });
 
@@ -22,7 +22,10 @@ export const setCampaniaSeleccionada = (campaniaId) => ({
 
 export const limpiarCampaniaSeleccionada = () => ({ type: types.CLEAR_CAMPANIA });
 
-export const fetchCampaniasPublicas = () => async (dispatch) => {
+export const fetchCampaniasPublicas = ({ forzar = false } = {}) => async (dispatch, getState) => {
+  const { campanias } = getState().arboles;
+  if (!forzar && !campanias.error && (campanias.loading || campanias.data.length > 0)) return;
+
   try {
     dispatch(fetchCampaniasRequest());
     dispatch(fetchCampaniasSuccess(await loadCampaniasPublicas()));
@@ -39,11 +42,11 @@ export const fetchCampaniasPublicas = () => async (dispatch) => {
 export const selectCampania = (campaniaId) => (dispatch) => {
   dispatch(setCampaniaSeleccionada(campaniaId));
   dispatch(setActivePlantedTrees(false));
-  dispatch(setActiveMappedTrees(true));
+  dispatch(mostrarArbolesMapeados(true));
 };
 
 export const clearCampania = () => (dispatch) => {
   dispatch(limpiarCampaniaSeleccionada());
   dispatch(setActivePlantedTrees(true));
-  dispatch(setActiveMappedTrees(false));
+  dispatch(mostrarArbolesMapeados(false));
 };

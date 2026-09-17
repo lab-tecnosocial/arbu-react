@@ -16,8 +16,8 @@ import {
 } from "./Utils/filterOptions";
 import { especies } from "../../utils/especies";
 import {
+  mostrarArbolesMapeados,
   resetPlantedTreesFilter,
-  setActiveMappedTrees,
   setActivePlantedTrees,
   setPlantedTreesFilter,
 } from "../../../../actions/arboles.actions";
@@ -72,14 +72,14 @@ export const Sidebar = () => {
       setArbolValues(arbolValues.filter((item) => item !== value));
       if (value === 'plantados') dispatch(setActivePlantedTrees(false))
       if (value === 'mapeados') {
-        dispatch(setActiveMappedTrees(false))
+        dispatch(mostrarArbolesMapeados(false))
         if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
       }
     } else {
       if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
       setArbolValues([...arbolValues, value]);
       if (value === 'plantados') dispatch(setActivePlantedTrees(true))
-      if (value === 'mapeados') dispatch(setActiveMappedTrees(true))
+      if (value === 'mapeados') dispatch(mostrarArbolesMapeados(true))
     }
   };
 
