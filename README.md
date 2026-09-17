@@ -54,6 +54,7 @@ src/
   actions/ reducers/ store/    # Redux (auth, mapa, catalogo, leaderboard, ...)
   selectors/        # lecturas derivadas del estado (campañas, carga de árboles)
   helpers/          # acceso a Firestore y utilidades compartidas
+docs/               # notas técnicas (lecturas de Firestore y su plan)
   firebase/         # inicialización de Firebase (API modular v9)
 ```
 
@@ -70,6 +71,12 @@ src/
 - **Arbu Pro** se carga con `React.lazy` desde `App.jsx`: arrastra
   material-react-table, xlsx y swagger-ui, que no deben pesar en el bundle que
   descarga cualquier visitante.
+- **Lecturas de Firestore**: Firestore cobra **por documento leído**. Nada de
+  `getDocs` de una colección entera para resolver un dato suelto; se lee por id
+  (`loadUsuariosPorIds`), o bajo demanda cuando la capa se enciende. El mapa
+  público lee por `leerColeccionConCache`. En desarrollo, cada lectura se anota
+  en consola con el prefijo `[lecturas]`. El detalle y el plan pendiente están
+  en [`docs/lecturas-firestore.md`](docs/lecturas-firestore.md).
 - **Estados de carga**: ninguna vista que dependa de Firestore se deja en
   blanco. Hay dos piezas compartidas, `<Spinner>` y `<Skeleton>`
   (`src/components/`), y el estado se lee de selectores derivados, nunca de
