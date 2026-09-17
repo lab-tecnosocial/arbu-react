@@ -1,5 +1,6 @@
 import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
+import { anotarLecturas } from "./leerColeccion";
 
 export const loadInscripciones = async () => {
   const inscripcionesSnapshot = await getDocs(collection(db, "inscripcionesMapeo"));
@@ -9,6 +10,7 @@ export const loadInscripciones = async () => {
     // arbolesMapeados.mapeadoPor y fallan updateDoc/deleteDoc de las solicitudes.
     inscripcionesArray.push({ id: element.id, ...element.data() });
   });
+  anotarLecturas("servidor", "inscripcionesMapeo", inscripcionesArray.length);
   return inscripcionesArray;
 }
 

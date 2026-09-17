@@ -1,12 +1,3 @@
-import { db } from "../firebase/firebase-config";
-import { collection, getDocs } from "firebase/firestore"
+import { leerColeccionConCache } from "./leerColeccion";
 
-export const loadArboles = async () => {
-  const arbolesCol = collection(db, 'arbolesPlantados');
-  const snapshot = await getDocs(arbolesCol);
-  const lista = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  return lista;
-}
+export const loadArboles = (opciones) => leerColeccionConCache("arbolesPlantados", opciones);

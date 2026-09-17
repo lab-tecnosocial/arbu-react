@@ -7,6 +7,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
+import { anotarLecturas } from "../leerColeccion";
 import { CAMPANIAS_COLLECTION, normalizarCampania, ordenarCampanias } from "./campaniaModel";
 
 /**
@@ -25,6 +26,7 @@ export const loadCampaniasPublicas = async () => {
     query(collection(db, CAMPANIAS_COLLECTION), where("publica", "==", true))
   );
 
+  anotarLecturas("servidor", "proyectos (campañas públicas)", snapshot.size);
   const campanias = snapshot.docs.map((d) => normalizarCampania({ id: d.id, ...d.data() }));
   return ordenarCampanias(campanias);
 };
