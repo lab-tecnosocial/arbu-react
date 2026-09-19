@@ -8,6 +8,7 @@ export default function ClusterArbolesMapeados({
   arbolesMapeados,
   customIcon,
   iconoDe,
+  agrupar = true,
 }) {
   const dispatch = useDispatch();
 
@@ -32,6 +33,9 @@ export default function ClusterArbolesMapeados({
   // El return condicional va DESPUÉS de los hooks: si no, alternar la capa cambia
   // el número de hooks entre renders y React lanza "Rendered more hooks…".
   if (!arbolesMapeados.isActive) return null;
+
+  // Sin agrupar, los marcadores cuelgan directo del mapa.
+  if (!agrupar) return <>{markers}</>;
 
   return (
     <MarkerClusterGroup chunkedLoading>

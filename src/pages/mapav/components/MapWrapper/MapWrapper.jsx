@@ -34,6 +34,11 @@ export const MapWrapper = () => {
     [reglasEspecie]
   );
 
+  // El concurso de primavera muestra cada árbol suelto: agrupar escondía
+  // justo lo que la actividad quiere enseñar (cuántos jacarandás hay y dónde).
+  // Solo este caso: el resto de las capas sigue agrupando.
+  const agruparMapeados = !reglasEspecie;
+
   // El contorno de los municipios solo se pinta si la campaña los restringe.
   const municipios = useMemo(
     () => (campania?.reglas?.municipios?.length ? exportarGeoJsonMunicipios() : null),
@@ -74,6 +79,7 @@ export const MapWrapper = () => {
           arbolesMapeados={arbolesMapeados}
           customIcon={customIcon}
           iconoDe={iconoDe}
+          agrupar={agruparMapeados}
         />
       </MapContainer>
     </div>
