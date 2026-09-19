@@ -38,7 +38,7 @@ export const Navbar = ({
       href: "/aprende",
       icon: <BookMarked size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
-    {
+    /**{
       label: "Api",
       href: "/api",
       icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
