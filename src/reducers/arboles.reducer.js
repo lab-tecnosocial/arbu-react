@@ -1,5 +1,6 @@
 import { types } from "../types/types";
 import { filtrarArbolesDeCampania } from "../helpers/campanias/registros";
+import { ORIGEN } from "../helpers/campanias/origenArbol";
 import { EMPTY_FILTERS, applyTreeFilters, hasActiveFilters } from "../pages/mapav/utils/treeFilters";
 
 const initialMappedTreesState = {
@@ -164,17 +165,27 @@ const recomputar = (estado) => {
   const { filters, campanias } = estado;
   const campania = campanias.data.find((c) => c.id === campanias.selectedId) ?? null;
 
-  // Los mapeados se acotan primero por campaña y después por los filtros del
+  // Los árboles se acotan primero por campaña y después por los filtros del
   // sidebar: ambos se componen, ninguno pisa al otro.
+  //
+  // Las DOS colecciones se acotan, no solo los mapeados: lo registrado desde
+  // iOS entra por `arbolesPlantados` (ver `helpers/campanias/origenArbol.js`),
+  // y mirar solo los mapeados dejaba el mapa de la campaña lleno de Android.
   const mapeadosEnCampania = campania
     ? filtrarArbolesDeCampania(estado.arbolesMapeados.data, campania)
     : estado.arbolesMapeados.data;
+
+  const plantadosEnCampania = campania
+    ? filtrarArbolesDeCampania(estado.arbolesPlantados.data, campania, {
+        origen: ORIGEN.PLANTADO,
+      })
+    : estado.arbolesPlantados.data;
 
   return {
     ...estado,
     arbolesPlantados: {
       ...estado.arbolesPlantados,
-      visibleData: applyTreeFilters(estado.arbolesPlantados.data, filters),
+      visibleData: applyTreeFilters(plantadosEnCampania, filters),
     },
     arbolesMapeados: {
       ...estado.arbolesMapeados,

@@ -91,7 +91,7 @@ export const Sidebar = () => {
       return;
     }
     dispatch(selectCampania(id));
-    setArbolValues(["mapeados"]);
+    setArbolValues(["plantados", "mapeados"]);
   };
 
   const handleCheckBox = (value) => {

@@ -36,12 +36,16 @@ export const fetchCampaniasPublicas = ({ forzar = false } = {}) => async (dispat
 };
 
 /**
- * Seleccionar una campaña enciende la capa de mapeados y apaga la de plantados.
+ * Seleccionar una campaña enciende las DOS capas, ya acotadas a la campaña por
+ * el reducer. Antes apagaba la de plantados, y con ella desaparecían del mapa
+ * todos los árboles registrados desde iOS, que llegan por `arbolesPlantados`
+ * (ver `helpers/campanias/origenArbol.js`).
+ *
  * Va aquí y no en el Sidebar para que el componente sea presentacional.
  */
 export const selectCampania = (campaniaId) => (dispatch) => {
   dispatch(setCampaniaSeleccionada(campaniaId));
-  dispatch(setActivePlantedTrees(false));
+  dispatch(setActivePlantedTrees(true));
   dispatch(mostrarArbolesMapeados(true));
 };
 

@@ -2,6 +2,7 @@ import { getMonitoreosOrdenados, getFechaArbol, toMillis } from "../fechaArbol";
 import { municipioDeCoordenada } from "../geo/municipios";
 import { coincideEspecie, tieneEspecieIdentificada } from "./especies";
 import { CRITERIO_FECHA, PARTICIPACION } from "./campaniaModel";
+import { ORIGEN, autorDelRegistro, monitoreoNormalizado } from "./origenArbol";
 
 /**
  * La unidad de conteo de una campaña NO es el árbol: es el REGISTRO, entendido
@@ -12,6 +13,9 @@ import { CRITERIO_FECHA, PARTICIPACION } from "./campaniaModel";
  *  - Un árbol mapeado hace un año que recibe un monitoreo durante el concurso
  *    cuenta, y las fotos que importan son las DE ESE monitoreo, no las del
  *    primero.
+ *
+ * Los registros salen de las DOS colecciones de árboles (ver `origenArbol.js`):
+ * lo mapeado desde Android y lo adoptado desde iOS participan igual.
  */
 
 const tieneCoordenadas = (arbol) =>
@@ -63,9 +67,13 @@ const dentroDeVentana = (fecha, inicio, fin) => {
 
 /**
  * Todos los registros de una campaña.
+ *
+ * @param {Array<object>} arboles árboles de UNA colección
+ * @param {object} campania
+ * @param {{origen?: string}} opciones de qué colección vienen esos árboles
  * @returns {Array<object>} un registro por par (árbol, monitoreo) en ventana
  */
-export const registrosDeCampania = (arboles = [], campania) => {
+export const registrosDeCampania = (arboles = [], campania, { origen = ORIGEN.MAPEADO } = {}) => {
   if (!campania) return [];
 
   const inicio = toMillis(campania.fechaInicio);
@@ -73,7 +81,13 @@ export const registrosDeCampania = (arboles = [], campania) => {
   const { reglas = {}, participacion, idMapeadores = [] } = campania;
   const soloMapeadores = participacion === PARTICIPACION.MAPEADORES;
   const setMapeadores = new Set(idMapeadores);
-  const porPrimerMonitoreo = reglas.criterioFecha === CRITERIO_FECHA.PRIMER_MONITOREO;
+
+  // En una adopción el registro es el ALTA del árbol: los monitoreos que vienen
+  // después son cuidado (riego, sanidad), no mapeo. Contarlos metería en la
+  // campaña el arbolado plantado histórico por el simple hecho de que alguien
+  // lo regó durante el concurso.
+  const soloAlta = origen === ORIGEN.PLANTADO;
+  const porPrimerMonitoreo = soloAlta || reglas.criterioFecha === CRITERIO_FECHA.PRIMER_MONITOREO;
 
   const registros = [];
 
@@ -86,12 +100,13 @@ export const registrosDeCampania = (arboles = [], campania) => {
     const fechaArbol = porPrimerMonitoreo ? getFechaArbol(arbol) : null;
     const candidatos = porPrimerMonitoreo ? monitoreos.slice(0, 1) : monitoreos;
 
-    for (const monitoreo of candidatos) {
+    for (const crudo of candidatos) {
+      const monitoreo = monitoreoNormalizado(crudo, origen);
       const fecha = porPrimerMonitoreo ? fechaArbol : monitoreo.fecha;
       const enPeriodo = dentroDeVentana(fecha, inicio, fin);
       if (!enPeriodo) continue;
 
-      const uid = monitoreo.monitoreoRealizadoPor || arbol.mapeadoPor || null;
+      const uid = autorDelRegistro(arbol, monitoreo);
       const participante = soloMapeadores ? Boolean(uid && setMapeadores.has(uid)) : Boolean(uid);
       if (!participante) continue;
 
@@ -132,6 +147,7 @@ export const registrosDeCampania = (arboles = [], campania) => {
       registros.push({
         clave: claveRegistro(arbol.id, monitoreo.key),
         campaniaId: campania.id,
+        origen,
         arbolId: arbol.id,
         monitoreoKey: monitoreo.key,
         uid,
@@ -158,6 +174,20 @@ export const registrosDeCampania = (arboles = [], campania) => {
 };
 
 /**
+ * Los registros de una campaña sumando las dos colecciones de árboles.
+ *
+ * Es la entrada que debe usar cualquier pantalla que decida algo sobre una
+ * campaña —el panel de revisión, el ranking, el acta—: contar solo una de las
+ * dos deja fuera a media base de usuarios según qué app tengan.
+ *
+ * @param {{mapeados?: Array<object>, plantados?: Array<object>}} fuentes
+ */
+export const registrosDeTodasLasFuentes = ({ mapeados = [], plantados = [] }, campania) => [
+  ...registrosDeCampania(mapeados, campania, { origen: ORIGEN.MAPEADO }),
+  ...registrosDeCampania(plantados, campania, { origen: ORIGEN.PLANTADO }),
+];
+
+/**
  * Los árboles que el mapa público debe pintar para una campaña.
  *
  * Filtra SOLO por ventana de fechas y participación. La especie no oculta
@@ -165,10 +195,10 @@ export const registrosDeCampania = (arboles = [], campania) => {
  * en la cola de revisión, no desaparecer. Solo se respeta el filtro por
  * especie si la campaña lo pide explícitamente con `filtraVisualizacion`.
  */
-export const filtrarArbolesDeCampania = (arboles = [], campania) => {
+export const filtrarArbolesDeCampania = (arboles = [], campania, { origen = ORIGEN.MAPEADO } = {}) => {
   if (!campania) return arboles;
 
-  const registros = registrosDeCampania(arboles, campania);
+  const registros = registrosDeCampania(arboles, campania, { origen });
   const filtraPorEspecie = campania.reglas?.especies?.filtraVisualizacion === true;
 
   const idsVisibles = new Set(
@@ -181,7 +211,7 @@ export const filtrarArbolesDeCampania = (arboles = [], campania) => {
 };
 
 /** Evaluación de un árbol concreto, para la ficha y el panel. */
-export const evaluarArbolEnCampania = (arbol, campania) => {
-  const registros = registrosDeCampania([arbol], campania);
+export const evaluarArbolEnCampania = (arbol, campania, { origen = ORIGEN.MAPEADO } = {}) => {
+  const registros = registrosDeCampania([arbol], campania, { origen });
   return { registros, algunoValido: registros.some((r) => r.valido) };
 };

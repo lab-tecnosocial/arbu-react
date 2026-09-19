@@ -6,6 +6,7 @@ import {
 import { useConcurso } from "../../context/ConcursoContext";
 import { exportarTablaAExcel } from "../../helpers/exportarExcel";
 import { formatFechaHora } from "../../helpers/fechaArbol";
+import { ETIQUETA_ORIGEN } from "../../helpers/campanias/origenArbol";
 
 const colorVeredicto = { apto: "success", dudoso: "warning", no_apto: "error" };
 
@@ -22,6 +23,7 @@ const TablaRegistrosConcurso = () => {
         ...r,
         participante: usuarios.get(r.uid)?.nombre || r.uid || "—",
         municipioNombre: r.municipio?.nombre ?? "Fuera del área",
+        origenTexto: ETIQUETA_ORIGEN[r.origen] ?? r.origen ?? "—",
         fechaTexto: formatFechaHora(r.fecha),
         estadoRevision: r.revisado ? r.revision.veredicto : "pendiente",
       })),
@@ -34,6 +36,7 @@ const TablaRegistrosConcurso = () => {
       { accessorKey: "nombreComun", header: "Nombre común", size: 130 },
       { accessorKey: "nombreCientifico", header: "Nombre científico", size: 160 },
       { accessorKey: "municipioNombre", header: "Municipio", size: 120 },
+      { accessorKey: "origenTexto", header: "Registro", size: 110 },
       { accessorKey: "fechaTexto", header: "Fecha", size: 140 },
       {
         accessorFn: (r) => r.auto?.veredicto,

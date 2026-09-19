@@ -131,6 +131,14 @@ generalizó sin migrar ningún documento) y se crean desde **Proyectos**.
   que cae dentro de la ventana. Así un ejemplar mapeado por varias personas vale
   para todas —lo exigen las bases del concurso— y un árbol antiguo remonitoreado
   durante la campaña cuenta, con las fotos de *ese* monitoreo.
+- **Una campaña mira las DOS colecciones de árboles**, porque cada app registra
+  en la suya: Android mapea en `arbolesMapeados` y iOS —que no tiene pantalla de
+  mapeo— registra por *Adopta*, en `arbolesPlantados`. Las diferencias de
+  esquema (`mapeadoPor`/`plantadoPor`, `fotografia`/`fotoArbolCompleto`) se
+  normalizan en `helpers/campanias/origenArbol.js`, y cada registro lleva su
+  `origen`. De una adopción cuenta solo el **alta** —su primer monitoreo—: los
+  posteriores son cuidado, y contarlos metería en la campaña todo el arbolado
+  plantado que alguien riegue durante el concurso.
 - **La especie no oculta nada**: el filtro público es la ventana de fechas. La
   especie decide el icono del marcador y cuenta para la validez, pero un
   jacarandá mal etiquetado sigue apareciendo en el mapa y va a la cola de

@@ -68,6 +68,7 @@ export const MapWrapper = () => {
         <ClusterArbolesPlantados
           arbolesPlantados={arbolesPlantados}
           customIcon={customIcon}
+          iconoDe={iconoDe}
         />
         <ClusterArbolesMapeados
           arbolesMapeados={arbolesMapeados}
