@@ -487,6 +487,16 @@ service cloud.firestore {
           allow read: if request.auth != null && tienePermiso('campanas');
           allow write: if request.auth != null && isSuperAdmin();
         }
+
+        // Bitácora de correcciones manuales de registros. Corregir un registro
+        // sobrescribe `arbolesMapeados`, o sea el dato que escribió la persona:
+        // aquí queda quién lo cambió, cuándo y qué decía antes. Solo se añade;
+        // una bitácora que se puede editar o borrar no sirve de nada.
+        match /correcciones/{correccionId} {
+          allow read: if request.auth != null && tienePermiso('campanas');
+          allow create: if request.auth != null && tienePermiso('campanas') &&
+            request.resource.data.editadoPor == request.auth.token.email;
+        }
       }
       
       // otros

@@ -1,12 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
 import {
-  Box, Button, Chip, FormControlLabel, Paper, Switch, TextField, Typography,
+  Alert, Box, Button, Chip, FormControlLabel, IconButton, Paper, Snackbar,
+  Switch, TextField, Tooltip, Typography,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import { useConcurso } from "../../context/ConcursoContext";
 import { exportarTablaAExcel } from "../../helpers/exportarExcel";
 import { formatFechaHora } from "../../helpers/fechaArbol";
 import { ETIQUETA_ORIGEN } from "../../helpers/campanias/origenArbol";
+import EditarRegistroDialog from "./EditarRegistroDialog";
 
 const colorVeredicto = { apto: "success", dudoso: "warning", no_apto: "error" };
 
@@ -16,6 +19,12 @@ const TablaRegistrosConcurso = () => {
     incluirFueraDeVentana, setIncluirFueraDeVentana,
     incluirSinEspecie, setIncluirSinEspecie,
   } = useConcurso();
+
+  // La fila que se está corrigiendo. Se guarda la CLAVE y no el objeto: tras
+  // recargar, los registros son objetos nuevos y el diálogo seguiría enseñando
+  // los datos viejos.
+  const [claveEditando, setClaveEditando] = useState(null);
+  const [aviso, setAviso] = useState(null);
 
   const filas = useMemo(
     () =>
@@ -101,9 +110,25 @@ const TablaRegistrosConcurso = () => {
     { header: "Foto flor", valor: (r) => r.fotos.fotoFlor ?? "" },
   ];
 
+  const enEdicion = useMemo(
+    () => filas.find((f) => f.clave === claveEditando) ?? null,
+    [filas, claveEditando]
+  );
+
   const table = useMaterialReactTable({
     columns: columnas,
     data: filas,
+    getRowId: (fila) => fila.clave,
+    enableRowActions: true,
+    positionActionsColumn: "first",
+    displayColumnDefOptions: { "mrt-row-actions": { header: "", size: 60 } },
+    renderRowActions: ({ row }) => (
+      <Tooltip title="Editar este registro">
+        <IconButton size="small" onClick={() => setClaveEditando(row.original.clave)}>
+          <EditIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    ),
     initialState: { density: "compact", pagination: { pageSize: 25, pageIndex: 0 } },
     muiTableHeadCellProps: { sx: { backgroundColor: "#268576", color: "white", fontFamily: "Poppins" } },
     muiTableBodyCellProps: { sx: { fontFamily: "Poppins" } },
@@ -154,6 +179,20 @@ const TablaRegistrosConcurso = () => {
       </Paper>
 
       <MaterialReactTable table={table} />
+
+      <EditarRegistroDialog
+        registro={enEdicion}
+        abierto={Boolean(enEdicion)}
+        onCerrar={() => setClaveEditando(null)}
+        onAviso={setAviso}
+      />
+
+      <Snackbar
+        open={Boolean(aviso)} autoHideDuration={6000} onClose={() => setAviso(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        {aviso ? <Alert severity={aviso.severity}>{aviso.texto}</Alert> : undefined}
+      </Snackbar>
     </Box>
   );
 };
