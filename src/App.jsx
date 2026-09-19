@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import RankingComponent from './components/ranking/RankingComponent';
 import CatalogoComponent from './components/catalogo/CatalogoComponent';
 import MapaPage from './pages/mapav/MapaPage.jsx';
@@ -33,10 +33,20 @@ const NoAutorizado = lazy(() => import('./components/autenticacion/NoAutorizado.
 const Dashboard = lazy(() => import('./components/dashboard/Dashboard.jsx'));
 const Tabla = lazy(() => import('./components/tabla/Tabla.jsx'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard.jsx'));
+const GestionAccesos = lazy(() => import('./components/admin/GestionAccesos.jsx'));
 const MapeoScoutComponent = lazy(() => import('./components/mapeo-scout/MapeoScoutComponent.jsx'));
 const ProyectosComponent = lazy(() => import('./components/proyectos/ProyectosComponent.jsx'));
 const DetalleProyecto = lazy(() => import('./components/proyectos/DetalleProyecto.jsx'));
 const ProyectosLayout = lazy(() => import('./components/proyectos/ProyectosLayout.jsx'));
+
+// Campañas de mapeo y panel del concurso
+const ListaCampanas = lazy(() => import('./components/concurso/ListaCampanas.jsx'));
+const CampanaLayout = lazy(() => import('./components/concurso/CampanaLayout.jsx'));
+const ResumenConcurso = lazy(() => import('./components/concurso/ResumenConcurso.jsx'));
+const TablaRegistrosConcurso = lazy(() => import('./components/concurso/TablaRegistrosConcurso.jsx'));
+const ColaRevision = lazy(() => import('./components/concurso/ColaRevision.jsx'));
+const TablaPosiciones = lazy(() => import('./components/concurso/TablaPosiciones.jsx'));
+const ActaResultados = lazy(() => import('./components/concurso/ActaResultados.jsx'));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -73,14 +83,27 @@ const App = () => {
           <Route path="login" element={<PublicRoute element={<IniciarSesion />} />} />
           <Route path="iniciar-sesion" element={<PublicRoute element={<IniciarSesion />} />} />
           <Route path="admin" element={<ProtectedRoute element={<AdminDashboard />} requiresAuthorization={true} />} />
-          <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-          <Route path="tabla" element={<ProtectedRoute element={<Tabla />} requiresAuthorization={true} />} />
-          <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} requiresAuthorization={true} />} />
+          <Route path="admin/accesos" element={<ProtectedRoute element={<GestionAccesos />} requiereSuperadmin={true} />} />
+          <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} permiso="dashboard" />} />
+          <Route path="tabla" element={<ProtectedRoute element={<Tabla />} permiso="tabla" />} />
+          <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} permiso="mapeoScout" />} />
 
           {/* Gestión de proyectos, con layout compartido */}
-          <Route path="proyectos" element={<ProtectedRoute element={<ProyectosLayout />} requiresAuthorization={true} />}>
+          <Route path="proyectos" element={<ProtectedRoute element={<ProyectosLayout />} permiso="proyectos" />}>
             <Route index element={<ProyectosComponent />} />
             <Route path=":id" element={<DetalleProyecto />} />
+          </Route>
+
+          {/* Campañas de mapeo: rutas anidadas para poder compartir enlaces
+              concretos ("mirá las posiciones", "hay 30 pendientes en la cola"). */}
+          <Route path="campanas" element={<ProtectedRoute element={<ListaCampanas />} permiso="campanas" />} />
+          <Route path="campanas/:id" element={<ProtectedRoute element={<CampanaLayout />} permiso="campanas" />}>
+            <Route index element={<Navigate to="resumen" replace />} />
+            <Route path="resumen" element={<ResumenConcurso />} />
+            <Route path="registros" element={<TablaRegistrosConcurso />} />
+            <Route path="revision" element={<ColaRevision />} />
+            <Route path="posiciones" element={<TablaPosiciones />} />
+            <Route path="acta" element={<ActaResultados />} />
           </Route>
 
           <Route path="no-autorizado" element={<NoAutorizado />} />

@@ -74,6 +74,13 @@
     gap: 8px;
   }
 
+  /* Las actividades son chips a ancho completo: en fila, la segunda se salía
+     del sidebar y no se veía. Una debajo de otra. */
+  .optionsColumna {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .accordionFilters {
     display: flex;
     flex-direction: column;
@@ -104,8 +111,16 @@
   transition: .2s ease;
 }
 
-.disabled {
+/* Se llamaba .disabled pero nunca deshabilitó nada: solo pinta el texto de
+   rojo. Y se aplicaba justo cuando había filtro que borrar, o sea al revés.
+   El nombre ahora dice lo que hace: el botón está ACTIVO. */
+.clearActive {
   color: var(--persian-red-500);
+}
+
+.clearOptions:disabled {
+  opacity: .45;
+  cursor: default;
 }
 
 .headerActions {
@@ -153,4 +168,25 @@
   .footer {
     flex-wrap: wrap;
   }
+}
+
+.chipEstado {
+  /* auto: el distintivo se pega a la derecha, quede corto o largo el nombre. */
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chipEnCurso {
+  color: var(--white);
+  background-color: var(--green2);
+}
+
+.chipConcluido {
+  /* Tokens semánticos, no colores fijos: así también contrasta en modo oscuro. */
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-muted);
 }

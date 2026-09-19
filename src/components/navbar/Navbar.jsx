@@ -4,6 +4,7 @@ import { BookMarked, FolderCode, Map, Medal, Menu, X, User, ShieldCheck } from "
 import styles from "./Navbar.module.css"
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAutorizacion } from "../../helpers/useAutorizacion";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase-config";
 import { ThemeToggle } from "../theme/ThemeToggle";
@@ -16,6 +17,7 @@ export const Navbar = ({
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user } = useSelector((state) => state.auth)
+  const { autorizado: esAdmin } = useAutorizacion()
   const { resolvedTheme } = useTheme();
   const [profileOpen, setProfileOpen] = useState(false);
   const brandLogo = resolvedTheme === "dark" ? "logodark.png" : logo;
@@ -40,12 +42,16 @@ export const Navbar = ({
       label: "Api",
       href: "/api",
       icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
-    },*/
-    {
-      label: "Admin",
-      href: "/admin",
-      icon: <ShieldCheck size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
+    // "Admin" solo se muestra a quien puede entrar: el resto veía un enlace
+    // que siempre acababa en /no-autorizado.
+    ...(esAdmin
+      ? [{
+        label: "Admin",
+        href: "/admin",
+        icon: <ShieldCheck size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
+      }]
+      : []),
   ];
 
   const getProfileOrDownload = (className = '') => user ? (

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./Button.module.css";
+import { Spinner } from "../Spinner/Spinner";
 
 export const Button = ({
   children,
@@ -28,7 +29,7 @@ export const Button = ({
         {...props}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
-        {isLoading ? <span className={styles.spinner}></span> : children}
+        {isLoading ? <Spinner size={16} /> : children}
       </Link>
       :
       <button
@@ -44,7 +45,7 @@ export const Button = ({
         {...props}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
-        {isLoading ? <span className={styles.spinner}></span> : children}
+        {isLoading ? <Spinner size={16} /> : children}
       </button>
   )
 };

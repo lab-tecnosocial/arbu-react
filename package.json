@@ -42,9 +42,12 @@
   },
   "scripts": {
     "start": "vite --port 3000",
+    "dev": "pnpm start",
     "build": "vite build",
     "serve": "vite preview",
-    "deploy": "pnpm run build && firebase deploy --only hosting"
+    "deploy": "pnpm run build && firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "rules:test": "firebase emulators:start --only firestore"
   },
   "eslintConfig": {
     "extends": [

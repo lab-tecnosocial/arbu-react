@@ -1,23 +1,46 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Trash2 } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
 import { Radio } from "../../../../components/Radio/Radio";
 import { OptionChip } from "../../../../components/OptionChip/OptionChip"
 import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
-import { optionsGeo, optionsArbol, optionsCategorias, optionsRiegos, optionsMonitoreos, optionsActividades } from "./Utils/filterOptions";
+import {
+  optionsArbol,
+  optionsCategorias,
+  optionsRiegos,
+  optionsMonitoreos,
+  MONITOREO_PERSONALIZADO,
+} from "./Utils/filterOptions";
 import { especies } from "../../utils/especies";
-import { resetMappedTreesActivityFilter, resetPlantedTreesFilter, setActiveMappedTrees, setActivePlantedTrees, setMappedTreesActivityFilter, setPlantedTreesFilter } from "../../../../actions/arboles.actions";
-import { setGeoMode } from "../../../../actions/mapaActions";
+import {
+  mostrarArbolesMapeados,
+  resetPlantedTreesFilter,
+  setActivePlantedTrees,
+  setPlantedTreesFilter,
+} from "../../../../actions/arboles.actions";
+import {
+  clearCampania,
+  limpiarCampaniaSeleccionada,
+  selectCampania,
+} from "../../../../actions/campanias.actions";
+import {
+  selectCampaniaSeleccionadaId,
+  selectCampaniasActivas,
+  selectCampaniasLoading,
+  selectCampaniasPasadas,
+} from "../../../../selectors/campanias";
+import { selectArbolesCargando } from "../../../../selectors/arboles";
+import { Skeleton } from "../../../../components/Skeleton/Skeleton";
+import { ESTADO_CAMPANIA } from "../../../../helpers/campanias/campaniaModel";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { Input } from "../../../../components/input/Input";
 
 export const Sidebar = () => {
   const dispatch = useDispatch()
   const [search, setSearch] = useState("");
-  const [geoValues, setGeoValues] = useState("normal");
   const [arbolValues, setArbolValues] = useState(["plantados"]);
   const [selectedCategorias, setSelectedCategorias] = useState("");
   const [selectedRiegos, setSelectedRiegos] = useState("");
@@ -25,101 +48,50 @@ export const Sidebar = () => {
   const [selectedEspecies, setSelectedEspecies] = useState([])
   const [fechaDesde, setDesde] = useState("");
   const [fechaHasta, setHasta] = useState("");
-  const [selectedActividad, setSelectedActividad] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const { arbolesPlantados } = useSelector((state) => state.arboles)
+  const campaniasActivas = useSelector(selectCampaniasActivas);
+  const campaniasPasadas = useSelector(selectCampaniasPasadas);
+  const campaniaSeleccionadaId = useSelector(selectCampaniaSeleccionadaId);
+  const campaniasCargando = useSelector(selectCampaniasLoading);
+  const arbolesCargando = useSelector(selectArbolesCargando);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsCollapsed(true);
-      }
-      else {
-        setIsCollapsed(false);
-      }
+      setIsCollapsed(window.innerWidth < 768);
     };
 
     handleResize();
-
     window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const handleToggleGeo = (value) => {
-    setGeoValues(value)
-    if (value === 'normal') {
-      dispatch(setGeoMode("normal"))
-    }
-    if (value === 'otbs') {
-      dispatch(setGeoMode("otbs"))
-    }
-    if (value === 'scouts') {
-      dispatch(setGeoMode("scouts"))
-    }
-  };
-
-  const clearActivityFilter = () => {
-    setSelectedActividad("");
-    dispatch(resetMappedTreesActivityFilter());
-  };
 
   const handleToggleArbol = (value) => {
     if (arbolValues.includes(value)) {
       setArbolValues(arbolValues.filter((item) => item !== value));
       if (value === 'plantados') dispatch(setActivePlantedTrees(false))
       if (value === 'mapeados') {
-        dispatch(setActiveMappedTrees(false))
-        if (selectedActividad) clearActivityFilter();
+        dispatch(mostrarArbolesMapeados(false))
+        if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
       }
     } else {
-      if (selectedActividad) clearActivityFilter();
+      if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
       setArbolValues([...arbolValues, value]);
       if (value === 'plantados') dispatch(setActivePlantedTrees(true))
-      if (value === 'mapeados') dispatch(setActiveMappedTrees(true))
+      if (value === 'mapeados') dispatch(mostrarArbolesMapeados(true))
     }
   };
 
-  const handleToggleActividad = (value) => {
-    if (selectedActividad === value) {
-      clearActivityFilter();
+  // La coreografía de capas vive en los thunks, no aquí.
+  const handleToggleCampania = (id) => {
+    if (campaniaSeleccionadaId === id) {
+      dispatch(clearCampania());
       setArbolValues(["plantados"]);
-      dispatch(setActivePlantedTrees(true));
-      dispatch(setActiveMappedTrees(false));
       return;
     }
-
-    setSelectedActividad(value);
-    dispatch(setMappedTreesActivityFilter(value));
-    setArbolValues([]);
-    dispatch(setActivePlantedTrees(false));
-    dispatch(setActiveMappedTrees(true));
-  };
-
-  const calcularFechasRango = (tipo) => {
-    const ahora = new Date();
-    const hasta = ahora.getTime();
-    let desde = null;
-
-    switch (tipo) {
-      case "estaSemana":
-        desde = new Date(ahora.setDate(ahora.getDate() - 7)).getTime();
-        break;
-      case "esteMes":
-        desde = new Date(ahora.setMonth(ahora.getMonth() - 1)).getTime();
-        break;
-      case "hoy":
-        desde = new Date(ahora.setMonth(ahora.getMonth() - 3)).getTime();
-        break;
-      case "todo":
-        desde = null;
-        break;
-    }
-
-    return { desde, hasta };
+    dispatch(selectCampania(id));
+    setArbolValues(["mapeados"]);
   };
 
   const handleCheckBox = (value) => {
@@ -130,32 +102,48 @@ export const Sidebar = () => {
     )
   }
 
+  const hayFiltros =
+    Boolean(search.trim()) ||
+    Boolean(selectedCategorias) ||
+    Boolean(selectedRiegos) ||
+    Boolean(selectedMonitoreos) ||
+    selectedEspecies.length > 0;
+
   const handleAplicar = () => {
+    const monitoreo =
+      selectedMonitoreos === MONITOREO_PERSONALIZADO
+        ? {
+          tipo: MONITOREO_PERSONALIZADO,
+          desde: fechaDesde ? new Date(`${fechaDesde}T00:00:00`).getTime() : null,
+          hasta: fechaHasta ? new Date(`${fechaHasta}T23:59:59.999`).getTime() : null,
+        }
+        : { tipo: selectedMonitoreos, desde: null, hasta: null };
 
-    let rangoMonitoreo = { tipo: selectedMonitoreos, desde: null, hasta: null };
-
-    if (selectedMonitoreos === "rango de fechas") {
-      const desdeMs = fechaDesde ? new Date(fechaDesde).getTime() : null;
-      const hastaMs = fechaHasta ? new Date(fechaHasta).getTime() : null;
-      rangoMonitoreo = {
-        tipo: "rango de fechas",
-        desde: desdeMs,
-        hasta: hastaMs
-      };
-    } else {
-      rangoMonitoreo = {
-        tipo: selectedMonitoreos,
-        ...calcularFechasRango(selectedMonitoreos)
-      };
-    }
     dispatch(setPlantedTreesFilter({
-      search,
-      selectedCategorias,
-      selectedRiegos,
-      selectedMonitoreos: rangoMonitoreo
-      // especiesSeleccionadas: especiesEspecificas
+      texto: search,
+      campo: selectedCategorias,
+      riego: selectedRiegos,
+      monitoreo,
+      especies: selectedEspecies,
     }))
   }
+
+  const handleDeshacer = () => {
+    setSearch("");
+    setSelectedCategorias("");
+    setSelectedMonitoreos("");
+    setSelectedRiegos("");
+    setSelectedEspecies([]);
+    setDesde("");
+    setHasta("");
+    dispatch(resetPlantedTreesFilter());
+  };
+
+  // Un solo bloque: las que están en curso primero, con su distintivo, y
+  // debajo las que ya terminaron.
+  const actividades = [...campaniasActivas, ...campaniasPasadas];
+
+  const hayResultados = arbolesPlantados.visibleData.length > 0;
 
   return (
     <div
@@ -182,53 +170,26 @@ export const Sidebar = () => {
           </button>
         </div>
 
-        {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 &&
+        {arbolesPlantados.isSearching &&
           <div className={styles.withResult}>
             <ArrowLeft size={22} strokeWidth={1.75} />
-            <button
-              onClick={() => dispatch(resetPlantedTreesFilter())}
-            >{arbolesPlantados.filteredData.length} Resultados
-            </button>
-          </div>
-        }
-        {arbolesPlantados.isSearching && !arbolesPlantados.filteredData.length > 0 &&
-          <div className={styles.withResult}>
-            <ArrowLeft size={22} strokeWidth={1.75} />
-            <button
-              onClick={() => dispatch(resetPlantedTreesFilter())}
-            >Volver
+            <button onClick={handleDeshacer}>
+              {hayResultados ? `${arbolesPlantados.visibleData.length} Resultados` : "Volver"}
             </button>
           </div>
         }
       </div>
       <div className={styles.body}>
-        {!arbolesPlantados.isSearching && !arbolesPlantados.filteredData.length > 0 && (
+        {!arbolesPlantados.isSearching && (
           <>
-            <div className={styles.rowSidebar}>
-              <h3>Geo Visualización</h3>
-              <div className={styles.options}>
-                {optionsGeo.map((option) => (
-                  <OptionChip
-                    key={option.value}
-                    onClick={() => {
-                      handleToggleGeo(option.value)
-                    }}
-                    checked={option.value === geoValues}
-                  >
-                    {option.label}
-                  </OptionChip>
-                ))}
-              </div>
-            </div>
             <div className={styles.rowSidebar}>
               <h3>Árboles</h3>
               <div className={styles.options}>
                 {optionsArbol.map((option) => (
                   <OptionChip
                     key={option.value}
-                    onClick={() => {
-                      handleToggleArbol(option.value)
-                    }}
+                    control="checkbox"
+                    onClick={() => handleToggleArbol(option.value)}
                     checked={arbolValues.includes(option.value)}
                   >
                     {option.label}
@@ -242,7 +203,7 @@ export const Sidebar = () => {
               <div className={styles.accordionFilters}>
                 <Accordion
                   label={"Categorias"}
-                  isActive={selectedCategorias ? true : false}
+                  isActive={Boolean(selectedCategorias)}
                 >
                   <div className={styles.inputOptions}>
                     {optionsCategorias.map((option) => (
@@ -255,10 +216,9 @@ export const Sidebar = () => {
                     ))}
                   </div>
                   <button
-                    onClick={() => {
-                      setSelectedCategorias("")
-                    }}
-                    className={`${styles.clearOptions} ${selectedCategorias ? styles.disabled : ""}`}
+                    onClick={() => setSelectedCategorias("")}
+                    disabled={!selectedCategorias}
+                    className={`${styles.clearOptions} ${selectedCategorias ? styles.clearActive : ""}`}
                   >
                     <Trash2 size={18} strokeWidth={1.75} />
                     <span>Eliminar filtro</span>
@@ -266,7 +226,7 @@ export const Sidebar = () => {
                 </Accordion>
                 <Accordion
                   label={"Riegos"}
-                  isActive={selectedRiegos ? true : false}
+                  isActive={Boolean(selectedRiegos)}
                 >
                   <div className={styles.inputOptions}>
                     {optionsRiegos.map((option) => (
@@ -279,10 +239,9 @@ export const Sidebar = () => {
                     ))}
                   </div>
                   <button
-                    onClick={() => {
-                      setSelectedRiegos("")
-                    }}
-                    className={`${styles.clearOptions} ${selectedRiegos ? styles.disabled : ""}`}
+                    onClick={() => setSelectedRiegos("")}
+                    disabled={!selectedRiegos}
+                    className={`${styles.clearOptions} ${selectedRiegos ? styles.clearActive : ""}`}
                   >
                     <Trash2 size={18} strokeWidth={1.75} />
                     <span>Eliminar filtro</span>
@@ -290,7 +249,7 @@ export const Sidebar = () => {
                 </Accordion>
                 <Accordion
                   label={"Monitoreos"}
-                  isActive={selectedMonitoreos ? true : false}
+                  isActive={Boolean(selectedMonitoreos)}
                 >
                   <div className={styles.inputOptions}>
                     {optionsMonitoreos.map((option) => (
@@ -308,21 +267,30 @@ export const Sidebar = () => {
                       label="Desde"
                       type="date"
                       value={fechaDesde}
-                      onChange={(e) => setDesde(e.target.value)}
+                      onChange={(e) => {
+                        setDesde(e.target.value);
+                        setSelectedMonitoreos(MONITOREO_PERSONALIZADO);
+                      }}
                     />
                     <Input
                       size="medium"
                       label="Hasta"
                       type="date"
                       value={fechaHasta}
-                      onChange={(e) => setHasta(e.target.value)}
+                      onChange={(e) => {
+                        setHasta(e.target.value);
+                        setSelectedMonitoreos(MONITOREO_PERSONALIZADO);
+                      }}
                     />
                   </div>
                   <button
                     onClick={() => {
-                      setSelectedMonitoreos("")
+                      setSelectedMonitoreos("");
+                      setDesde("");
+                      setHasta("");
                     }}
-                    className={`${styles.clearOptions} ${selectedMonitoreos ? styles.disabled : ""}`}
+                    disabled={!selectedMonitoreos}
+                    className={`${styles.clearOptions} ${selectedMonitoreos ? styles.clearActive : ""}`}
                   >
                     <Trash2 size={18} strokeWidth={1.75} />
                     <span>Eliminar filtro</span>
@@ -330,7 +298,7 @@ export const Sidebar = () => {
                 </Accordion>
                 <Accordion
                   label={"Especies"}
-                  isActive={selectedEspecies.length > 0 ? true : false}
+                  isActive={selectedEspecies.length > 0}
                 >
                   <div className={styles.inputOptions}>
                     {especies.map((especie) => (
@@ -343,10 +311,9 @@ export const Sidebar = () => {
                     ))}
                   </div>
                   <button
-                    onClick={() => {
-                      setSelectedEspecies([])
-                    }}
-                    className={`${styles.clearOptions} ${selectedEspecies ? styles.disabled : ""}`}
+                    onClick={() => setSelectedEspecies([])}
+                    disabled={selectedEspecies.length === 0}
+                    className={`${styles.clearOptions} ${selectedEspecies.length > 0 ? styles.clearActive : ""}`}
                   >
                     <Trash2 size={18} strokeWidth={1.75} />
                     <span>Eliminar filtro</span>
@@ -355,58 +322,71 @@ export const Sidebar = () => {
 
               </div>
             </div>
-            <div className={styles.rowSidebar}>
-              <h3>Actividades pasadas</h3>
-              <div className={styles.options}>
-                {optionsActividades.map((option) => (
-                  <OptionChip
-                    key={option.value}
-                    fullWidth
-                    onClick={() => handleToggleActividad(option.value)}
-                    checked={selectedActividad === option.value}
-                  >
-                    {option.label}
-                  </OptionChip>
-                ))}
+            {campaniasCargando && (
+              <div className={styles.rowSidebar} role="status" aria-label="Cargando actividades">
+                <h3>Actividades</h3>
+                <div className={`${styles.options} ${styles.optionsColumna}`}>
+                  <Skeleton height={48} radius="var(--br-medium)" />
+                  <Skeleton height={48} radius="var(--br-medium)" />
+                </div>
               </div>
-            </div>
+            )}
+            {!campaniasCargando && actividades.length > 0 && (
+              <div className={styles.rowSidebar}>
+                <h3>Actividades</h3>
+                <div className={`${styles.options} ${styles.optionsColumna}`}>
+                  {actividades.map((campania) => (
+                    <OptionChip
+                      key={campania.id}
+                      fullWidth
+                      onClick={() => handleToggleCampania(campania.id)}
+                      checked={campaniaSeleccionadaId === campania.id}
+                    >
+                      {campania.nombre}
+                      {campania.estado === ESTADO_CAMPANIA.ACTIVA ? (
+                        <span className={`${styles.chipEstado} ${styles.chipEnCurso}`}>
+                          En curso
+                        </span>
+                      ) : (
+                        <span className={`${styles.chipEstado} ${styles.chipConcluido}`}>
+                          Concluido
+                        </span>
+                      )}
+                    </OptionChip>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
 
-        {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 ?
-          <div className={styles.resultsWrapper}>
-            {
-              arbolesPlantados.filteredData.map((arbol, i) => {
-                return (
-                  <ResultCard index={i} key={arbol.id} arbolData={arbol} />
-                )
-              })
-            }
-          </div>
-          :
-          arbolesPlantados.isSearching && !arbolesPlantados.filteredData.length > 0 && (
+        {arbolesPlantados.isSearching && (
+          hayResultados ? (
+            <div className={styles.resultsWrapper}>
+              {arbolesPlantados.visibleData.map((arbol, i) => (
+                <ResultCard index={i} key={arbol.id} arbolData={arbol} />
+              ))}
+            </div>
+          ) : (
             <>sin resultados</>
           )
-        }
+        )}
 
       </div>
       <div className={styles.footer}>
         <Button
           variant="terciary"
           fullWidth
-          disabled={
-            (selectedCategorias || selectedMonitoreos || selectedRiegos) === "" && selectedEspecies.length === 0
-          }
-          onClick={() => {
-            setSelectedCategorias("")
-            setSelectedMonitoreos("")
-            setSelectedRiegos("")
-            setSelectedEspecies([])
-          }}
+          disabled={!hayFiltros}
+          onClick={handleDeshacer}
         >Deshacer</Button>
-        <Button variant="secondary" fullWidth onClick={handleAplicar}>Buscar</Button>
+        <Button
+          variant="secondary"
+          fullWidth
+          isLoading={arbolesCargando}
+          onClick={handleAplicar}
+        >Buscar</Button>
       </div>
     </div >
   )
 }
-
