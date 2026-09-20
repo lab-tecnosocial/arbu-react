@@ -1,0 +1,42 @@
+rules_version = '2';
+
+// Reglas de Storage de Arbu (proyecto arbu-c574d, bucket arbu-c574d.appspot.com).
+//
+// Traídas de la consola el 20/09/2026, EXACTAMENTE como estaban desde
+// 2021-11-24: hasta entonces no estaban versionadas. Se guardan aquí para que
+// un `firebase deploy --only storage` no las reemplace por sorpresa —que es lo
+// que habría pasado de inventarlas— y para poder razonar sobre ellas.
+//
+// Qué dicen hoy: cualquier usuario autenticado lee y escribe CUALQUIER ruta.
+// Es la plantilla por defecto de Firebase y es más abierta de lo que debería,
+// pero endurecerla sin saber qué prefijos usan las apps de Android e iOS las
+// dejaría sin poder subir fotos. Apretarlas es un trabajo aparte, y el primer
+// paso es inventariar el bucket.
+//
+// Por qué las fotos se ven en el mapa público sin sesión: las URLs que
+// devuelve `getDownloadURL` llevan un token de descarga y no pasan por estas
+// reglas. El `allow read` de aquí solo gobierna el acceso por ruta.
+//
+// La web sube a `aportesWeb/{arbolId}/{monitoreoKey}/{clave}.webp`
+// (ver `src/helpers/aportes/subirFoto.js`), un prefijo propio y separado del
+// que usan las apps. Hoy ese prefijo queda cubierto por la regla general; no
+// se añade un bloque específico porque los `match` de Storage se unen con OR y
+// una regla más estricta al lado de una abierta no restringe nada: daría una
+// falsa sensación de seguridad.
+//
+// Desplegar con `pnpm deploy:storage` (NO va incluido en `pnpm deploy`).
+//
+// OJO (20/09/2026): ese despliegue HOY FALLA con "Your project is being set up.
+// Please wait a minute before deploying again" y un aviso sobre App Engine.
+// Falla igual con el bucket declarado explícitamente, así que es cosa del
+// proyecto o del CLI (12.4.5), no de este archivo. No urge: el contenido es
+// idéntico byte a byte al que ya está publicado desde 2021, o sea que el
+// despliegue sería un no-op. Si algún día hay que cambiar estas reglas de
+// verdad, hay que resolver eso primero (o editarlas desde la consola).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

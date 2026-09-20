@@ -395,11 +395,12 @@ service cloud.firestore {
   ];
       }
 
-      // Reglas para colección arbolesMapeados - solo lectura pública
-      match /arbolesMapeados/{document=**} {
-        allow read: if true;
-        allow write: if false; // Solo lectura para prueba
-      }
+      // NO se redeclara aquí `arbolesMapeados`: estaba duplicado con un
+      // `allow write: if false` que no restringía nada. Los `match` de
+      // Firestore se UNEN (basta que uno permita), así que el bloque de
+      // arriba —create/update para cualquier autenticado, que es como
+      // escriben las apps móviles— era el que mandaba. Dejarlo daba a
+      // entender lo contrario.
       
       // Documento único de accesos a Arbu Pro:
       //   correos  -> quién entra al back-office
@@ -441,6 +442,21 @@ service cloud.firestore {
           area in get(/databases/$(database)/documents/usuariosAutorizados/accesoTablas)
                     .data.get('permisos', {}).get(request.auth.token.email, [])
         );
+      }
+
+      // Bitácora global de los aportes cargados o corregidos desde la web.
+      //
+      // Crear o corregir un aporte escribe en `arbolesMapeados`, o sea sobre
+      // el dato que escribió una persona con su teléfono. Aquí queda quién lo
+      // hizo, cuándo y qué decía antes. Solo se AÑADE: una bitácora que se
+      // puede editar o borrar no sirve para responder "¿quién tocó esto?".
+      //
+      // La del concurso (`proyectos/{id}/correcciones`) sigue existiendo: allí
+      // la corrección pertenece a una campaña concreta.
+      match /bitacoraAportes/{entradaId} {
+        allow read: if request.auth != null && tienePermiso('aportes');
+        allow create: if request.auth != null && tienePermiso('aportes') &&
+          request.resource.data.editadoPor == request.auth.token.email;
       }
 
       // "proyectos" es también la colección de CAMPAÑAS de mapeo: el nombre es

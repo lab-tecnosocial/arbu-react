@@ -36,6 +36,7 @@ que **no se renombran a la ligera**.
 | id | Área | Ruta |
 | --- | --- | --- |
 | `campanas` | Campañas y concursos | `/campanas` |
+| `aportes` | Aportes | `/admin/aportes` |
 | `proyectos` | Proyectos | `/proyectos` |
 | `tabla` | Tabla de árboles | `/tabla` |
 | `mapeoScout` | Mapeo scout | `/mapeo-scout` |

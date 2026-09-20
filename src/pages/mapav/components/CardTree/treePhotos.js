@@ -1,4 +1,4 @@
-const MAPPED_PHOTO_FIELDS = [
+export const MAPPED_PHOTO_FIELDS = [
   { key: "fotoArbolCompleto", label: "Árbol completo" },
   { key: "fotoRaiz", label: "Raíz" },
   { key: "fotoCorteza", label: "Corteza" },

@@ -47,7 +47,8 @@
     "serve": "vite preview",
     "deploy": "pnpm run build && firebase deploy --only hosting",
     "deploy:rules": "firebase deploy --only firestore:rules",
-    "rules:test": "firebase emulators:start --only firestore"
+    "rules:test": "firebase emulators:start --only firestore",
+    "deploy:storage": "firebase deploy --only storage"
   },
   "eslintConfig": {
     "extends": [

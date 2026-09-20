@@ -50,6 +50,22 @@ const escribirMarca = (nombre) => {
 };
 
 /**
+ * Olvida la marca de frescura de una colección.
+ *
+ * Tras escribir desde Arbu Pro, el mapa público de ESTE navegador seguiría
+ * sirviendo su copia de hasta media hora: el admin no vería el aporte que
+ * acaba de registrar y lo daría por perdido. Borrar la marca fuerza la
+ * siguiente lectura contra el servidor.
+ */
+export const invalidarMarca = (nombre) => {
+  try {
+    localStorage.removeItem(CLAVE(nombre));
+  } catch {
+    /* sin almacenamiento: no había marca que invalidar */
+  }
+};
+
+/**
  * Lectura de una colección entera apoyada en la caché local de Firestore.
  *
  * - Si hay copia en caché y es más nueva que `frescuraMs`, se devuelve y **no

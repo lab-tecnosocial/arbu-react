@@ -178,15 +178,18 @@ El sidebar tenía un bloque "Geo Visualización" con Normal / OTBs / Scouts.
   dentro de `onEachFeature`, que es un hook fuera de componente y habría
   reventado igualmente.
 
-## Mapeo desde la web (pendiente)
+## Mapeo desde la web
 
-`TreeMappingForm` se retiró: era inalcanzable (su botón llevaba tiempo
-comentado) y escribía a `mapeos_test` con un esquema incompatible con
-`arbolesMapeados` —`lugarPlantacion` en vez de `lugarDePlantacion`, `diametro`
-suelto, `fechaCreacion`— y **sin latitud, longitud ni `mapeadoPor`**. Aunque se
-reactivara, produciría documentos que el mapa no puede pintar ni atribuir a
-nadie. Para revivirlo hay que escribir en `arbolesMapeados` con el esquema real
-(incluido el envoltorio `monitoreos`) y añadir su regla de Firestore.
+Hecho, en `/admin/aportes` (área `aportes`). Un administrador registra árboles
+que no entraron por la app, corrige los existentes —incluidas coordenadas y
+fotos— e importa planillas. Los detalles, el modelo de datos y los sitios donde
+es fácil equivocarse están en **`docs/aportes-web.md`**.
+
+El antiguo `TreeMappingForm` se había retirado por escribir a `mapeos_test` con
+un esquema incompatible (`lugarPlantacion` en vez de `lugarDePlantacion`,
+`diametro` suelto, y **sin latitud, longitud ni `mapeadoPor`**): producía
+documentos que el mapa no podía pintar ni atribuir a nadie. Lo de ahora escribe
+en `arbolesMapeados` con el esquema real, envoltorio `monitoreos` incluido.
 
 ## Service worker, caché y "no veo mis cambios"
 

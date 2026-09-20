@@ -15,5 +15,9 @@
   },
   "firestore": {
     "rules": "firestore.rules"
+  },
+  "storage": {
+    "bucket": "arbu-c574d.appspot.com",
+    "rules": "storage.rules"
   }
 }
