@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowLeft, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, ChevronUp, Link2, Trash2 } from "lucide-react";
 import { Button } from "../../../../components/button/Button";
 import styles from "./Sidebar.module.css"
 import { Radio } from "../../../../components/Radio/Radio";
@@ -27,12 +27,18 @@ import {
   selectCampania,
 } from "../../../../actions/campanias.actions";
 import {
+  selectCampaniaSeleccionada,
   selectCampaniaSeleccionadaId,
   selectCampaniasActivas,
   selectCampaniasLoading,
   selectCampaniasPasadas,
 } from "../../../../selectors/campanias";
-import { selectArbolesCargando } from "../../../../selectors/arboles";
+import {
+  selectArbolesCargando,
+  selectMapeadosActivos,
+  selectPlantadosActivos,
+} from "../../../../selectors/arboles";
+import { enlaceDeCampania } from "../../../../helpers/campanias/enlaceCampania";
 import { Skeleton } from "../../../../components/Skeleton/Skeleton";
 import { ESTADO_CAMPANIA } from "../../../../helpers/campanias/campaniaModel";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
@@ -41,7 +47,6 @@ import { Input } from "../../../../components/input/Input";
 export const Sidebar = () => {
   const dispatch = useDispatch()
   const [search, setSearch] = useState("");
-  const [arbolValues, setArbolValues] = useState(["plantados"]);
   const [selectedCategorias, setSelectedCategorias] = useState("");
   const [selectedRiegos, setSelectedRiegos] = useState("");
   const [selectedMonitoreos, setSelectedMonitoreos] = useState("");
@@ -50,11 +55,16 @@ export const Sidebar = () => {
   const [fechaHasta, setHasta] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const [enlaceCopiado, setEnlaceCopiado] = useState(false);
+
   const { arbolesPlantados } = useSelector((state) => state.arboles)
+  const plantadosActivos = useSelector(selectPlantadosActivos);
+  const mapeadosActivos = useSelector(selectMapeadosActivos);
   const campaniasActivas = useSelector(selectCampaniasActivas);
   const campaniasPasadas = useSelector(selectCampaniasPasadas);
   const campaniaSeleccionadaId = useSelector(selectCampaniaSeleccionadaId);
   const campaniasCargando = useSelector(selectCampaniasLoading);
+  const campaniaSeleccionada = useSelector(selectCampaniaSeleccionada);
   const arbolesCargando = useSelector(selectArbolesCargando);
 
   useEffect(() => {
@@ -67,31 +77,54 @@ export const Sidebar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Qué capas están encendidas se lee del store, no de un estado propio: la
+  // selección también puede venir de un enlace `/mapa?actividad=…`, y una copia
+  // local se quedaría mostrando lo contrario de lo que pinta el mapa.
+  const capaActiva = { plantados: plantadosActivos, mapeados: mapeadosActivos };
+
   const handleToggleArbol = (value) => {
-    if (arbolValues.includes(value)) {
-      setArbolValues(arbolValues.filter((item) => item !== value));
+    const encendida = capaActiva[value];
+
+    if (encendida) {
       if (value === 'plantados') dispatch(setActivePlantedTrees(false))
       if (value === 'mapeados') {
         dispatch(mostrarArbolesMapeados(false))
         if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
       }
-    } else {
-      if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
-      setArbolValues([...arbolValues, value]);
-      if (value === 'plantados') dispatch(setActivePlantedTrees(true))
-      if (value === 'mapeados') dispatch(mostrarArbolesMapeados(true))
+      return;
     }
+
+    if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
+    if (value === 'plantados') dispatch(setActivePlantedTrees(true))
+    if (value === 'mapeados') dispatch(mostrarArbolesMapeados(true))
   };
 
   // La coreografía de capas vive en los thunks, no aquí.
   const handleToggleCampania = (id) => {
     if (campaniaSeleccionadaId === id) {
       dispatch(clearCampania());
-      setArbolValues(["plantados"]);
       return;
     }
     dispatch(selectCampania(id));
-    setArbolValues(["plantados", "mapeados"]);
+  };
+
+  /**
+   * Copiar el enlace de la actividad que se está viendo.
+   *
+   * La URL ya lleva el parámetro puesto, pero pedirle a alguien que copie la
+   * barra de direcciones en un móvil es pedirle demasiado.
+   */
+  const handleCopiarEnlace = async () => {
+    const enlace = enlaceDeCampania(campaniaSeleccionada, window.location.origin);
+    try {
+      await navigator.clipboard.writeText(enlace);
+      setEnlaceCopiado(true);
+      setTimeout(() => setEnlaceCopiado(false), 2500);
+    } catch (error) {
+      // Sin permiso de portapapeles (o sin HTTPS) queda el recurso de siempre:
+      // la URL de la barra, que ya es la correcta.
+      console.warn("[mapa] no se pudo copiar el enlace:", error);
+    }
   };
 
   const handleCheckBox = (value) => {
@@ -190,7 +223,7 @@ export const Sidebar = () => {
                     key={option.value}
                     control="checkbox"
                     onClick={() => handleToggleArbol(option.value)}
-                    checked={arbolValues.includes(option.value)}
+                    checked={Boolean(capaActiva[option.value])}
                   >
                     {option.label}
                   </OptionChip>
@@ -355,6 +388,19 @@ export const Sidebar = () => {
                     </OptionChip>
                   ))}
                 </div>
+                {campaniaSeleccionada && (
+                  <button
+                    type="button"
+                    className={styles.copiarEnlace}
+                    onClick={handleCopiarEnlace}
+                    title="Copiar el enlace de esta actividad para compartirla"
+                  >
+                    {enlaceCopiado
+                      ? <Check size={16} strokeWidth={1.75} />
+                      : <Link2 size={16} strokeWidth={1.75} />}
+                    <span>{enlaceCopiado ? "Enlace copiado" : "Copiar enlace de esta actividad"}</span>
+                  </button>
+                )}
               </div>
             )}
           </>

@@ -160,6 +160,36 @@ generalizó sin migrar ningún documento) y se crean desde **Proyectos**.
   caer del lado equivocado. La válvula de escape es la revisión humana, no un
   buffer.
 
+### Enlace directo a una actividad
+
+`/mapa?actividad=<slug>` abre el mapa **ya puesto** en esa actividad, con sus
+dos capas encendidas:
+
+```
+https://arbu.app/mapa?actividad=mapa-de-la-primavera-2026
+```
+
+Funciona **sin sesión**: las campañas con `publica: true` se leen sin
+autenticar, que es de donde sale el selector del mapa.
+
+- El parámetro acepta el `slug` de la campaña, su id de documento y el slug sin
+  el sufijo del id. Un enlace compartido se reenvía durante meses y a veces se
+  teclea a mano: lo caro es que deje de abrir.
+- **La URL se mantiene sola**: elegir una actividad la reescribe (con `replace`,
+  para no llenar el historial), así que compartir es copiar la barra de
+  direcciones. En la barra lateral hay además un botón «Copiar enlace de esta
+  actividad».
+- Un slug que no existe —campaña borrada, errata— no rompe nada: el mapa abre
+  normal y el parámetro se limpia.
+- Qué capas están encendidas se lee del store (`selectPlantadosActivos`,
+  `selectMapeadosActivos`) y no de un estado del Sidebar, porque la selección
+  puede venir del enlace y una copia local mostraría lo contrario de lo que
+  pinta el mapa.
+
+Las piezas: `helpers/campanias/enlaceCampania.js` (el parámetro y su
+resolución, sin React) y `pages/mapav/hooks/useActividadEnUrl.js` (la
+sincronización en los dos sentidos).
+
 ## Capa geográfica de grupos scouts (retirada)
 
 El sidebar tenía un bloque "Geo Visualización" con Normal / OTBs / Scouts.

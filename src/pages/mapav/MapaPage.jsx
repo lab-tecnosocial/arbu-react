@@ -6,6 +6,7 @@ import { MapWrapper } from "./components/MapWrapper/MapWrapper";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
 import { cargarDatosMapaPublico } from "../../actions/mapaPublico.actions";
+import { useActividadEnUrl } from "./hooks/useActividadEnUrl";
 import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
 
 const MapaComponent = () => {
@@ -14,6 +15,10 @@ const MapaComponent = () => {
   useEffect(() => {
     dispatch(cargarDatosMapaPublico());
   }, [dispatch]);
+
+  // `/mapa?actividad=…` abre el mapa ya puesto en esa actividad, y elegir una
+  // reescribe la URL para que compartir sea copiar la barra de direcciones.
+  useActividadEnUrl();
 
   return (
     <div className={styles.mainGrid}>

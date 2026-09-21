@@ -190,3 +190,25 @@
   color: var(--color-text-muted);
   background-color: var(--color-bg-muted);
 }
+
+/* Compartir la actividad que se está viendo: la URL ya la lleva, esto solo
+   evita tener que copiar la barra de direcciones a mano en un móvil. */
+.copiarEnlace {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--gray-300, #d4d4d4);
+  border-radius: var(--br-medium, 8px);
+  background: transparent;
+  color: var(--gray-600, #525252);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.copiarEnlace:hover {
+  border-style: solid;
+  color: var(--primary-600, #2f6b4f);
+}
