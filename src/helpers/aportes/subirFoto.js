@@ -21,6 +21,50 @@ const LADO_MAXIMO = 1600;
 const CALIDAD = 0.82;
 const TAMANIO_MAXIMO_ORIGEN = 25 * 1024 * 1024;
 
+/**
+ * Los únicos formatos que un navegador pinta en cualquier parte.
+ *
+ * La lista es una lista blanca, no una negra, por lo que pasó el 21/09/2026:
+ * se subió un **HEIC** —el formato con el que fotografía el iPhone por
+ * defecto—, la compresión no pudo decodificarlo, el fallback «si falla, sube el
+ * original» lo subió tal cual… y la ficha del árbol quedó con una foto rota en
+ * producción. Chrome y Firefox no muestran HEIC; Safari sí, así que quien lo
+ * sube desde un Mac ni siquiera ve el problema. Una lista negra habría dejado
+ * pasar el siguiente formato exótico: aquí solo entra lo que se ve seguro.
+ */
+const FORMATOS_ADMITIDOS = ["image/jpeg", "image/png", "image/webp"];
+
+/** Para el atributo `accept` del selector de archivos. */
+export const ACCEPT_FOTOS = FORMATOS_ADMITIDOS.join(",");
+
+const esHeic = (archivo) =>
+  /^image\/hei[cf]/i.test(archivo.type ?? "") || /\.(heic|heif)$/i.test(archivo.name ?? "");
+
+/**
+ * ¿Se puede subir esta foto? Devuelve el motivo si no, o `null` si sí.
+ *
+ * El tipo puede llegar vacío (algunos sistemas no lo rellenan al arrastrar), y
+ * entonces manda la extensión: rechazar por un `type` en blanco tiraría fotos
+ * perfectamente válidas.
+ */
+export const motivoDeRechazo = (archivo) => {
+  if (!archivo) return "No hay archivo";
+
+  if (esHeic(archivo)) {
+    return "Las fotos del iPhone (HEIC) no se ven en la web. Exportala o convertila a JPG y volvé a subirla.";
+  }
+
+  const tipo = (archivo.type || "").toLowerCase();
+  const porExtension = /\.(jpe?g|png|webp)$/i.test(archivo.name ?? "");
+  if (tipo ? !FORMATOS_ADMITIDOS.includes(tipo) : !porExtension) {
+    return "Formato no admitido. Subí la foto en JPG, PNG o WebP.";
+  }
+
+  if (archivo.size > TAMANIO_MAXIMO_ORIGEN) return "La imagen pesa más de 25 MB";
+
+  return null;
+};
+
 export const RAIZ_APORTES = "aportesWeb";
 
 const leerImagen = (archivo) =>
@@ -76,13 +120,10 @@ const extension = (blob) => (blob.type === "image/webp" ? "webp" : (blob.type.sp
  * @returns {Promise<{success: boolean, url?: string, ruta?: string, error?: string}>}
  */
 export const subirFoto = async (archivo, destino, onProgreso) => {
-  if (!archivo) return { success: false, error: "No hay archivo" };
-  if (!archivo.type?.startsWith("image/")) {
-    return { success: false, error: "El archivo no es una imagen" };
-  }
-  if (archivo.size > TAMANIO_MAXIMO_ORIGEN) {
-    return { success: false, error: "La imagen pesa más de 25 MB" };
-  }
+  // Se comprueba ANTES de comprimir y de subir: lo que no se ve en un navegador
+  // no debe llegar nunca a Storage ni a la ficha de un árbol.
+  const rechazo = motivoDeRechazo(archivo);
+  if (rechazo) return { success: false, error: rechazo };
 
   const blob = await comprimirImagen(archivo);
   const ruta = `${RAIZ_APORTES}/${destino.arbolId}/${destino.monitoreoKey}/${destino.clave}.${extension(blob)}`;

@@ -77,9 +77,21 @@ La web nunca había subido nada a Storage. Ahora sube a
 `aportesWeb/{arbolId}/{monitoreoKey}/{clave}.webp`, un **prefijo propio**,
 separado del que usan las apps (que este repo no conoce).
 
-Se comprime en el cliente antes de subir: WebP, lado máximo 1600 px, calidad
-0.82. Una foto de teléfono de 4 MB queda en ~300 KB. Si la compresión falla, se
-sube el original: mejor 4 MB que perder la foto.
+**Solo se admiten JPG, PNG y WebP**, y se comprueba antes de comprimir y de
+subir. Es una lista blanca por lo que pasó el 21/09/2026, el primer día de uso
+real: se subió un **HEIC** —el formato con el que fotografía el iPhone por
+defecto—, `comprimirImagen()` no pudo decodificarlo, el fallback «si falla,
+sube el original» lo subió tal cual, y la ficha del árbol quedó con una foto
+rota en producción. Chrome y Firefox no muestran HEIC; **Safari sí**, así que
+quien lo sube desde un Mac ni siquiera ve el problema. Ahora la casilla lo
+rechaza y explica qué hacer («exportala o convertila a JPG»), en la casilla y
+en un aviso arriba. Una lista negra habría dejado pasar el siguiente formato
+exótico.
+
+Lo admitido se comprime en el cliente antes de subir: WebP, lado máximo 1600
+px, calidad 0.82. Una foto de teléfono de 4 MB queda en ~300 KB. Si la
+compresión falla, se sube el original —que ya se sabe mostrable, porque pasó la
+lista blanca—: mejor 4 MB que perder la foto.
 
 Como las fotos se suben mientras se rellena el formulario, el id del árbol y la
 clave del monitoreo **se reservan antes de guardar** (`nuevaIdentidadAporte`);

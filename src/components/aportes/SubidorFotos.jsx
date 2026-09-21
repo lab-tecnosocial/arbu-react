@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { subirFoto } from "../../helpers/aportes/subirFoto";
+import { ACCEPT_FOTOS, motivoDeRechazo, subirFoto } from "../../helpers/aportes/subirFoto";
 import { leerMetadatosFoto } from "../../helpers/aportes/metadatosFoto";
 
 /**
@@ -24,7 +24,9 @@ import { leerMetadatosFoto } from "../../helpers/aportes/metadatosFoto";
  * es la parte más pesada del formulario. Nunca se pisa una casilla que ya
  * tiene foto —quien quiera reemplazarla la suelta encima a propósito—.
  */
-const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, onMetadatos, deshabilitado }) => {
+const SubidorFotos = ({
+  clavesFoto, fotos, identidad, onCambiar, onMetadatos, onRechazo, deshabilitado,
+}) => {
   const [progreso, setProgreso] = useState({});
   const [errores, setErrores] = useState({});
   const [encima, setEncima] = useState(null);
@@ -33,6 +35,17 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, onMetadatos, de
   const elegir = async (clave, archivo) => {
     if (!archivo) return;
 
+    // Un formato que la web no puede pintar se rechaza aquí, antes de leer nada
+    // y antes de subir: el motivo se dice en la casilla Y arriba, porque el
+    // texto de una casilla es fácil de no ver entre seis.
+    const rechazo = motivoDeRechazo(archivo);
+    const etiquetaCasilla = clavesFoto.find((f) => f.key === clave)?.label ?? clave;
+    if (rechazo) {
+      setErrores((prev) => ({ ...prev, [clave]: rechazo }));
+      onRechazo?.(etiquetaCasilla, rechazo);
+      return;
+    }
+
     setErrores((prev) => ({ ...prev, [clave]: null }));
     setProgreso((prev) => ({ ...prev, [clave]: 0 }));
 
@@ -40,8 +53,7 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, onMetadatos, de
     // la subida: `subirFoto` lo recomprime en un canvas, y de ahí sale sin
     // coordenada ni fecha. Se avisa aunque la subida falle —el dato de dónde y
     // cuándo sigue siendo bueno— y si falla la lectura no se toca la subida.
-    const etiqueta = clavesFoto.find((f) => f.key === clave)?.label ?? clave;
-    leerMetadatosFoto(archivo).then((metadatos) => onMetadatos?.(etiqueta, metadatos));
+    leerMetadatosFoto(archivo).then((metadatos) => onMetadatos?.(etiquetaCasilla, metadatos));
 
     const res = await subirFoto(
       archivo,
@@ -64,7 +76,9 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, onMetadatos, de
    * las demás caen en las que siguen vacías, en el orden del catálogo.
    */
   const soltar = (clave, lista) => {
-    const archivos = Array.from(lista ?? []).filter((a) => a.type?.startsWith("image/"));
+    // No se filtra por tipo: un HEIC soltado tiene que decir por qué no vale,
+    // no desaparecer sin más.
+    const archivos = Array.from(lista ?? []);
     if (!archivos.length) return;
 
     // Se sigue por las casillas que vienen DESPUÉS de aquella donde se soltó, y
@@ -153,7 +167,7 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, onMetadatos, de
 
               <input
                 type="file"
-                accept="image/*"
+                accept={ACCEPT_FOTOS}
                 multiple
                 hidden
                 ref={(el) => { entradas.current[key] = el; }}

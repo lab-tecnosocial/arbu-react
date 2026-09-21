@@ -121,6 +121,9 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
     });
   };
 
+  /** Una foto que no se puede usar: se dice por qué, donde se ve. */
+  const alRechazarFoto = (etiqueta, motivo) => setLecturaFoto({ etiqueta, rechazo: motivo });
+
   const usarDatosDeLaFoto = () => {
     cambiar(lecturaFoto.propuesta);
     setLecturaFoto((prev) => ({
@@ -273,7 +276,17 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
   /** Qué se sacó de la última foto, y qué queda por decidir. */
   const avisoDeLaFoto = () => {
     if (!lecturaFoto) return null;
-    const { etiqueta, vacia, aplicados = [], enConflicto = [], propuesta = {} } = lecturaFoto;
+    const {
+      etiqueta, vacia, rechazo, aplicados = [], enConflicto = [], propuesta = {},
+    } = lecturaFoto;
+
+    if (rechazo) {
+      return (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          {rechazo} (casilla «{etiqueta}»)
+        </Alert>
+      );
+    }
 
     if (vacia) {
       return (
@@ -365,8 +378,8 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
         <Divider sx={{ my: 2 }} />
         <Typography variant="overline" color="text.secondary">Fotos</Typography>
         <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-          Si la foto viene del teléfono con el GPS encendido, la ubicación y la fecha se
-          completan solas.
+          JPG, PNG o WebP. Si la foto viene del teléfono con el GPS encendido, la ubicación y
+          la fecha se completan solas.
         </Typography>
         <Box sx={{ mt: 1 }}>
           {identidad && (
@@ -376,6 +389,7 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
               identidad={identidad}
               onCambiar={cambiarFoto}
               onMetadatos={alLeerMetadatos}
+              onRechazo={alRechazarFoto}
               deshabilitado={guardando}
             />
           )}
