@@ -26,6 +26,7 @@ src/helpers/aportes/
   validarAporte.js    normalización y validación (errores vs advertencias)
   escrituraArbol.js   crear, diff y actualizar; reserva de ids
   subirFoto.js        compresión en cliente + subida a Storage
+  metadatosFoto.js    EXIF de la foto (GPS y fecha) y cómo se concilia
   importarAportes.js  plantilla, lectura de planilla y escritura por lotes
   listadoAportes.js   árboles → filas (árbol, monitoreo)
   bitacora.js         quién cambió qué y qué decía antes
@@ -98,6 +99,44 @@ resolverlo antes de tocar esas reglas de verdad—.
 
 Las fotos se ven en el mapa público sin sesión porque las URLs de
 `getDownloadURL` llevan un token de descarga y no pasan por esas reglas.
+
+Las casillas aceptan **arrastrar y soltar**. Soltar varias fotos de golpe las
+reparte por las casillas libres empezando por la de al lado, así que las seis de
+un árbol entran de una vez y en el orden del catálogo. Nunca se pisa una casilla
+que ya tiene foto: para reemplazarla hay que soltarla encima.
+
+## Lo que la foto ya sabe: ubicación y fecha
+
+Una foto de teléfono trae en su EXIF la coordenada del GPS y la hora del
+disparo. Al elegirla, `metadatosFoto.js` los lee y **rellena los campos que
+estén en blanco**: ubicación (que mueve el marcador del mapa) y fecha del
+mapeo.
+
+- **Se lee del archivo original, nunca del que se sube.** `comprimirImagen()`
+  redibuja la foto en un `<canvas>` y un canvas no conserva EXIF: leerlo después
+  de comprimir daría siempre vacío. Por eso la lectura arranca en
+  `SubidorFotos` antes de llamar a `subirFoto`, en paralelo con la subida, y se
+  avisa aunque la subida falle.
+- **La foto rellena huecos, no corrige a la persona.** Si ya hay un punto y la
+  foto discrepa en más de 25 m, o si la fecha es otra, no se toca nada: se
+  ofrece con un botón «Usar los de la foto». Lo contrario convertiría «subí otra
+  foto» en «se me movió el árbol». Por debajo de 25 m es ruido del GPS y no se
+  pregunta.
+- **Al crear, se guarda la hora real del disparo.** El formulario solo expresa
+  días, así que un alta normal nace a medianoche; si la foto dice la hora y el
+  día sigue siendo el suyo, se conserva esa hora. Al **corregir** no se toca: la
+  hora del monitoreo es la que registró la app.
+- **(0, 0) y las fechas anteriores a 1990 se descartan**: son el valor por
+  defecto de un GPS que no fijó posición y de una cámara sin reloj en hora, no
+  un dato.
+- **WhatsApp y las redes borran el EXIF al comprimir.** Es la causa habitual de
+  que no se rellene nada, y el aviso de la pantalla lo dice para que nadie
+  busque el fallo en el código.
+
+Lo lee `exifr` (variante `lite`: la `mini` no trae GPS ni HEIC —el formato del
+iPhone— y la `full` pesa el doble por formatos que aquí nadie usa), con **import
+dinámico**: son ~45 KB que solo se descargan al elegir una foto, en su propio
+chunk, y no entran en el bundle del mapa público.
 
 ## Permisos
 

@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert, Autocomplete, Box, Button, Dialog, DialogActions, DialogContent,
   DialogTitle, Divider, Grid, TextField, Typography,
 } from "@mui/material";
 import { CAMPO } from "../../helpers/aportes/tiposAporte";
 import {
-  validarAporte, valoresIniciales,
+  aValorFecha, validarAporte, valoresIniciales,
 } from "../../helpers/aportes/validarAporte";
+import { conciliarMetadatos } from "../../helpers/aportes/metadatosFoto";
 import {
   calcularCambios, crearArbol, actualizarArbol, nuevaIdentidadAporte,
 } from "../../helpers/aportes/escrituraArbol";
@@ -43,6 +44,14 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
   const [guardando, setGuardando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState(null);
   const [intentado, setIntentado] = useState(false);
+  const [lecturaFoto, setLecturaFoto] = useState(null);
+  const [horaDeLaFoto, setHoraDeLaFoto] = useState(null);
+
+  // El EXIF se lee mientras la persona puede seguir escribiendo, así que la
+  // conciliación necesita los valores de AHORA y no los del render en que se
+  // eligió el archivo.
+  const valoresRef = useRef(valores);
+  valoresRef.current = valores;
 
   // Cada apertura reinicia el formulario: si no, se arrastran los valores del
   // aporte anterior y se corrige el árbol equivocado.
@@ -53,6 +62,8 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
     setRutasSubidas({});
     setErrorGeneral(null);
     setIntentado(false);
+    setLecturaFoto(null);
+    setHoraDeLaFoto(null);
     setIdentidad(
       arbol
         ? { arbolId: arbol.id, monitoreoKey }
@@ -67,11 +78,56 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
 
   const visibles = intentado ? errores : {};
 
-  const cambiar = (parcial) => setValores((prev) => ({ ...prev, ...parcial }));
+  // El espejo se adelanta al render a propósito: al soltar varias fotos de
+  // golpe, sus lecturas de EXIF terminan casi juntas, y la segunda tiene que
+  // ver lo que acaba de rellenar la primera en vez de volver a pisarlo.
+  const cambiar = (parcial) => {
+    valoresRef.current = { ...valoresRef.current, ...parcial };
+    setValores((prev) => ({ ...prev, ...parcial }));
+  };
 
   const cambiarFoto = (clave, url, ruta) => {
     setFotos((prev) => ({ ...prev, [clave]: url }));
     setRutasSubidas((prev) => ({ ...prev, [clave]: ruta ?? prev[clave] }));
+  };
+
+  /**
+   * Lo que venía dentro de la foto: coordenada del GPS y hora del disparo.
+   *
+   * Rellena solo lo que está en blanco. Si la foto discrepa de lo que ya hay,
+   * no se toca nada y se ofrece con un botón: subir una segunda foto no puede
+   * mover un árbol que alguien acababa de colocar a mano en el mapa.
+   */
+  const alLeerMetadatos = (etiqueta, metadatos) => {
+    if (!metadatos.coordenadas && !metadatos.fecha) {
+      // Si otra foto ya puso el dato, que esta no lo traiga no es noticia.
+      setLecturaFoto((prev) => (prev?.aplicados?.length ? prev : { etiqueta, vacia: true }));
+      return;
+    }
+
+    const { propuesta, aplicar, enConflicto } = conciliarMetadatos(
+      valoresRef.current,
+      metadatos
+    );
+
+    if (Object.keys(aplicar).length) cambiar(aplicar);
+    if (metadatos.fecha) setHoraDeLaFoto(metadatos.fecha);
+
+    setLecturaFoto({
+      etiqueta,
+      propuesta,
+      aplicados: Object.keys(aplicar),
+      enConflicto,
+    });
+  };
+
+  const usarDatosDeLaFoto = () => {
+    cambiar(lecturaFoto.propuesta);
+    setLecturaFoto((prev) => ({
+      ...prev,
+      aplicados: Object.keys(prev.propuesta),
+      enConflicto: [],
+    }));
   };
 
   /** Lo subido y no guardado no debe quedarse ocupando el almacén. */
@@ -98,6 +154,15 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
     setErrorGeneral(null);
 
     const conFotos = { ...normalizados, ...fotos };
+
+    // El formulario solo sabe expresar un DÍA, pero la foto sí trae la hora del
+    // disparo. Si el día que se va a guardar sigue siendo el suyo, el árbol
+    // nace con la hora real en lugar de con medianoche: es un dato que ya
+    // existía y que después nadie tendría cómo reponer. Al corregir no se toca
+    // —la hora del monitoreo es la que registró la app—.
+    if (!editando && horaDeLaFoto && aValorFecha(horaDeLaFoto) === valores.timestamp) {
+      conFotos.timestamp = horaDeLaFoto;
+    }
 
     if (!editando) {
       const res = await crearArbol(tipo, conFotos, autor, identidad);
@@ -205,6 +270,58 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
 
   const camposArbolVisibles = tipo.camposArbol.filter((c) => !CAMPOS_EN_MAPA.includes(c.nombre));
 
+  /** Qué se sacó de la última foto, y qué queda por decidir. */
+  const avisoDeLaFoto = () => {
+    if (!lecturaFoto) return null;
+    const { etiqueta, vacia, aplicados = [], enConflicto = [], propuesta = {} } = lecturaFoto;
+
+    if (vacia) {
+      return (
+        <Alert severity="info" sx={{ mt: 2 }}>
+          La foto «{etiqueta}» no trae ubicación ni fecha. WhatsApp y las redes las borran al
+          comprimir: si la foto pasó por ahí, esos datos ya no están y hay que ponerlos a mano.
+        </Alert>
+      );
+    }
+
+    const tomados = [
+      aplicados.includes("latitud") ? "la ubicación" : null,
+      aplicados.includes("timestamp") ? "la fecha del mapeo" : null,
+    ].filter(Boolean);
+
+    if (!tomados.length && !enConflicto.length) return null;
+
+    return (
+      <Alert
+        severity={enConflicto.length ? "warning" : "success"}
+        sx={{ mt: 2 }}
+        action={
+          enConflicto.length ? (
+            <Button size="small" color="inherit" onClick={usarDatosDeLaFoto}>
+              Usar los de la foto
+            </Button>
+          ) : undefined
+        }
+      >
+        {tomados.length > 0 && (
+          <>
+            De la foto «{etiqueta}» se tomó {tomados.join(" y ")}. Revisalo y ajustalo si hace
+            falta.{enConflicto.length ? " " : ""}
+          </>
+        )}
+        {enConflicto.length > 0 && (
+          <>
+            La foto «{etiqueta}» dice otra cosa en {enConflicto.join(" y ")}
+            {propuesta.timestamp && enConflicto.includes("la fecha")
+              ? ` (${propuesta.timestamp})`
+              : ""}
+            . Se deja lo que ya estaba puesto.
+          </>
+        )}
+      </Alert>
+    );
+  };
+
   return (
     <Dialog open={abierto} onClose={cerrarSinGuardar} maxWidth="md" fullWidth>
       <DialogTitle>
@@ -247,6 +364,10 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
 
         <Divider sx={{ my: 2 }} />
         <Typography variant="overline" color="text.secondary">Fotos</Typography>
+        <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
+          Si la foto viene del teléfono con el GPS encendido, la ubicación y la fecha se
+          completan solas.
+        </Typography>
         <Box sx={{ mt: 1 }}>
           {identidad && (
             <SubidorFotos
@@ -254,10 +375,13 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
               fotos={fotos}
               identidad={identidad}
               onCambiar={cambiarFoto}
+              onMetadatos={alLeerMetadatos}
               deshabilitado={guardando}
             />
           )}
         </Box>
+
+        {avisoDeLaFoto()}
 
         {advertencias.length > 0 && (
           <Alert severity="warning" sx={{ mt: 2 }}>

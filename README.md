@@ -182,8 +182,10 @@ El sidebar tenía un bloque "Geo Visualización" con Normal / OTBs / Scouts.
 
 Hecho, en `/admin/aportes` (área `aportes`). Un administrador registra árboles
 que no entraron por la app, corrige los existentes —incluidas coordenadas y
-fotos— e importa planillas. Los detalles, el modelo de datos y los sitios donde
-es fácil equivocarse están en **`docs/aportes-web.md`**.
+fotos— e importa planillas. Las fotos se arrastran a sus casillas y, si
+conservan el EXIF de la cámara, **la ubicación y la fecha se rellenan solas**.
+Los detalles, el modelo de datos y los sitios donde es fácil equivocarse están
+en **`docs/aportes-web.md`**.
 
 El antiguo `TreeMappingForm` se había retirado por escribir a `mapeos_test` con
 un esquema incompatible (`lugarPlantacion` en vez de `lugarDePlantacion`,

@@ -5,6 +5,7 @@ import {
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { subirFoto } from "../../helpers/aportes/subirFoto";
+import { leerMetadatosFoto } from "../../helpers/aportes/metadatosFoto";
 
 /**
  * Las fotos del monitoreo, una casilla por parte del árbol.
@@ -16,10 +17,17 @@ import { subirFoto } from "../../helpers/aportes/subirFoto";
  * Quitar una foto solo la desengancha del formulario; el archivo se borra de
  * Storage al descartar el aporte entero, no aquí, porque en una edición la URL
  * puede ser una que subió la app móvil y que no nos toca borrar.
+ *
+ * Se puede hacer clic o **arrastrar** las fotos a las casillas. Arrastrar
+ * varias de golpe sobre una casilla reparte las demás por las que estén
+ * libres: cargar un árbol son seis fotos, y seis diálogos de archivo seguidos
+ * es la parte más pesada del formulario. Nunca se pisa una casilla que ya
+ * tiene foto —quien quiera reemplazarla la suelta encima a propósito—.
  */
-const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, deshabilitado }) => {
+const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, onMetadatos, deshabilitado }) => {
   const [progreso, setProgreso] = useState({});
   const [errores, setErrores] = useState({});
+  const [encima, setEncima] = useState(null);
   const entradas = useRef({});
 
   const elegir = async (clave, archivo) => {
@@ -27,6 +35,13 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, deshabilitado }
 
     setErrores((prev) => ({ ...prev, [clave]: null }));
     setProgreso((prev) => ({ ...prev, [clave]: 0 }));
+
+    // El EXIF se lee del archivo tal como salió de la cámara y en paralelo a
+    // la subida: `subirFoto` lo recomprime en un canvas, y de ahí sale sin
+    // coordenada ni fecha. Se avisa aunque la subida falle —el dato de dónde y
+    // cuándo sigue siendo bueno— y si falla la lectura no se toca la subida.
+    const etiqueta = clavesFoto.find((f) => f.key === clave)?.label ?? clave;
+    leerMetadatosFoto(archivo).then((metadatos) => onMetadatos?.(etiqueta, metadatos));
 
     const res = await subirFoto(
       archivo,
@@ -44,25 +59,70 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, deshabilitado }
     onCambiar(clave, res.url, res.ruta);
   };
 
+  /**
+   * Reparte lo que se soltó: la primera foto va a la casilla donde se soltó y
+   * las demás caen en las que siguen vacías, en el orden del catálogo.
+   */
+  const soltar = (clave, lista) => {
+    const archivos = Array.from(lista ?? []).filter((a) => a.type?.startsWith("image/"));
+    if (!archivos.length) return;
+
+    // Se sigue por las casillas que vienen DESPUÉS de aquella donde se soltó, y
+    // al llegar al final se vuelve al principio: soltar las seis fotos sobre la
+    // primera casilla las reparte en el orden del catálogo, que es el orden en
+    // que se toman.
+    const orden = clavesFoto.map(({ key }) => key);
+    const desde = orden.indexOf(clave);
+    const libres = [...orden.slice(desde + 1), ...orden.slice(0, Math.max(desde, 0))]
+      .filter((key) => !fotos[key] && progreso[key] === undefined);
+
+    const destinos = [clave, ...libres];
+    archivos.slice(0, destinos.length).forEach((archivo, i) => elegir(destinos[i], archivo));
+  };
+
+  // Soltar una foto fuera de una casilla haría que el navegador la abriera y
+  // se llevara por delante el formulario a medio llenar.
+  const ignorarArrastre = (e) => e.preventDefault();
+
   return (
-    <Grid container spacing={1.5}>
+    <Grid container spacing={1.5} onDragOver={ignorarArrastre} onDrop={ignorarArrastre}>
       {clavesFoto.map(({ key, label }) => {
         const url = fotos[key];
         const pct = progreso[key];
         const subiendo = pct !== null && pct !== undefined;
 
+        const recibiendo = encima === key;
+
         return (
           <Grid item xs={6} sm={4} key={key}>
-            <Card variant="outlined" sx={{ position: "relative" }}>
+            <Card
+              variant="outlined"
+              sx={{
+                position: "relative",
+                borderColor: recibiendo ? "primary.main" : undefined,
+                borderStyle: recibiendo ? "dashed" : undefined,
+              }}
+            >
               <Box
                 onClick={() => !deshabilitado && !subiendo && entradas.current[key]?.click()}
+                onDragOver={(e) => {
+                  if (deshabilitado) return;
+                  e.preventDefault();
+                  setEncima(key);
+                }}
+                onDragLeave={() => setEncima((prev) => (prev === key ? null : prev))}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setEncima(null);
+                  if (!deshabilitado) soltar(key, e.dataTransfer?.files);
+                }}
                 sx={{
                   height: 120,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: deshabilitado ? "default" : "pointer",
-                  backgroundColor: "action.hover",
+                  backgroundColor: recibiendo ? "action.selected" : "action.hover",
                   backgroundImage: url ? `url(${url})` : "none",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
@@ -94,10 +154,11 @@ const SubidorFotos = ({ clavesFoto, fotos, identidad, onCambiar, deshabilitado }
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 hidden
                 ref={(el) => { entradas.current[key] = el; }}
                 onChange={(e) => {
-                  elegir(key, e.target.files?.[0]);
+                  soltar(key, e.target.files);
                   e.target.value = "";
                 }}
               />

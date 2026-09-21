@@ -50,6 +50,9 @@ importers:
       embla-carousel-react:
         specifier: 1.2.20
         version: 1.2.20(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      exifr:
+        specifier: ^7.1.3
+        version: 7.1.3
       firebase:
         specifier: ^9.23.0
         version: 9.23.0
@@ -2713,6 +2716,9 @@ packages:
   eta@4.6.0:
     resolution: {integrity: sha512-lW6is4T1NFOYnmqGZIfvixqj7A7sSvScF+DN8EK6K58xI5MZ5UvYe0GjopxOXQtZvUn4eDdVuZ8XSoYWTMEKwA==}
     engines: {node: '>=20'}
+
+  exifr@7.1.3:
+    resolution: {integrity: sha512-g/aje2noHivrRSLbAUtBPWFbxKdKhgj/xr1vATDdUXPOFYJlQ62Ft0oy+72V6XLIpDJfHs6gXLbBLAolqOXYRw==}
 
   expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
@@ -8268,6 +8274,8 @@ snapshots:
   esutils@2.0.3: {}
 
   eta@4.6.0: {}
+
+  exifr@7.1.3: {}
 
   expand-template@2.0.3:
     optional: true

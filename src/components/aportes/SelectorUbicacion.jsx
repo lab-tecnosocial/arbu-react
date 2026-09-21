@@ -1,6 +1,6 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import { Alert, Box, Grid, TextField, Typography } from "@mui/material";
 import { BASEMAP_URL, BASEMAP_ATTRIBUTION } from "../../helpers/basemap";
 import { municipioDeCoordenada } from "../../helpers/geo/municipios";
@@ -24,6 +24,26 @@ const iconoUbicacion = new L.Icon({
   iconSize: new L.Point(40, 47),
   iconAnchor: [20, 47],
 });
+
+/**
+ * Lleva la vista al punto cuando este se fija desde fuera del mapa: los
+ * metadatos de una foto, o una coordenada escrita a mano.
+ *
+ * Solo se mueve si el punto quedó FUERA de lo que se está viendo. Así un clic
+ * o un arrastre del marcador —que caen siempre dentro de la vista— no
+ * recentran el mapa bajo el cursor, que es molesto y desorienta.
+ */
+const SeguirPunto = ({ lat, lon }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+    if (map.getBounds().contains([lat, lon])) return;
+    map.setView([lat, lon], Math.max(map.getZoom(), 17));
+  }, [map, lat, lon]);
+
+  return null;
+};
 
 const ClicEnElMapa = ({ onElegir }) => {
   useMapEvents({
@@ -93,6 +113,7 @@ const SelectorUbicacion = ({ latitud, longitud, onCambiar, errores = {} }) => {
         >
           <TileLayer url={BASEMAP_URL} attribution={BASEMAP_ATTRIBUTION} />
           <ClicEnElMapa onElegir={elegir} />
+          <SeguirPunto lat={hayPunto ? lat : null} lon={hayPunto ? lon : null} />
           {hayPunto && (
             <Marker
               position={[lat, lon]}
