@@ -34,6 +34,21 @@ if (!import.meta.env.DEV && 'serviceWorker' in navigator && navigator.serviceWor
   });
 }
 
+// El plugin registra el service worker y comprueba si hay versión nueva AL
+// CARGAR la página. Una pestaña que alguien deja abierta toda la tarde —lo
+// normal en el back-office— nunca se entera de un despliegue, así que se
+// pregunta también cada hora sobre el registro que ya existe.
+const UNA_HORA = 60 * 60 * 1000;
+
+if (!import.meta.env.DEV && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.ready.then((registro) => {
+    setInterval(() => {
+      // Sin conexión, preguntar solo ensucia la consola con errores de red.
+      if (navigator.onLine) registro.update();
+    }, UNA_HORA);
+  });
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>

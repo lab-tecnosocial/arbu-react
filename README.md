@@ -245,6 +245,31 @@ Si aun así ves algo viejo: DevTools → Application → Clear site data. Y para
 trabajar cómodo contra preview, marca "Update on reload" en Application →
 Service Workers.
 
+### Por qué un despliegue tardaba en verse (21/09/2026)
+
+Tres cosas se sumaban, y la primera era la gorda:
+
+- **Firebase Hosting servía `index.html`, `sw.js` y `registerSW.js` con
+  `Cache-Control: max-age=3600`**, que es su valor por defecto. Durante una hora
+  el navegador no volvía a pedirlos: daba igual lo que se hubiera desplegado,
+  porque lo que decide *qué versión se usa* estaba congelado. Ahora
+  `firebase.json` les pone `no-cache` —que no es "no guardes", sino "revalida
+  siempre": con el ETag, si no cambió nada la respuesta es un 304 vacío— y a
+  `/assets/**` le pone un año `immutable`, que es seguro porque esos nombres
+  llevan hash.
+- **El precache pesaba 3,9 MB.** El service worker nuevo no se activa hasta
+  haberlo descargado entero, así que cuanto más pesa, más rato sigue sirviendo
+  la versión anterior. Se sacaron del precache `swagger-ui` (938 KB, solo la
+  documentación de la API) y `xlsx` (424 KB, solo importar planillas): quedó en
+  2,5 MB. Siguen cacheándose, pero en runtime, cuando alguien abre esas
+  pantallas.
+- **Solo se comprobaba si había versión nueva al cargar la página.** Una pestaña
+  abierta toda la tarde —lo normal en el back-office— no se enteraba nunca.
+  Ahora `src/index.jsx` pregunta también cada hora.
+
+Síntoma que se veía: entrar a un enlace recién desplegado y que la función nueva
+no estuviera, dos veces seguidas, y a la tercera sí.
+
 ## Imágenes y caché
 
 Las fotos de los árboles viven en Firebase Storage y se piden sin CORS, así que

@@ -19,7 +19,32 @@ export default defineConfig(() => {
           enabled: false,
         },
         workbox: {
+          // Lo pesado que solo usan unas pocas pantallas NO se precachea.
+          // El precache se descarga entero antes de que el service worker nuevo
+          // pueda activarse: cuanto más pesa, más tarda un despliegue en verse
+          // —la app sigue sirviendo la versión vieja mientras tanto— y más
+          // datos gasta alguien que solo entra a mirar el mapa. `swagger-ui`
+          // es la documentación de la API y `xlsx` la importación de planillas
+          // del back-office: quien las abre se las descarga entonces, y
+          // `runtimeCaching` se las guarda para la próxima.
+          globIgnores: ['**/swagger-ui-*.js', '**/xlsx-*.js'],
           runtimeCaching: [
+            {
+              // Los chunks que quedaron fuera del precache. Llevan hash en el
+              // nombre, así que una respuesta cacheada nunca es "vieja": o es
+              // ese archivo exacto, o es otro nombre.
+              urlPattern: ({ url, sameOrigin }) =>
+                sameOrigin && url.pathname.startsWith('/assets/'),
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'arbu-chunks',
+                expiration: {
+                  maxEntries: 60,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+                cacheableResponse: { statuses: [200] },
+              },
+            },
             {
               // Intercepta las imágenes de tu bucket de Firebase
               urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*?/i,
