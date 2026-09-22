@@ -62,6 +62,14 @@ export const RELLENO_APPS = {
     monitoreo: {
       altura: 0,
       diametroAlturaPecho: 0,
+      /**
+       * La foto principal SÍ, las demás no. Es la única clave de foto que
+       * aparece en el 100% de los monitoreos de la app (`fotoCorteza`,
+       * `fotoHoja`... faltan a menudo en sus propios documentos, así que sabe
+       * convivir con su ausencia). Meterla en el mismo saco que las otras
+       * cinco dejó cuatro documentos rotos en la primera reparación.
+       */
+      fotoArbolCompleto: "",
     },
   },
 };
