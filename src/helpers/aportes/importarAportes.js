@@ -151,7 +151,9 @@ export const importarFilas = async (tipo, filas, autor) => {
 
       for (const fila of validas.slice(i, i + TAMANIO_LOTE)) {
         const ref = docRef(collection(db, tipo.coleccion));
-        const { documento } = documentoNuevo(tipo, fila.normalizados, autor);
+        const { documento } = documentoNuevo(tipo, fila.normalizados, autor, {
+          arbolId: ref.id,
+        });
         lote.set(ref, { ...documento, registradoVia: "planilla" });
         ids.push(ref.id);
       }

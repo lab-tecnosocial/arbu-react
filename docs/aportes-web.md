@@ -38,6 +38,36 @@ src/components/aportes/
 
 ## Lo que hay que saber antes de tocarlo
 
+- **Un documento incompleto tumba la app de Android.** Es el incidente del
+  21/09/2026: 121 crashes en 13 personas, un `NullPointerException` en
+  `MapaFragment.onEvent`. Las apps móviles **nunca omiten un campo** —cuando
+  algo está vacío escriben `""` o `0`, y repiten el id del documento dentro del
+  documento (`id`)— y leen con `doc.get("campo").toString()`, que revienta si el
+  campo no está. Como el fallo ocurre dentro del listener de la colección, **un
+  solo documento malo deja sin mapa a todo el mundo**, no solo a quien abre ese
+  árbol. La web hacía justo lo contrario: `documentoNuevo()` saltaba todo valor
+  vacío. La regla, para cualquier cosa que esta web escriba en las colecciones
+  de las apps: **un documento escrito por la web tiene que ser indistinguible de
+  uno escrito por la app**. Los campos de más son inofensivos (la app los
+  ignora); los de menos son un crash en producción que no se arregla desde
+  aquí. Lo garantiza `completarParaApps()`, y el catálogo de campos con su valor
+  neutro está en `src/helpers/aportes/esquemaApp.js`, que es la única fuente:
+  lo usan el formulario, el importador y el script de reparación.
+
+  Para auditar lo ya guardado —conviene tras cualquier cambio en la escritura—:
+
+  ```bash
+  pnpm esquema:app                 # solo mira, no escribe
+  pnpm esquema:app -- --aplicar    # rellena lo que falte
+  pnpm esquema:app -- --todos      # audita la colección entera, no solo la web
+  ```
+
+  Las claves de foto NO se rellenan: la propia app las omite cuando no hay foto,
+  así que sabe convivir con su ausencia. El `0` de `altura` y
+  `diametroAlturaPecho` no inventa una medida (ningún árbol mide 0, y la web ya
+  lo lee con `valor && ...` o `valor || null`): es el precio de que la app no
+  distinga "sin medir" de "ausente".
+
 - **`mapeadoPor` no es opcional.** El mapa público decide si un árbol es un
   mapeo o una adopción por la simple presencia de ese campo
   (`CardTree.jsx`: `Object.hasOwn(selectedTree, "mapeadoPor")`). Un documento

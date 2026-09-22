@@ -10,6 +10,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase/firebase-config";
 import { CAMPO, camposDelTipo, esDeMonitoreo } from "./tiposAporte";
+import { completarParaApps } from "./esquemaApp";
 import { toDate } from "../fechaArbol";
 import { aValorFecha } from "./validarAporte";
 import { invalidarMarca } from "../leerColeccion";
@@ -24,6 +25,10 @@ import { invalidarMarca } from "../leerColeccion";
  *  - **El campo de autoría no es opcional.** El mapa público decide si un árbol
  *    es un mapeo o una adopción por la mera presencia de `mapeadoPor`
  *    (`CardTree.jsx`). Sin él, la ficha muestra la galería equivocada.
+ *  - **Un documento incompleto tumba la app móvil.** Lo que las apps escriben
+ *    siempre, aquí se escribe siempre, aunque venga en blanco: lo garantiza
+ *    `completarParaApps()`. El porqué está en `esquemaApp.js`, y costó 121
+ *    crashes en producción.
  *  - **`monitoreos` es un MAPA, no una subcolección ni un array.** Su clave es
  *    un id opaco y el orden de `Object.keys` no significa nada: la fecha real
  *    sale del `timestamp` de cada monitoreo (ver `fechaArbol.js`).
@@ -169,6 +174,9 @@ export const nuevaIdentidadAporte = (tipo) => ({
  * @param {object} tipo del catálogo de `tiposAporte`
  * @param {object} valores ya normalizados (números como number, fechas como Date)
  * @param {{uid: string, email: string}} autor quien lo sube
+ * @param {{arbolId: string, monitoreoKey?: string}} identidad el id con el que
+ *   se va a guardar. Es obligatorio: las apps guardan el id dentro del propio
+ *   documento y `completarParaApps()` falla sin él, a propósito.
  */
 export const documentoNuevo = (tipo, valores, autor, identidad = null) => {
   const monitoreoKey = identidad?.monitoreoKey ?? uuidv4();
@@ -185,7 +193,7 @@ export const documentoNuevo = (tipo, valores, autor, identidad = null) => {
 
   return {
     monitoreoKey,
-    documento: {
+    documento: completarParaApps(tipo.coleccion, {
       ...arbol,
       [tipo.campoAutor]: autor.uid,
       validado: false,
@@ -201,7 +209,7 @@ export const documentoNuevo = (tipo, valores, autor, identidad = null) => {
           monitoreoRealizadoPor: autor.uid,
         },
       },
-    },
+    }, identidad?.arbolId),
   };
 };
 

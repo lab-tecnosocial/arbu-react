@@ -49,7 +49,8 @@
     "deploy": "pnpm run build && firebase deploy --only hosting",
     "deploy:rules": "firebase deploy --only firestore:rules",
     "rules:test": "firebase emulators:start --only firestore",
-    "deploy:storage": "firebase deploy --only storage"
+    "deploy:storage": "firebase deploy --only storage",
+    "esquema:app": "node scripts/reparar-esquema-app.mjs"
   },
   "eslintConfig": {
     "extends": [
