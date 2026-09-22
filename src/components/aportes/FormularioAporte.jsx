@@ -71,9 +71,11 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
     );
   }, [abierto, arbol?.id, monitoreoKey, tipo]);
 
+  // Las fotos entran en la validación: la principal es obligatoria
+  // (`tipo.fotoRequerida`) y su valor vive en otro estado, no en `valores`.
   const { errores, advertencias, valido, normalizados } = useMemo(
-    () => validarAporte(tipo, valores),
-    [tipo, valores]
+    () => validarAporte(tipo, { ...valores, ...fotos }),
+    [tipo, valores, fotos]
   );
 
   const visibles = intentado ? errores : {};
@@ -377,9 +379,17 @@ const FormularioAporte = ({ abierto, tipo, arbol, monitoreoKey, autor, onCerrar,
 
         <Divider sx={{ my: 2 }} />
         <Typography variant="overline" color="text.secondary">Fotos</Typography>
-        <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-          JPG, PNG o WebP. Si la foto viene del teléfono con el GPS encendido, la ubicación y
-          la fecha se completan solas.
+        <Typography
+          variant="caption"
+          color={visibles[tipo.fotoRequerida] ? "error" : "text.secondary"}
+          display="block"
+          sx={{ mb: 1 }}
+        >
+          {visibles[tipo.fotoRequerida]
+            ? "La foto del árbol completo es obligatoria: sin ella el registro no se puede verificar."
+            : "La foto del árbol completo es obligatoria. JPG, PNG o WebP."}{" "}
+          Si la foto viene del teléfono con el GPS encendido, la ubicación y la fecha se
+          completan solas.
         </Typography>
         <Box sx={{ mt: 1 }}>
           {identidad && (

@@ -38,6 +38,16 @@ src/components/aportes/
 
 ## Lo que hay que saber antes de tocarlo
 
+- **La foto del árbol completo es obligatoria**, en el formulario y en la
+  planilla (`tipo.fotoRequerida` en `tiposAporte.js`, validado en
+  `validarAporte`). No es un capricho: es lo que hace verificable un registro
+  —en la revisión del concurso, un árbol sin foto no se puede validar ni
+  descartar, solo arrastrar— y es la única foto que las apps escriben siempre.
+  El 21/09/2026 se colaron cuatro aportes sin foto porque la imagen era un HEIC
+  que `subirFoto.js` rechazó y el árbol se guardó igual; hubo que borrarlos a
+  mano. Si el formulario acepta guardar algo que la foto no respalda, el dato
+  nace sin poder comprobarse.
+
 - **Un documento incompleto tumba la app de Android.** Es el incidente del
   21/09/2026: 121 crashes en 13 personas, un `NullPointerException` en
   `MapaFragment.onEvent`. Las apps móviles **nunca omiten un campo** —cuando

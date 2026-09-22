@@ -112,6 +112,16 @@ export const validarAporte = (tipo, valores) => {
     }
   }
 
+  // La foto principal se valida aparte porque no es un campo del formulario
+  // como los demás: su valor es la URL que devuelve Storage al subirla.
+  if (tipo.fotoRequerida) {
+    const etiqueta =
+      tipo.clavesFoto.find((f) => f.key === tipo.fotoRequerida)?.label ?? "foto";
+    if (!aTexto(valores[tipo.fotoRequerida]).trim()) {
+      errores[tipo.fotoRequerida] = `Falta la foto de ${etiqueta.toLowerCase()}`;
+    }
+  }
+
   const lat = normalizados.latitud;
   const lon = normalizados.longitud;
   if (lat === 0 && lon === 0) {

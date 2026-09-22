@@ -37,7 +37,9 @@ export const columnasPlantilla = (tipo) => [
   ...tipo.clavesFoto.map(({ key, label }) => ({
     header: `URL ${label.toLowerCase()}`,
     nombre: key,
-    requerido: false,
+    // La foto principal es obligatoria también al importar: un registro sin
+    // ella no se puede verificar en la revisión del concurso.
+    requerido: key === tipo.fotoRequerida,
   })),
 ];
 
@@ -51,6 +53,7 @@ export const descargarPlantilla = (tipo) => {
     latitud: "-17.38950",
     longitud: "-66.15700",
     timestamp: aValorFecha(new Date()),
+    [tipo.fotoRequerida]: "https://firebasestorage.googleapis.com/...(URL de la foto)",
   };
 
   exportarFilasAExcel(

@@ -94,6 +94,17 @@ const TIPO_MAPEO = {
 
   /** Las seis claves de foto del mapeo, del catálogo que ya usa la ficha. */
   clavesFoto: MAPPED_PHOTO_FIELDS,
+
+  /**
+   * Sin esta foto el aporte no se guarda.
+   *
+   * Es la única foto que las apps escriben siempre, y es lo que hace
+   * verificable un registro: en la revisión del concurso, un árbol sin foto no
+   * se puede validar ni descartar, solo arrastrar. El 21/09/2026 se colaron
+   * cuatro así —la foto era un HEIC y `subirFoto.js` lo rechazó, pero el árbol
+   * se guardó igual—, y hubo que borrarlos a mano.
+   */
+  fotoRequerida: "fotoArbolCompleto",
 };
 
 export const TIPOS_APORTE = [TIPO_MAPEO];
