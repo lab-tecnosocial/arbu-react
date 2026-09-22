@@ -62,8 +62,13 @@ src/components/aportes/
   pnpm esquema:app -- --todos      # audita la colección entera, no solo la web
   ```
 
-  Las claves de foto NO se rellenan: la propia app las omite cuando no hay foto,
-  así que sabe convivir con su ausencia. El `0` de `altura` y
+  Con las fotos hay un matiz que costó una segunda reparación: `fotoArbolCompleto`
+  **sí** se rellena (está en el 100% de los monitoreos que escriben las apps),
+  mientras que las otras cinco claves (`fotoCorteza`, `fotoHoja`...) no, porque
+  faltan a menudo en los propios documentos de la app y por tanto sabe convivir
+  con su ausencia. Meterlas todas en el mismo saco dejó 4 documentos sin reparar
+  y la app siguió crasheando. En la web no se nota: la galería descarta las urls
+  vacías (`getTreePhotos` filtra por `monitoreo[key]`). El `0` de `altura` y
   `diametroAlturaPecho` no inventa una medida (ningún árbol mide 0, y la web ya
   lo lee con `valor && ...` o `valor || null`): es el precio de que la app no
   distinga "sin medir" de "ausente".
