@@ -23,17 +23,17 @@ export const FILTER_TTL_MS = 24 * 60 * 60 * 1000;
 export const EMPTY_FILTERS = {
   texto: "",
   campo: CAMPO_TODOS,
-  riego: RIEGO_CON_Y_SIN,
-  monitoreo: { tipo: MONITOREO_TODOS, desde: null, hasta: null },
+  riego: "",
+  monitoreo: { tipo: "", desde: null, hasta: null },
   especies: [],
 };
 
 const sanitizeFilters = (filters = EMPTY_FILTERS) => ({
   texto: typeof filters.texto === "string" ? filters.texto : "",
   campo: filters.campo || CAMPO_TODOS,
-  riego: filters.riego || RIEGO_CON_Y_SIN,
+  riego: filters.riego || "",
   monitoreo: {
-    tipo: filters.monitoreo?.tipo || MONITOREO_TODOS,
+    tipo: filters.monitoreo?.tipo || "",
     desde: filters.monitoreo?.desde ?? null,
     hasta: filters.monitoreo?.hasta ?? null,
   },
@@ -86,8 +86,8 @@ export const hasActiveFilters = (filters = EMPTY_FILTERS) =>
   Boolean(
     filters.texto?.trim() ||
       (filters.campo && filters.campo !== CAMPO_TODOS) ||
-      (filters.riego && filters.riego !== RIEGO_CON_Y_SIN) ||
-      (filters.monitoreo?.tipo && filters.monitoreo.tipo !== MONITOREO_TODOS) ||
+      Boolean(filters.riego) ||
+      Boolean(filters.monitoreo?.tipo) ||
       filters.especies?.length > 0
   );
 
@@ -119,9 +119,48 @@ export const calcularRangoFechas = (tipo, ahora = Date.now()) => {
   }
 };
 
+const normalizarTexto = (valor) =>
+  String(valor ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .toLowerCase()
+    .trim();
+
+const distanciaTexto = (primero, segundo) => {
+  const fila = Array.from({ length: segundo.length + 1 }, (_, indice) => indice);
+
+  for (let indice = 1; indice <= primero.length; indice += 1) {
+    let diagonal = fila[0];
+    fila[0] = indice;
+
+    for (let otroIndice = 1; otroIndice <= segundo.length; otroIndice += 1) {
+      const anterior = fila[otroIndice];
+      fila[otroIndice] = primero[indice - 1] === segundo[otroIndice - 1]
+        ? diagonal
+        : Math.min(diagonal, fila[otroIndice - 1], anterior) + 1;
+      diagonal = anterior;
+    }
+  }
+
+  return fila[segundo.length];
+};
+
+const coincideBusquedaFlexible = (valor, texto) => {
+  const nombre = normalizarTexto(valor);
+  if (!nombre) return false;
+  if (nombre.includes(texto)) return true;
+
+  const palabras = nombre.split(/\s+/);
+  return texto.length >= 4 && palabras.some((palabra) => (
+    Math.abs(palabra.length - texto.length) <= 1 &&
+    distanciaTexto(palabra, texto) <= 1
+  ));
+};
+
 const coincideTexto = (arbol, texto, campo) => {
   if (!texto) return true;
-  const busca = (valor) => (valor || "").toLowerCase().includes(texto);
+  const busca = (valor) => coincideBusquedaFlexible(valor, texto);
 
   if (campo === CAMPO_TODOS || !campo) {
     return (
@@ -134,9 +173,15 @@ const coincideTexto = (arbol, texto, campo) => {
 export const tieneRiegos = (arbol) => {
   const riegos = arbol?.riegos ?? arbol?.riego;
   if (!riegos) return false;
-  if (Array.isArray(riegos)) return riegos.length > 0;
-  if (typeof riegos === "object") return Object.keys(riegos).length > 0;
-  return Boolean(riegos);
+  if (Array.isArray(riegos)) return riegos.some(Boolean);
+  if (typeof riegos === "object") {
+    return Object.values(riegos).some((riego) => {
+      if (!riego) return false;
+      if (typeof riego !== "object") return true;
+      return Object.keys(riego).length > 0;
+    });
+  }
+  return typeof riegos === "string" ? riegos.trim().length > 0 : Boolean(riegos);
 };
 
 const coincideRiego = (arbol, riego) => {
@@ -172,7 +217,7 @@ const coincideEspecies = (arbol, especies) => {
 export const applyTreeFilters = (arboles = [], filters = EMPTY_FILTERS) => {
   if (!hasActiveFilters(filters)) return arboles;
 
-  const texto = (filters.texto || "").toLowerCase().trim();
+  const texto = normalizarTexto(filters.texto);
 
   return arboles.filter(
     (arbol) =>
