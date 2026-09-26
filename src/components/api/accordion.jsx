@@ -72,7 +72,7 @@ const Accordion = ({ id, itemName, itemContent, currentActive, onClick }) => {
                         onClick(id)
                       }}
                       style={{
-                        color: ancorColor === i && currentActive === id ? '#7BA05B' : 'black',
+                        color: ancorColor === i && currentActive === id ? 'var(--green2)' : 'var(--color-text-secondary)',
                       }}
                     >
                       {label}

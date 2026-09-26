@@ -9,11 +9,14 @@ import Footer from '../footer/Footer'
 import SelectionGuide from './manual/SelectionGuide'
 import PlantacionGuide from './manual/PlantacionGuide'
 import { startLoadEspeciesCatalogo } from '../../actions/catalogoActions'
-import { APRENDE_NIGHT_MODE_CLASS, APRENDE_NIGHT_MODE_ENABLED } from './aprendeTheme.config'
+import { APRENDE_NIGHT_MODE_CLASS } from './aprendeTheme.config'
+import { useTheme } from '../../context/ThemeContext'
 import './aprende-theme.css'
 
 const CatalogoComponent = () => {
   const dispatch = useDispatch()
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
   const [searchParams, setSearchParams] = useSearchParams()
   const tab = searchParams.get('tab')
   const activeTab = ['catalogo', 'guia-seleccion', 'guia-plantacion'].includes(tab) ? tab : 'guias'
@@ -51,8 +54,10 @@ const CatalogoComponent = () => {
       className={[
         'catalogo-main',
         activeTab !== 'catalogo' ? 'catalogo-main--guias' : '',
-        APRENDE_NIGHT_MODE_ENABLED ? APRENDE_NIGHT_MODE_CLASS : '',
-      ].filter(Boolean).join(' ')}
+        isDark ? APRENDE_NIGHT_MODE_CLASS : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {activeTab !== 'guias' ? (
         <section className='catalogo-backbar'>

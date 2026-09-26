@@ -1,5 +1,6 @@
 .accordion {
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
   border-radius: 8px;
   height: fit-content;
   padding: 0 16px;
@@ -14,10 +15,10 @@
     cursor: pointer;
 
     span {
-      color: var(--geyser-400);
+      color: var(--color-text);
       font-size: 16px;
       font-weight: 400;
-      transition: .2 ease;
+      transition: .2s ease;
     }
 
     svg {
@@ -56,7 +57,8 @@
 }
 
 .active {
-  background-color: var(--geyser-50);
+  background-color: var(--color-bg-subtle);
+  border-color: var(--green2);
 
   .accordionHeader {
     span {
@@ -64,4 +66,22 @@
       font-weight: 500;
     }
   }
+}
+
+:global([data-theme="dark"]) .accordion {
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: var(--geyser-800);
+}
+
+:global([data-theme="dark"]) .accordion .accordionHeader span {
+  color: var(--geyser-50);
+}
+
+:global([data-theme="dark"]) .active {
+  background-color: rgba(38, 133, 118, 0.28);
+  border-color: var(--green3);
+}
+
+:global([data-theme="dark"]) .active .accordionHeader span {
+  color: #ffffff;
 }

@@ -44,13 +44,37 @@
 }
 
 .terciary {
-  border: 1px solid var(--geyser-200);
-  background-color: white;
+  border: 1px solid var(--green2);
+  background-color: var(--color-surface-elevated);
   color: var(--green2);
 }
 
+.terciary a {
+  color: inherit;
+}
+
+.terciary:hover:not(:disabled) {
+  background-color: rgba(38, 133, 118, 0.1);
+}
+
 .terciary-disabled {
-  color: var(--geyser-200);
+  color: var(--color-border);
+}
+
+:global([data-theme="dark"]) .terciary {
+  border: 1px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+}
+
+:global([data-theme="dark"]) .terciary:hover:not(:disabled) {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: var(--geyser-950);
+}
+
+:global([data-theme="dark"]) .terciary:hover:not(:disabled) a {
+  color: inherit;
 }
 
 .danger {
@@ -71,16 +95,6 @@
   position: relative;
 }
 
-.spinner {
-  border: 3px solid #f3f4f6;
-  border-top: 3px solid #111827;
-  border-radius: 50%;
-  width: 1rem;
-  height: 1rem;
-  animation: spin 0.8s linear infinite;
-  display: inline-block;
-}
-
 .spaceIcon {
   padding-left: 14px;
 }
@@ -89,8 +103,11 @@
   width: 100%;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+@media (max-width: 480px) {
+  .button {
+    height: 48px;
+    font-size: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
