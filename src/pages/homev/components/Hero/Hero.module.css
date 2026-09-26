@@ -33,6 +33,18 @@
     flex-wrap: wrap;
     gap: 16px;
 
+    .downloadRow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .storeDownloadButton {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
     .blur {
       position: absolute;
       top: 0;
@@ -132,6 +144,19 @@
 
     .buttons {
       justify-content: center;
+      width: 100%;
+      align-items: center;
+    }
+
+    .downloadRow {
+      width: 100%;
+      max-width: min(100%, 380px);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .storeDownloadButton {
       width: 100%;
     }
   }
