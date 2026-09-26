@@ -8,10 +8,11 @@
   gap: 1rem;
   justify-content: flex-start;
   padding: 1rem 1.25rem;
-  border: 1px solid rgba(23, 76, 68, 0.08);
+  border: 1px solid var(--color-ranking-card-border);
   border-radius: 20px;
-  background: #ffffff;
-  box-shadow: 0 14px 30px rgba(16, 24, 40, 0.04);
+  background: var(--color-surface);
+  box-shadow: 0 14px 30px var(--color-ranking-shadow-strong);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 .index-and-img{
   display: flex;
@@ -26,8 +27,8 @@
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: #2f8c7e;
-  color: #ffffff;
+  background: var(--green2);
+  color: var(--color-on-brand);
   font-family: 'Poppins', sans-serif;
   font-size: 1.35rem;
   font-weight: 700;
@@ -61,13 +62,13 @@
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.2;
-  color: #2b3035;
+  color: var(--color-text);
   text-align: left;
 }
 .puntos-user-list{
   font-size: 1rem;
   font-weight: 500;
-  color: #6e7f7c;
+  color: var(--color-text-muted);
 }
 
 @media only screen and (min-width: 430px) {
@@ -106,3 +107,4 @@
     font-size: 1.05rem;
 }
 
+}

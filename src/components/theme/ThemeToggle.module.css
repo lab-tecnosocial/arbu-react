@@ -1,0 +1,35 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border12);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(37, 43, 44, 0.45);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.toggle:hover {
+  background-color: var(--color-bg-subtle);
+  border-color: #ffffff;
+}
+
+:global([data-theme="dark"]) .toggle {
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+  background-color: transparent;
+  color: #ffffff;
+}
+
+:global([data-theme="dark"]) .toggle:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--green2);
+  outline-offset: 2px;
+}

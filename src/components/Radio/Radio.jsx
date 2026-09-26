@@ -39,7 +39,7 @@ export const Radio = ({ value, checked, onClick, fullWidth }) => {
             width="15"
             height="15"
             rx="7.5"
-            stroke="var(--geyser-300)"
+            stroke="var(--color-border-strong)"
           />
         </svg>
       )}

@@ -7,29 +7,49 @@
   max-height: calc(100vh - 124px);
   width: 100%;
   max-width: 320px;
+  min-width: 0;
+  flex: 0 0 auto;
+  overflow: hidden;
   transition: .3s ease;
 }
 
 .sidebar.collapsed {
   max-height: 56px;
+  gap: 0;
+}
+
+.sidebar.collapsed .body,
+.sidebar.collapsed .footer {
+  display: none;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
 
-  .withResult {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    color: var(--geyser-950);
+.withResult {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: fit-content;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
 
-    span {
-      margin-top: 3px;
-    }
-  }
+.withResult:hover {
+  opacity: 0.8;
+}
+
+.withResult span {
+  margin-top: 2px;
 }
 
 .body {
@@ -57,12 +77,19 @@
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 8px;
-    color: var(--geyser-950);
+    color: var(--color-text);
   }
 
   .options {
     display: flex;
     gap: 8px;
+  }
+
+  /* Las actividades son chips a ancho completo: en fila, la segunda se salía
+     del sidebar y no se veía. Una debajo de otra. */
+  .optionsColumna {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .accordionFilters {
@@ -90,13 +117,21 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: var(--geyser-400);
+  color: var(--color-text-muted);
   width: fit-content;
   transition: .2s ease;
 }
 
-.disabled {
+/* Se llamaba .disabled pero nunca deshabilitó nada: solo pinta el texto de
+   rojo. Y se aplicaba justo cuando había filtro que borrar, o sea al revés.
+   El nombre ahora dice lo que hace: el botón está ACTIVO. */
+.clearActive {
   color: var(--persian-red-500);
+}
+
+.clearOptions:disabled {
+  opacity: .45;
+  cursor: default;
 }
 
 .headerActions {
@@ -110,11 +145,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   min-width: 50px;
-  border: 1px solid var(--geyser-200);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   color: var(--green2);
+  background-color: var(--color-surface);
 }
 
 .toggleBtn:hover {
@@ -129,9 +165,39 @@
   .sidebar {
     width: 100%;
     max-width: 100%;
+    max-height: 38vh;
+  }
+
+  .sidebar.collapsed {
+    max-height: 56px;
   }
 
   .toggleBtn {
     display: flex;
   }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+}
+
+.chipEstado {
+  /* auto: el distintivo se pega a la derecha, quede corto o largo el nombre. */
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chipEnCurso {
+  color: var(--white);
+  background-color: var(--green2);
+}
+
+.chipConcluido {
+  /* Tokens semánticos, no colores fijos: así también contrasta en modo oscuro. */
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-muted);
 }

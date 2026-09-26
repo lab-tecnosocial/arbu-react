@@ -1,0 +1,176 @@
+import { collection, doc as docRef, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
+import { db } from "../firebase/firebase-config";
+import { getFechaArbol, toDate } from "./fechaArbol";
+import { checkIsSuperAdmin } from "./checkAuthorization";
+
+/**
+ * Carga los proyectos de un usuario específico
+ * Si el usuario es superadmin, carga TODOS los proyectos
+ * @param {string} userEmail - Email del usuario autorizado
+ * @returns {Promise<Array>} - Array de proyectos del usuario (o todos si es superadmin)
+ */
+export const loadProyectos = async (userEmail) => {
+  try {
+    if (!userEmail) {
+      console.error("No se proporcionó email de usuario");
+      return [];
+    }
+
+    // Verificar si es superadmin
+    const isSuperAdmin = await checkIsSuperAdmin(userEmail);
+
+    let proyectosSnapshot;
+
+    if (isSuperAdmin) {
+      // Superadmin: cargar TODOS los proyectos
+      proyectosSnapshot = await getDocs(
+        query(collection(db, "proyectos"), orderBy("createdAt", "desc"))
+      );
+    } else {
+      // Usuario normal: solo sus proyectos
+      proyectosSnapshot = await getDocs(
+        query(
+          collection(db, "proyectos"),
+          where("usuarioAutorizado", "==", userEmail),
+          orderBy("createdAt", "desc")
+        )
+      );
+    }
+
+    const proyectos = [];
+    proyectosSnapshot.forEach((doc) => {
+      proyectos.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    return proyectos;
+  } catch (error) {
+    console.error("Error al cargar proyectos:", error);
+    return [];
+  }
+};
+
+/**
+ * Carga un proyecto específico y valida que pertenezca al usuario
+ * Si el usuario es superadmin, puede ver cualquier proyecto
+ * @param {string} proyectoId - ID del proyecto
+ * @param {string} userEmail - Email del usuario para validar ownership
+ * @returns {Promise<Object|null>} - Proyecto si pertenece al usuario, null si no
+ */
+export const loadProyectoById = async (proyectoId, userEmail) => {
+  try {
+    if (!proyectoId || !userEmail) {
+      console.error("Faltan parámetros para cargar proyecto");
+      return null;
+    }
+
+    const snapshot = await getDoc(docRef(db, "proyectos", proyectoId));
+
+    if (!snapshot.exists()) {
+      console.error("Proyecto no encontrado");
+      return null;
+    }
+
+    const proyecto = { id: snapshot.id, ...snapshot.data() };
+
+    // Verificar si es superadmin
+    const isSuperAdmin = await checkIsSuperAdmin(userEmail);
+
+    // Validar ownership (superadmin puede ver todos)
+    if (!isSuperAdmin && proyecto.usuarioAutorizado !== userEmail) {
+      console.error("Usuario no autorizado para este proyecto");
+      return null;
+    }
+
+    return proyecto;
+  } catch (error) {
+    console.error("Error al cargar proyecto:", error);
+    return null;
+  }
+};
+
+/**
+ * Carga los árboles filtrados para un proyecto específico
+ * @param {Object} proyecto - Objeto del proyecto con idMapeadores, fechaInicio, fechaFin
+ * @returns {Promise<Array>} - Array de árboles que cumplen los filtros del proyecto
+ */
+export const loadArbolesProyecto = async (proyecto) => {
+  try {
+    if (!proyecto || !proyecto.idMapeadores || proyecto.idMapeadores.length === 0) {
+      return [];
+    }
+
+    // Cargar todos los árboles mapeados
+    const arbolesSnapshot = await getDocs(collection(db, "arbolesMapeados"));
+    const arbolesMapeados = [];
+
+    arbolesSnapshot.forEach((doc) => {
+      arbolesMapeados.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    // Filtrar árboles por mapeadores y fechas del proyecto
+    const fechaInicio = toDate(proyecto.fechaInicio);
+    const fechaFin = toDate(proyecto.fechaFin);
+
+    const arbolesFiltrados = arbolesMapeados.filter((arbol) => {
+      // Filtrar por mapeador
+      if (!proyecto.idMapeadores.includes(arbol.mapeadoPor)) {
+        return false;
+      }
+
+      // Filtrar por fecha si está disponible. getFechaArbol ordena por el
+      // timestamp real, no por el orden arbitrario de Object.keys.
+      const fechaArbol = getFechaArbol(arbol);
+
+      if (fechaArbol) {
+        if (fechaInicio && fechaArbol < fechaInicio) return false;
+        if (fechaFin && fechaArbol > fechaFin) return false;
+      }
+
+      return true;
+    });
+
+    return arbolesFiltrados;
+  } catch (error) {
+    console.error("Error al cargar árboles del proyecto:", error);
+    return [];
+  }
+};
+
+/**
+ * Carga información de mapeadores desde inscripcionesMapeo
+ * @param {Array<string>} mapeadorIds - Array de IDs de mapeadores (Firestore document IDs)
+ * @returns {Promise<Array>} - Array con información de mapeadores
+ */
+export const loadMapeadoresInfo = async (mapeadorIds) => {
+  try {
+    if (!mapeadorIds || mapeadorIds.length === 0) {
+      return [];
+    }
+
+    const mapeadores = [];
+
+    // Cargar todos los mapeadores de inscripcionesMapeo
+    const inscripcionesSnapshot = await getDocs(collection(db, "inscripcionesMapeo"));
+
+    inscripcionesSnapshot.forEach((doc) => {
+      // Solo incluir mapeadores que estén en la lista de IDs
+      if (mapeadorIds.includes(doc.id)) {
+        mapeadores.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      }
+    });
+
+    return mapeadores;
+  } catch (error) {
+    console.error("Error al cargar información de mapeadores:", error);
+    return [];
+  }
+};

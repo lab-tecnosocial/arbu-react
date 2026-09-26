@@ -1,0 +1,54 @@
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebase-config";
+
+/**
+ * Load inscripciones mapeo data and join with their mapped trees
+ * Returns an array of mappers with their associated trees
+ */
+export const loadMapeoData = async () => {
+  try {
+    // Fetch inscripcionesMapeo collection
+    const inscripcionesSnapshot = await getDocs(collection(db, "inscripcionesMapeo"));
+    const inscripciones = [];
+    inscripcionesSnapshot.forEach((doc) => {
+      inscripciones.push({
+        id: doc.id,  // Agregar el ID del documento de Firestore
+        ...doc.data()
+      });
+    });
+
+    // Fetch arbolesMapeados collection
+    const arbolesSnapshot = await getDocs(collection(db, "arbolesMapeados"));
+    const arbolesMapeados = [];
+    arbolesSnapshot.forEach((doc) => {
+      arbolesMapeados.push({
+        id: doc.id,  // Agregar el ID del documento de Firestore
+        ...doc.data()
+      });
+    });
+
+    // Join data: match inscripcion.id with arbol.mapeadoPor
+    const mapeadoresConArboles = inscripciones.map((mapper) => {
+      const arbolesDelMapeador = arbolesMapeados.filter(
+        (arbol) => arbol.mapeadoPor === mapper.id
+      );
+
+      return {
+        ...mapper,
+        arbolesMapeados: arbolesDelMapeador,
+        cantidadArbolesMapeados: arbolesDelMapeador.length,
+      };
+    });
+
+    return {
+      mapeadores: mapeadoresConArboles,
+      arbolesMapeados: arbolesMapeados,
+    };
+  } catch (error) {
+    console.error("Error loading mapeo data:", error);
+    return {
+      mapeadores: [],
+      arbolesMapeados: [],
+    };
+  }
+};

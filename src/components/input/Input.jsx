@@ -44,8 +44,13 @@ export const Input = ({
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && typeof searchOnClick === "function") {
+      e.preventDefault();
       searchOnClick();
+    }
+
+    if (typeof props.onKeyDown === "function") {
+      props.onKeyDown(e);
     }
   };
 
@@ -112,6 +117,7 @@ export const Input = ({
           onChange={suggestions.length > 0 ? handleInputChange : onChange}
           onFocus={() => setShowSuggestions(filteredSuggestions.length > 0)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onKeyDown={handleKeyDown}
           className={`${styles.input} `}
           disabled={disabled}
           {...props}

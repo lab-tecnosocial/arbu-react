@@ -4,12 +4,12 @@ import { InscriptionForm } from "./components/InscriptionForm/InscriptionForm.js
 import { LoginForm } from "./components/LoginForm/LoginForm.jsx";
 
 export const Inscripcion = () => {
-  const { uid, checking } = useSelector(state => state.auth)
+  const { user, checking } = useSelector(state => state.auth)
   if (checking) return <p>cargando...</p>
   return (
     <div className={`${styles.inscripcionPage}`}>
       <div className={styles.card}>
-        {!uid ?
+        {!user ?
           <LoginForm />
           :
           <InscriptionForm />

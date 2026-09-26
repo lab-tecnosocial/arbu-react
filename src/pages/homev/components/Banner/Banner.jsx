@@ -25,7 +25,7 @@ export const Banner = () => {
           </div>
         </div>
         <div className={styles.picture}>
-          <img src="hero.png" alt="hero pgn" />
+          <img src="hero3.png" alt="hero3 pgn" />
         </div>
       </div>
     </div>

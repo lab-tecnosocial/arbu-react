@@ -2,17 +2,21 @@ import React from "react";
 import styles from './Footer.module.css';
 import { Link } from "react-router-dom";
 
-import { Facebook, Instagram, Youtube } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const year = new Date().getFullYear();
 const Footer = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   return (
     <footer>
       <div className={styles.footer}>
         <div className={styles.main}>
           <div className={styles.footerInfo}>
             <div className={styles.logo}>
-              <img src="Logo.png" alt="Arbu logo app" />
+              <img src={isDark ? "logodark.png" : "Logo.png"} alt="Arbu logo app" />
             </div>
             <p>Arbu nace para cuidar lo que nos da vida: los árboles de nuestra ciudad.</p>
             <div className={styles.socialIcons}>
@@ -46,7 +50,7 @@ const Footer = () => {
           </div>
           <div className={styles.tecnoLabInfo}>
              <a href="https://labtecnosocial.org" target="_blank" rel="noopener noreferrer">
-              <img src="tecnolab.png" alt="tecnolab icon info" />
+              <img src={isDark ? "tecnolabdark.png" : "tecnolab.png"} alt="tecnolab icon info" />
             </a>
           </div>
         </div>

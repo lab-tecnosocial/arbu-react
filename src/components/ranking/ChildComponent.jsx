@@ -23,7 +23,7 @@ const ChildComponent = ({ nombre, puntos, foto, institucion,index }) => {
         </div>
         <div className="img-and-info">
           <div className="info">
-            <span className="name-user-list text-dark">{nombre}</span>
+            <span className="name-user-list">{nombre}</span>
             <span className="puntos-user-list">{puntos} pts</span>
             {/* <span className="name-institucion">{institucion}</span> */}
           </div>

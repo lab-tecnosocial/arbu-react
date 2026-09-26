@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { Button } from "../button/Button";
-import { BookMarked, FolderCode, Map, Medal, Menu, X, User } from "lucide-react"
+import { BookMarked, FolderCode, Map, Medal, Menu, X, User, ShieldCheck } from "lucide-react"
 import styles from "./Navbar.module.css"
 import { Link, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { authLogout } from "../../actions/auth.actions";
+import { useSelector } from "react-redux";
+import { useAutorizacion } from "../../helpers/useAutorizacion";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebase-config";
+import { ThemeToggle } from "../theme/ThemeToggle";
+import { useTheme } from "../../context/ThemeContext";
 
 export const Navbar = ({
   logo = "Logo.png",
@@ -12,10 +16,11 @@ export const Navbar = ({
 }) => {
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { uid } = useSelector((state) => state.auth)
-  console.log({ uid });
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth)
+  const { autorizado: esAdmin } = useAutorizacion()
+  const { resolvedTheme } = useTheme();
   const [profileOpen, setProfileOpen] = useState(false);
+  const brandLogo = resolvedTheme === "dark" ? "logodark.png" : logo;
 
   const links = [
     {
@@ -38,9 +43,18 @@ export const Navbar = ({
       href: "/api",
       icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
+    // "Admin" solo se muestra a quien puede entrar: el resto veía un enlace
+    // que siempre acababa en /no-autorizado.
+    ...(esAdmin
+      ? [{
+        label: "Admin",
+        href: "/admin",
+        icon: <ShieldCheck size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
+      }]
+      : []),
   ];
 
-  const getProfileOrDownload = (className = '') => uid ? (
+  const getProfileOrDownload = (className = '') => user ? (
     <div className={styles.profileContainer}>
       <button className={`${styles.profileButton} ${className}`} onClick={() => setProfileOpen(!profileOpen)}>
         <User size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
@@ -49,7 +63,7 @@ export const Navbar = ({
       {profileOpen && (
         <div className={styles.profileDropdown}>
           <Link to="/perfil" onClick={() => { setProfileOpen(false); setIsMenuOpen(false); }}>Ver perfil</Link>
-          <button onClick={() => { dispatch(authLogout()); setProfileOpen(false); setIsMenuOpen(false); }}>Cerrar sesión</button>
+          <button onClick={() => { signOut(auth); setProfileOpen(false); setIsMenuOpen(false); }}>Cerrar sesión</button>
         </div>
       )}
     </div>
@@ -65,7 +79,7 @@ export const Navbar = ({
     <nav className={styles.navbar}>
       <div className={styles.navbarWrapperDesktop}>
         <Link to={'/'} className={styles.logo}>
-          {logo ? <img src={logo} alt="Logo Arbu" /> : <span>MiApp</span>}
+          {brandLogo ? <img src={brandLogo} alt="Logo Arbu" /> : <span>MiApp</span>}
         </Link>
         <ul className={styles.navLinks}>
           {links.map((link) => (
@@ -77,7 +91,10 @@ export const Navbar = ({
             </li>
           ))}
         </ul>
-        {getProfileOrDownload(styles.ctoButton)}
+        <div className={styles.actions}>
+          <ThemeToggle iconProps={iconProps} />
+          {getProfileOrDownload(styles.ctoButton)}
+        </div>
       </div>
     </nav>
   );
@@ -86,8 +103,14 @@ export const Navbar = ({
     <nav className={styles.navbar}>
       <div className={styles.navbarWrapperMobile}>
         <Link to={'/'} className={styles.logo}>
-          {logo ? <img src={logo} alt="Logo Arbu" /> : <span>MiApp</span>}
+          {brandLogo ? <img src={brandLogo} alt="Logo Arbu" /> : <span>MiApp</span>}
         </Link>
+        <div className={styles.mobileActions}>
+          <ThemeToggle iconProps={iconProps} />
+          <button className={styles.hamburger} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X size={iconProps.size} strokeWidth={iconProps.strokeWidth} /> : <Menu size={iconProps.size} strokeWidth={iconProps.strokeWidth} />}
+          </button>
+        </div>
         <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ''}`}>
           {links.map((link) => (
             <li key={link.href}>
@@ -99,9 +122,6 @@ export const Navbar = ({
           ))}
           {getProfileOrDownload(styles.ctoButtonMobile)}
         </ul>
-        <button className={styles.hamburger} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X size={iconProps.size} strokeWidth={iconProps.strokeWidth} /> : <Menu size={iconProps.size} strokeWidth={iconProps.strokeWidth} />}
-        </button>
       </div>
     </nav>
   );
