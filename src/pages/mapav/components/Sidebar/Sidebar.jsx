@@ -9,7 +9,6 @@ import { Accordion } from "../../../../components/Accordion/Accordion";
 import { ResultCard } from "../ResultCard/ResultCard";
 import {
   optionsArbol,
-  optionsCategorias,
   optionsRiegos,
   optionsMonitoreos,
   MONITOREO_PERSONALIZADO,
@@ -37,12 +36,13 @@ import { Skeleton } from "../../../../components/Skeleton/Skeleton";
 import { ESTADO_CAMPANIA } from "../../../../helpers/campanias/campaniaModel";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { Input } from "../../../../components/input/Input";
+import { setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
+import { loadPersistedFilters } from "../../utils/treeFilters";
 
 export const Sidebar = () => {
   const dispatch = useDispatch()
   const [search, setSearch] = useState("");
   const [arbolValues, setArbolValues] = useState(["plantados"]);
-  const [selectedCategorias, setSelectedCategorias] = useState("");
   const [selectedRiegos, setSelectedRiegos] = useState("");
   const [selectedMonitoreos, setSelectedMonitoreos] = useState("");
   const [selectedEspecies, setSelectedEspecies] = useState([])
@@ -57,10 +57,24 @@ export const Sidebar = () => {
   const campaniasCargando = useSelector(selectCampaniasLoading);
   const arbolesCargando = useSelector(selectArbolesCargando);
 
+
   useEffect(() => {
     const handleResize = () => {
       setIsCollapsed(window.innerWidth < 768);
     };
+
+    const persistedFilters = loadPersistedFilters();
+    if (persistedFilters) {
+      setSearch(persistedFilters.texto || "");
+      setSelectedRiegos(persistedFilters.riego || "");
+      setSelectedMonitoreos(persistedFilters.monitoreo?.tipo || "");
+      setSelectedEspecies(persistedFilters.especies || []);
+
+      if (persistedFilters.monitoreo?.tipo === MONITOREO_PERSONALIZADO) {
+        setDesde(persistedFilters.monitoreo.desde ? new Date(persistedFilters.monitoreo.desde).toISOString().slice(0, 10) : "");
+        setHasta(persistedFilters.monitoreo.hasta ? new Date(persistedFilters.monitoreo.hasta).toISOString().slice(0, 10) : "");
+      }
+    }
 
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -104,7 +118,6 @@ export const Sidebar = () => {
 
   const hayFiltros =
     Boolean(search.trim()) ||
-    Boolean(selectedCategorias) ||
     Boolean(selectedRiegos) ||
     Boolean(selectedMonitoreos) ||
     selectedEspecies.length > 0;
@@ -121,7 +134,7 @@ export const Sidebar = () => {
 
     dispatch(setPlantedTreesFilter({
       texto: search,
-      campo: selectedCategorias,
+      campo: "todos",
       riego: selectedRiegos,
       monitoreo,
       especies: selectedEspecies,
@@ -130,12 +143,13 @@ export const Sidebar = () => {
 
   const handleDeshacer = () => {
     setSearch("");
-    setSelectedCategorias("");
     setSelectedMonitoreos("");
     setSelectedRiegos("");
     setSelectedEspecies([]);
     setDesde("");
     setHasta("");
+    dispatch(setSelectedTree(null, {}));
+    dispatch(setPanelState("CLOSE"));
     dispatch(resetPlantedTreesFilter());
   };
 
@@ -171,12 +185,17 @@ export const Sidebar = () => {
         </div>
 
         {arbolesPlantados.isSearching &&
-          <div className={styles.withResult}>
+          <button
+            type="button"
+            className={styles.withResult}
+            onClick={handleDeshacer}
+            aria-label={hayResultados ? `Volver atrás, ${arbolesPlantados.visibleData.length} resultados` : "Volver atrás"}
+          >
             <ArrowLeft size={22} strokeWidth={1.75} />
-            <button onClick={handleDeshacer}>
-              {hayResultados ? `${arbolesPlantados.visibleData.length} Resultados` : "Volver"}
-            </button>
-          </div>
+            <span>
+              {hayResultados ? `Volver atrás (${arbolesPlantados.visibleData.length} Resultados)` : "Volver atrás"}
+            </span>
+          </button>
         }
       </div>
       <div className={styles.body}>
@@ -201,29 +220,6 @@ export const Sidebar = () => {
             <div className={styles.rowSidebar}>
               <h3>Filtros</h3>
               <div className={styles.accordionFilters}>
-                <Accordion
-                  label={"Categorias"}
-                  isActive={Boolean(selectedCategorias)}
-                >
-                  <div className={styles.inputOptions}>
-                    {optionsCategorias.map((option) => (
-                      <Radio
-                        key={option.value}
-                        value={option.label}
-                        onClick={() => setSelectedCategorias(option.value)}
-                        checked={option.value === selectedCategorias}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => setSelectedCategorias("")}
-                    disabled={!selectedCategorias}
-                    className={`${styles.clearOptions} ${selectedCategorias ? styles.clearActive : ""}`}
-                  >
-                    <Trash2 size={18} strokeWidth={1.75} />
-                    <span>Eliminar filtro</span>
-                  </button>
-                </Accordion>
                 <Accordion
                   label={"Riegos"}
                   isActive={Boolean(selectedRiegos)}

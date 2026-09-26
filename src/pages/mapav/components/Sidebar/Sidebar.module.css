@@ -27,18 +27,29 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
 
-  .withResult {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    color: var(--color-text);
+.withResult {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: fit-content;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
 
-    span {
-      margin-top: 3px;
-    }
-  }
+.withResult:hover {
+  opacity: 0.8;
+}
+
+.withResult span {
+  margin-top: 2px;
 }
 
 .body {

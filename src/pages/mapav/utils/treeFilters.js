@@ -17,12 +17,69 @@ import {
  * puede probar sin montar un store.
  */
 
+export const FILTER_STORAGE_KEY = "mapa_publico_filters_v1";
+export const FILTER_TTL_MS = 24 * 60 * 60 * 1000;
+
 export const EMPTY_FILTERS = {
   texto: "",
   campo: CAMPO_TODOS,
   riego: RIEGO_CON_Y_SIN,
   monitoreo: { tipo: MONITOREO_TODOS, desde: null, hasta: null },
   especies: [],
+};
+
+const sanitizeFilters = (filters = EMPTY_FILTERS) => ({
+  texto: typeof filters.texto === "string" ? filters.texto : "",
+  campo: filters.campo || CAMPO_TODOS,
+  riego: filters.riego || RIEGO_CON_Y_SIN,
+  monitoreo: {
+    tipo: filters.monitoreo?.tipo || MONITOREO_TODOS,
+    desde: filters.monitoreo?.desde ?? null,
+    hasta: filters.monitoreo?.hasta ?? null,
+  },
+  especies: Array.isArray(filters.especies) ? filters.especies : [],
+});
+
+export const savePersistedFilters = (filters = EMPTY_FILTERS) => {
+  if (typeof window === "undefined") return;
+
+  try {
+    const payload = {
+      savedAt: Date.now(),
+      filters: sanitizeFilters(filters),
+    };
+    window.localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.warn("No se pudo guardar el filtro del mapa:", error);
+  }
+};
+
+export const loadPersistedFilters = () => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(FILTER_STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.savedAt || !parsed.filters) return null;
+
+    const age = Date.now() - Number(parsed.savedAt);
+    if (age > FILTER_TTL_MS) {
+      window.localStorage.removeItem(FILTER_STORAGE_KEY);
+      return null;
+    }
+
+    return sanitizeFilters(parsed.filters);
+  } catch (error) {
+    console.warn("No se pudo leer el filtro persistido del mapa:", error);
+    return null;
+  }
+};
+
+export const clearPersistedFilters = () => {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(FILTER_STORAGE_KEY);
 };
 
 export const hasActiveFilters = (filters = EMPTY_FILTERS) =>
@@ -74,10 +131,18 @@ const coincideTexto = (arbol, texto, campo) => {
   return busca(arbol[campo]);
 };
 
+export const tieneRiegos = (arbol) => {
+  const riegos = arbol?.riegos ?? arbol?.riego;
+  if (!riegos) return false;
+  if (Array.isArray(riegos)) return riegos.length > 0;
+  if (typeof riegos === "object") return Object.keys(riegos).length > 0;
+  return Boolean(riegos);
+};
+
 const coincideRiego = (arbol, riego) => {
   if (!riego || riego === RIEGO_CON_Y_SIN) return true;
-  const tieneRiegos = Object.keys(arbol.riegos ?? {}).length > 0;
-  return riego === "conRiegos" ? tieneRiegos : !tieneRiegos;
+  const regado = tieneRiegos(arbol);
+  return riego === "conRiegos" ? regado : !regado;
 };
 
 const coincideMonitoreo = (arbol, monitoreo) => {

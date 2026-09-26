@@ -2,9 +2,10 @@ import { FRESCURA_MAPA_PUBLICO_MS } from "../helpers/leerColeccion";
 import { loadArboles } from "../helpers/loadArboles";
 import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados";
 import { loadInscripcionesMapeoPublic } from "../helpers/loadInscripciones";
+import { clearPersistedFilters, savePersistedFilters } from "../pages/mapav/utils/treeFilters";
 import { types } from "../types/types";
 
-// Action creators for mapped trees (árboles mapeados)
+
 export const fetchMappedTreesRequest = () => ({
   type: types.FETCH_ARBOLES_MAPEADOS_REQUEST,
 });
@@ -54,14 +55,22 @@ export const setActivePlantedTrees = (value) => ({
   payload: value,
 });
 
-export const setPlantedTreesFilter = (filters) => ({
-  type: types.FILTRAR_ARBOLES_PLANTADOS,
-  payload: filters,
-});
+export const setPlantedTreesFilter = (filters) => {
+  savePersistedFilters(filters);
 
-export const resetPlantedTreesFilter = () => ({
-  type: types.RESET_PLANTADOS_FILTRADOS,
-});
+  return {
+    type: types.FILTRAR_ARBOLES_PLANTADOS,
+    payload: filters,
+  };
+};
+
+export const resetPlantedTreesFilter = () => {
+  clearPersistedFilters();
+
+  return {
+    type: types.RESET_PLANTADOS_FILTRADOS,
+  };
+};
 
 export const fetchInscripcionesMapeoRequest = () => ({
   type: types.FETCH_INSCRIPCIONES_MAPEO_REQUEST,

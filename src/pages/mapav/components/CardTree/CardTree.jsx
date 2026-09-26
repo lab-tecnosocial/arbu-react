@@ -146,6 +146,10 @@ export const CardTree = () => {
     selectedTree?.id ??
     `${selectedTree?.latitud ?? ""}-${selectedTree?.longitud ?? ""}-${index}`;
 
+  if (!selectedTree || Object.keys(selectedTree).length === 0) {
+    return null;
+  }
+
   return (
     <div
       ref={contentRef}

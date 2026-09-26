@@ -1,6 +1,6 @@
 import { types } from "../types/types";
 import { filtrarArbolesDeCampania } from "../helpers/campanias/registros";
-import { EMPTY_FILTERS, applyTreeFilters, hasActiveFilters } from "../pages/mapav/utils/treeFilters";
+import { EMPTY_FILTERS, applyTreeFilters, hasActiveFilters, loadPersistedFilters } from "../pages/mapav/utils/treeFilters";
 
 const initialMappedTreesState = {
   data: [],
@@ -39,7 +39,7 @@ const initialState = {
   arbolesPlantados: initialPlantedTreesState,
   inscripcionesMapeo: initialInscripcionesMapeoState,
   campanias: initialCampaniasState,
-  filters: EMPTY_FILTERS,
+  filters: loadPersistedFilters() ?? EMPTY_FILTERS,
 };
 
 const arbolesMapeadosReducer = (state = initialMappedTreesState, action) => {
