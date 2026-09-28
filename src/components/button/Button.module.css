@@ -99,6 +99,30 @@
   padding-left: 14px;
 }
 
+/* Elevación sutil al pasar el cursor, común a todas las variantes. */
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.icon img {
+  transition: transform .3s ease;
+}
+
+.button:hover:not(:disabled) .icon img {
+  transform: scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover:not(:disabled),
+  .button:hover:not(:disabled) .icon img {
+    transform: none;
+  }
+}
+
 .fullWidth {
   width: 100%;
 }

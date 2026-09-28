@@ -44,11 +44,13 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  transition: .2s ease;
+  transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
 }
 
 .card:hover {
   border-color: var(--geyser-300);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px -20px rgba(23, 77, 68, 0.4);
 }
 
 .cardPro {
@@ -92,6 +94,7 @@
   margin-top: auto;
 
   li {
+    transition: color .2s ease;
     display: flex;
     align-items: flex-start;
     gap: 12px;
@@ -111,6 +114,17 @@
   border-radius: var(--border12);
   background-color: var(--light);
   color: var(--green2);
+  transition: background-color .25s ease, color .25s ease, transform .25s ease;
+}
+
+.list li:hover {
+  color: var(--color-text);
+}
+
+.list li:hover .itemIcon {
+  background-color: var(--green2);
+  color: white;
+  transform: scale(1.1);
 }
 
 .cardButton {

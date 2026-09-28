@@ -43,6 +43,7 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
     destacada: false,
     participacion: PARTICIPACION.MAPEADORES,
     soloJacaranda: false,
+    soloJacarandaEnMapa: false,
     restringirMunicipios: false,
   });
   const [mapeadoresSeleccionados, setMapeadoresSeleccionados] = useState([]);
@@ -65,6 +66,7 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
         destacada: proyecto.destacada === true,
         participacion: proyecto.participacion || PARTICIPACION.MAPEADORES,
         soloJacaranda: Boolean(proyecto.reglas?.especies),
+        soloJacarandaEnMapa: proyecto.reglas?.especies?.filtraVisualizacion === true,
         restringirMunicipios: Boolean(proyecto.reglas?.municipios?.length),
       });
 
@@ -90,6 +92,7 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
         destacada: false,
         participacion: PARTICIPACION.MAPEADORES,
         soloJacaranda: false,
+        soloJacarandaEnMapa: false,
         restringirMunicipios: false,
       });
       setMapeadoresSeleccionados([]);
@@ -154,7 +157,12 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
       participacion: formData.participacion,
       reglas: {
         criterioFecha: REGLAS_CONCURSO_PRIMAVERA.criterioFecha,
-        especies: formData.soloJacaranda ? REGLAS_CONCURSO_PRIMAVERA.especies : null,
+        especies: formData.soloJacaranda
+          ? {
+              ...REGLAS_CONCURSO_PRIMAVERA.especies,
+              filtraVisualizacion: formData.soloJacarandaEnMapa,
+            }
+          : null,
         municipios: formData.restringirMunicipios ? CODIGOS_METROPOLITANOS_CBBA : null,
         fotos: formData.soloJacaranda ? REGLAS_CONCURSO_PRIMAVERA.fotos : null,
         requiereUbicacion: true,
@@ -334,6 +342,13 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
               label="Jacarandás en flor (icono propio en el mapa)"
               sx={{ ".MuiFormControlLabel-label": { fontFamily: "Poppins" } }}
             />
+            {formData.soloJacaranda && (
+              <FormControlLabel
+                control={<Switch checked={formData.soloJacarandaEnMapa} onChange={(e) => setFormData({ ...formData, soloJacarandaEnMapa: e.target.checked })} />}
+                label="Mostrar en el mapa solo los jacarandás"
+                sx={{ ".MuiFormControlLabel-label": { fontFamily: "Poppins" } }}
+              />
+            )}
             <FormControlLabel
               control={<Switch checked={formData.restringirMunicipios} onChange={(e) => setFormData({ ...formData, restringirMunicipios: e.target.checked })} />}
               label="Solo los 7 municipios del área metropolitana"
@@ -341,8 +356,9 @@ const CrearEditarProyecto = ({ open, onClose, proyecto = null }) => {
             />
           </Box>
           <Typography variant="caption" sx={{ fontFamily: "Poppins", color: "#6b7a7a", display: "block", mb: 2 }}>
-            La especie no oculta árboles del mapa ni descarta registros por sí sola: marca el icono
-            y cuenta para la validez, y lo dudoso pasa por la cola de revisión.
+            La especie no descarta registros por sí sola: marca el icono y cuenta para la validez,
+            y lo dudoso pasa por la cola de revisión. Ocultar las demás especies solo afecta al mapa
+            público: los registros sin especie identificada siguen llegando a la revisión.
           </Typography>
 
           {formData.participacion === PARTICIPACION.MAPEADORES && (

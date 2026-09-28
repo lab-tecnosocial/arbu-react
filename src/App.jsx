@@ -12,6 +12,8 @@ import { onAuthStateChanged } from "firebase/auth"
 import { authLogin } from "./actions/auth.actions.jsx";
 import { auth } from "./firebase/firebase-config.js";
 import { Inscripcion } from "./pages/inscripcion/Inscripcion.jsx";
+import { BlogPage } from "./pages/blog/BlogPage.jsx";
+import { EntradaBlog } from "./pages/blog/EntradaBlog.jsx";
 
 // Las rutas de guardia sí se cargan siempre: son las que deciden el acceso.
 import ProtectedRoute from './components/autenticacion/ProtectedRoute.jsx';
@@ -79,6 +81,8 @@ const App = () => {
             <Route path='licencias-limitaciones' element={<Licencias />} />
           </Route>
           <Route path="acerca" element={<Acerca />} />
+          <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/:slug" element={<EntradaBlog />} />
 
           {/* Arbu Pro */}
           <Route path="login" element={<PublicRoute element={<IniciarSesion />} />} />

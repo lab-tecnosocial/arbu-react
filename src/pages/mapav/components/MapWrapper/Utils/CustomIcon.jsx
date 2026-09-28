@@ -22,3 +22,15 @@ export const jacarandaIcon = new L.Icon({
   iconUrl: "/jacaranda.png",
   iconSize: new L.Point(72, 72),
 });
+
+/**
+ * Icono transparente para los árboles que no cumplen la especie de la campaña
+ * (en el concurso de primavera, todo lo que no es jacarandá). El marcador sigue
+ * existiendo pero no se ve ni se puede tocar: la clase `icono-oculto` lo deja
+ * sin opacidad y sin eventos de puntero (ver MapWrapper.module.css).
+ */
+export const iconoOculto = new L.DivIcon({
+  className: "icono-oculto",
+  html: "",
+  iconSize: new L.Point(0, 0),
+});
