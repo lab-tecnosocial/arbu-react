@@ -1,0 +1,1 @@
+import{j as o,O as r}from"./index-BaG8qXVc.js";import{P as t}from"./ProyectosContext-Cncoff7B.js";import{M as s}from"./MapeoScoutContext-DeqqxfAB.js";const m=()=>o.jsx(t,{children:o.jsx(s,{children:o.jsx(r,{})})});export{m as default};

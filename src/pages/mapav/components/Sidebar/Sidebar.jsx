@@ -373,6 +373,7 @@ export const Sidebar = () => {
           </>
         )}
 
+
         {arbolesPlantados.isSearching && arbolesPlantados.filteredData.length > 0 ?
           <div className={styles.resultsWrapper}>
             {
