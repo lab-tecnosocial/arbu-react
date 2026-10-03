@@ -364,6 +364,7 @@ export const Sidebar = () => {
                 </div>
               </div>
             )}
+            
             {!campaniasCargando && actividades.length > 0 && (
               <div className={styles.rowSidebar}>
                 <h3>Actividades</h3>
