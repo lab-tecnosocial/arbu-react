@@ -28,6 +28,9 @@ export const Navbar = ({
       href: "/mapa",
       icon: <Map size={iconProps.size} strokeWidth={iconProps.strokeWidth} />,
     },
+
+
+    
     {
       label: "Ranking",
       href: "/ranking",
