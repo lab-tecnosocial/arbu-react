@@ -1,71 +1,84 @@
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase-config";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "./../firebase/firebase-config";
+import { ACCESO_VACIO, IDS_PERMISOS } from "./permisos";
+
+const REF = () => doc(db, "usuariosAutorizados", "accesoTablas");
 
 /**
- * Verifica si un usuario está autorizado para acceder a las tablas
- * @param {string} userEmail - Email del usuario a verificar
- * @returns {Promise<boolean>} - true si está autorizado, false si no
+ * Toda la autorización de Arbu Pro sale de un único documento:
+ * `usuariosAutorizados/accesoTablas`.
+ *
+ *   correos:  ["a@x.com", ...]          quién entra al back-office
+ *   roles:    { "a@x.com": "superadmin" | "admin" }
+ *   permisos: { "a@x.com": ["campanas", "tabla"] }
+ *
+ * `admin` no da nada por sí solo: es una etiqueta. Lo que abre puertas es el
+ * mapa `permisos`, y `superadmin` que se las salta todas.
  */
-export const checkUserAuthorization = async (userEmail) => {
-    try {
-        const snapshot = await getDoc(doc(db, "usuariosAutorizados", "accesoTablas"));
+const leerDocumento = async () => {
+  const snapshot = await getDoc(REF());
+  return snapshot.exists() ? snapshot.data() : null;
+};
 
-        if (!snapshot.exists()) {
-            return false;
-        }
+// El documento se consultaba en cada montaje de ProtectedRoute y otra vez en
+// cada pantalla. Se lee una vez por sesión y se reparte.
+let promesaDocumento = null;
 
-        const data = snapshot.data();
-        const correosAutorizados = data?.correos || [];
+const documento = () => {
+  if (!promesaDocumento) promesaDocumento = leerDocumento();
+  return promesaDocumento;
+};
 
-        return correosAutorizados.includes(userEmail);
-    } catch (error) {
-        console.error("Error al verificar autorización:", error);
-        return false;
-    }
+/** Tras guardar permisos hay que olvidar lo leído, o la UI miente. */
+export const invalidarAcceso = () => {
+  promesaDocumento = null;
+};
+
+const perfil = (data, email) => {
+  if (!data || !email) return ACCESO_VACIO;
+
+  const autorizado = (data.correos || []).includes(email);
+  const rol = data.roles?.[email] ?? null;
+  const esSuperadmin = rol === "superadmin";
+  const permisos = (data.permisos?.[email] || []).filter((p) => IDS_PERMISOS.includes(p));
+
+  return { autorizado, esSuperadmin, rol, permisos };
+};
+
+/** El acceso completo de un email: una sola lectura para todas las preguntas. */
+export const cargarAcceso = async (email) => {
+  try {
+    return perfil(await documento(), email);
+  } catch (error) {
+    console.error("[autorización] no se pudo leer el documento de accesos:", error);
+    return ACCESO_VACIO;
+  }
+};
+
+/** El documento entero. Solo lo necesita la pantalla que gestiona accesos. */
+export const cargarAccesosDeTodos = async () => {
+  invalidarAcceso();
+  const data = (await documento()) ?? {};
+  return {
+    correos: data.correos || [],
+    roles: data.roles || {},
+    permisos: data.permisos || {},
+  };
 };
 
 /**
- * Verifica si un usuario es superadministrador
- * @param {string} userEmail - Email del usuario a verificar
- * @returns {Promise<boolean>} - true si es superadmin, false si no
+ * Guarda la tabla de accesos completa. Las reglas solo dejan escribir aquí a un
+ * superadmin; esto es la mitad del cliente, no la defensa.
  */
-export const checkIsSuperAdmin = async (userEmail) => {
-    try {
-        const snapshot = await getDoc(doc(db, "usuariosAutorizados", "accesoTablas"));
-
-        if (!snapshot.exists()) {
-            return false;
-        }
-
-        const data = snapshot.data();
-        const roles = data?.roles || {};
-
-        return roles[userEmail] === 'superadmin';
-    } catch (error) {
-        console.error("Error al verificar si es superadmin:", error);
-        return false;
-    }
+export const guardarAccesos = async ({ correos, roles, permisos }) => {
+  await setDoc(REF(), { correos, roles, permisos }, { merge: true });
+  invalidarAcceso();
 };
 
-/**
- * Obtiene el rol de un usuario
- * @param {string} userEmail - Email del usuario
- * @returns {Promise<string|null>} - Rol del usuario o null
- */
-export const getUserRole = async (userEmail) => {
-    try {
-        const snapshot = await getDoc(doc(db, "usuariosAutorizados", "accesoTablas"));
+export const checkUserAuthorization = async (userEmail) =>
+  (await cargarAcceso(userEmail)).autorizado;
 
-        if (!snapshot.exists()) {
-            return null;
-        }
+export const checkIsSuperAdmin = async (userEmail) =>
+  (await cargarAcceso(userEmail)).esSuperadmin;
 
-        const data = snapshot.data();
-        const roles = data?.roles || {};
-
-        return roles[userEmail] || 'admin'; // Por defecto 'admin' si no tiene rol específico
-    } catch (error) {
-        console.error("Error al obtener rol de usuario:", error);
-        return null;
-    }
-};
+export const getUserRole = async (userEmail) => (await cargarAcceso(userEmail)).rol;

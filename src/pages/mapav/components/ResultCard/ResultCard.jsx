@@ -2,9 +2,14 @@ import { ClipboardPlus, Droplet, Heart, MapPinCheckInside, MoveVertical } from "
 import styles from "./ResultCard.module.css"
 import { useDispatch } from "react-redux"
 import { setPanelState, setSelectedCoords, setSelectedTree } from "../../../../actions/mapaActions"
+import { getUltimoMonitoreo } from "../../../../helpers/fechaArbol"
 
 export const ResultCard = ({ index, arbolData }) => {
   const dispatch = useDispatch()
+
+  // Antes esto mostraba "1.5" fijo para todos los árboles. Mejor no mostrar el
+  // dato que inventarlo.
+  const alturaUltimoMonitoreo = getUltimoMonitoreo(arbolData)?.altura ?? null
 
   const handleButton = () => {
     dispatch(setPanelState("OPEN"))
@@ -37,17 +42,19 @@ export const ResultCard = ({ index, arbolData }) => {
           <Heart size={16} strokeWidth={1.75} />
           <span>{arbolData.estado}</span>
         </div>
-        <div className={styles.detail}>
-          <MoveVertical size={16} strokeWidth={1.75} />
-          <span>1.5</span>
-        </div>
+        {alturaUltimoMonitoreo !== null && (
+          <div className={styles.detail}>
+            <MoveVertical size={16} strokeWidth={1.75} />
+            <span>{alturaUltimoMonitoreo}</span>
+          </div>
+        )}
         <div className={styles.detail}>
           <Droplet size={16} strokeWidth={1.75} />
-          <span>{Object.keys(arbolData.riegos).length}</span>
+          <span>{Object.keys(arbolData.riegos ?? {}).length}</span>
         </div>
         <div className={styles.detail}>
           <MapPinCheckInside size={16} strokeWidth={1.75} />
-          <span>{Object.keys(arbolData.monitoreos).length}</span>
+          <span>{Object.keys(arbolData.monitoreos ?? {}).length}</span>
         </div>
       </div>
     </button>

@@ -48,4 +48,34 @@
 
 .fullWidth {
   width: 100%;
+  /* A ancho completo el contenido se centraba y cada chip quedaba alineado de
+     una forma distinta según lo largo que fuera su texto. */
+  justify-content: flex-start;
+}
+
+/* Mismo dibujo que el del componente Checkbox: un solo control visual en todo el sitio. */
+.iconBox {
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  border: 1px solid var(--geyser-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+}
+
+.iconBox svg {
+  color: transparent;
+}
+
+.iconBoxChecked {
+  border: 1px solid var(--green2);
+  background-color: var(--white);
+}
+
+.iconBoxChecked svg {
+  color: var(--green2);
 }

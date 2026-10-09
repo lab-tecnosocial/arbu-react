@@ -1,0 +1,74 @@
+/* Centrado en el mapa: arriba del todo competía con los tiles y se perdía.
+   Por encima de los controles de Leaflet (que llegan a z-index 1000). */
+.aviso {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 32px);
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-medium);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 500;
+  animation: aparecer 0.2s ease-out;
+}
+
+.avisoError {
+  color: var(--color-text);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.avisoError svg {
+  color: #b42318;
+}
+
+.reintentar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.reintentar:hover {
+  background-color: var(--color-hover-overlay);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .aviso {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+}

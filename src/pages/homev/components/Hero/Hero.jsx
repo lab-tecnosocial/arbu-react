@@ -34,30 +34,8 @@ export const Hero = () => {
               <img src="blur.png" alt="blur background" />
             </div>
           </div>
-          <div className={styles.rating}>
-            <div className={styles.profilePictures}>
-              <div className={styles.profile}>
-                <img src="profile1.png" alt="" />
-              </div>
-              <div className={styles.profile}>
-                <img src="profile2.png" alt="" />
-              </div><div className={styles.profile}>
-                <img src="profile3.png" alt="" />
-              </div>
-            </div>
-            <div className={styles.ratingLabel}>
-              <div className={styles.stars}>
-                <img src="star.png" alt="" />
-                <img src="star.png" alt="" />
-                <img src="star.png" alt="" />
-                <img src="star.png" alt="" />
-                <img src="star1.png" alt="" />
-              </div>
-              <span>4.7 por +240 usuarios</span>
-            </div>
-          </div>
         </div>
-        <div className={styles.picture}>
+        <div className={styles.picture} data-reveal="right" style={{ "--reveal-delay": "200ms" }}>
           <img src="hero2.png" alt="hero2 pgn" />
         </div>
       </div>

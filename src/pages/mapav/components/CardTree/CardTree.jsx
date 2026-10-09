@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Calendar, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
 import { Chip } from "../../../../components/Chip/Chip";
-import { setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
+import { asegurarUsuarios, setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
 import { TreePhotoGallery, TreePhotoTrigger } from "./TreePhotoGallery";
 import {
   formatMonitoreoDateLong,
@@ -13,28 +13,21 @@ import {
   MAPPED_PARTS_UI,
 } from "./treePhotos";
 import { getScoutInfoByMapeadoPor } from "../../utils/scoutEscudos";
+import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 
 export const CardTree = () => {
   const dispatch = useDispatch()
   const contentRef = useRef(null)
-  const { usuarios, panelState, selectedTree, index } = useSelector((state) => state.mapa)
+  const { usuariosMap, panelState, selectedTree, index } = useSelector((state) => state.mapa)
   const { arbolesPlantados, arbolesMapeados, inscripcionesMapeo } = useSelector((state) => state.arboles)
+  const campaniaSeleccionada = useSelector(selectCampaniaSeleccionada)
   const [monitoreos, setMonitoreos] = useState([])
   const [riegos, setRiegos] = useState([])
   const [isLargeScreen, setIsLargeScreen] = useState(
     window.matchMedia('(min-width: 768px)').matches
   );
 
-  const getFullNameUser = (id) => {
-    if (selectedTree && usuarios) {
-      for (const [_, value] of Object.entries(usuarios)) {
-        if (value.id === id) {
-          return value.nombre;
-        }
-      }
-    }
-    return "";
-  };
+  const getFullNameUser = (id) => usuariosMap?.[id]?.nombre ?? "";
 
   const toDate = (timestamp, locale = "es-BO") => {
     if (!timestamp || typeof timestamp.seconds !== "number") {
@@ -63,6 +56,19 @@ export const CardTree = () => {
       }
     }
   }, [selectedTree])
+
+  // Los nombres se piden por árbol abierto, no de antemano: son los únicos
+  // usuarios que esta ficha va a mostrar.
+  useEffect(() => {
+    if (!selectedTree) return;
+
+    const ids = [
+      ...(selectedTree.usuariosQueAdoptaron ?? []),
+      ...Object.values(selectedTree.monitoreos ?? {}).map((m) => m?.monitoreoRealizadoPor),
+    ];
+
+    if (ids.filter(Boolean).length > 0) dispatch(asegurarUsuarios(ids));
+  }, [selectedTree, dispatch])
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
@@ -106,7 +112,9 @@ export const CardTree = () => {
   }, [panelState, selectedTree, isLargeScreen])
 
   const isMapped = selectedTree && Object.hasOwn(selectedTree, "mapeadoPor");
-  const showScoutInfo = arbolesMapeados.activityFilter === "scouts2025";
+  // El escudo scout se muestra cuando hay una campaña seleccionada que tiene
+  // mapeadores inscritos (las campañas abiertas, como el concurso, no los tienen).
+  const showScoutInfo = Boolean(campaniaSeleccionada?.idMapeadores?.length);
   const scoutInfo = useMemo(() => {
     if (!showScoutInfo || !isMapped || !selectedTree?.mapeadoPor) return null;
     return getScoutInfoByMapeadoPor(
@@ -148,24 +156,24 @@ export const CardTree = () => {
           <span>Detalles de Árbol</span>
           <div className={styles.topBarOptions}>
             {/* <span className={styles.topBarIndicator}>
-              {index + 1} de {arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length}
+              {index + 1} de {arbolesPlantados.visibleData.length}
             </span>
             <div className={styles.buttons}>
               <button
                 onClick={() => {
                   if (index > 0) {
                     const newIndex = index - 1;
-                    const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
+                    const newTree = arbolesPlantados.visibleData[newIndex];
                     dispatch(setSelectedTree(newIndex, newTree));
                   }
                 }}
               ><ChevronLeft size={20} strokeWidth={1.75} /></button>
               <button
                 onClick={() => {
-                  const maxIndex = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData.length : arbolesPlantados.data.length;
+                  const maxIndex = arbolesPlantados.visibleData.length;
                   if (index < maxIndex - 1) {
                     const newIndex = index + 1;
-                    const newTree = arbolesPlantados.filteredData.length > 0 ? arbolesPlantados.filteredData[newIndex] : arbolesPlantados.data[newIndex];
+                    const newTree = arbolesPlantados.visibleData[newIndex];
                     dispatch(setSelectedTree(newIndex, newTree));
                   }
                 }}

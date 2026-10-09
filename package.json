@@ -18,10 +18,12 @@
     "animejs": "^4.1.3",
     "dayjs": "^1.11.23",
     "embla-carousel-react": "1.2.20",
+    "exifr": "^7.1.3",
     "firebase": "^9.23.0",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
     "lucide-react": "^0.539.0",
+    "marked": "^18.0.14",
     "material-react-table": "^2.13.3",
     "prop-types": "15.8.1",
     "react": "^18.2.0",
@@ -42,9 +44,14 @@
   },
   "scripts": {
     "start": "vite --port 3000",
+    "dev": "pnpm start",
     "build": "vite build",
     "serve": "vite preview",
-    "deploy": "pnpm run build && firebase deploy --only hosting"
+    "deploy": "pnpm run build && firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "rules:test": "firebase emulators:start --only firestore",
+    "deploy:storage": "firebase deploy --only storage",
+    "esquema:app": "node scripts/reparar-esquema-app.mjs"
   },
   "eslintConfig": {
     "extends": [

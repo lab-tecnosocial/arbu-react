@@ -1,9 +1,8 @@
+import { FRESCURA_MAPA_PUBLICO_MS } from "../helpers/leerColeccion";
 import { loadArboles } from "../helpers/loadArboles";
-import { loadArbolesMapeadosConDemo } from "../helpers/loadArbolesMapeados";
-import { INSCRIPCIONES_MAPEO_MOCK } from "../pages/mapav/utils/inscripcionesMapeoMock";
+import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados";
+import { loadInscripcionesMapeoPublic } from "../helpers/loadInscripciones";
 import { types } from "../types/types";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 // Action creators for mapped trees (árboles mapeados)
 export const fetchMappedTreesRequest = () => ({
@@ -24,6 +23,16 @@ export const setActiveMappedTrees = (value) => ({
   type: types.SHOW_DATA_ARBOLES_MAPEADOS,
   payload: value,
 });
+
+/**
+ * Encender la capa de mapeados trae consigo sus inscripciones (el escudo
+ * scout). Va en un thunk para que ni el Sidebar ni las campañas tengan que
+ * acordarse de pedirlas.
+ */
+export const mostrarArbolesMapeados = (visible) => (dispatch) => {
+  dispatch(setActiveMappedTrees(visible));
+  if (visible) dispatch(asegurarInscripcionesMapeo());
+};
 
 // Action creators for planted trees (árboles plantados)
 export const fetchPlantedTreesRequest = () => ({
@@ -52,15 +61,6 @@ export const setPlantedTreesFilter = (filters) => ({
 
 export const resetPlantedTreesFilter = () => ({
   type: types.RESET_PLANTADOS_FILTRADOS,
-});
-
-export const setMappedTreesActivityFilter = (activity) => ({
-  type: types.FILTRAR_ARBOLES_MAPEADOS,
-  payload: activity,
-});
-
-export const resetMappedTreesActivityFilter = () => ({
-  type: types.RESET_MAPEADOS_FILTRADOS,
 });
 
 export const fetchInscripcionesMapeoRequest = () => ({
@@ -93,50 +93,66 @@ export const setSearchStart = (value) => ({
 });
 
 // Thunk actions
-export const fetchMappedTrees = () => {
-  return async (dispatch) => {
+
+/**
+ * Volver al mapa desde otra ruta no tiene por qué repetir 4.800 lecturas: si
+ * los datos ya están en el store y no hubo error, no se vuelve a pedir. El
+ * botón "Reintentar" pasa `forzar` para saltarse esta guardia.
+ */
+const yaEstaCargado = (slice, forzar) =>
+  !forzar && !slice.error && (slice.loading || slice.data.length > 0);
+
+export const fetchMappedTrees = ({ forzar = false } = {}) => {
+  return async (dispatch, getState) => {
+    if (yaEstaCargado(getState().arboles.arbolesMapeados, forzar)) return;
     try {
       dispatch(fetchMappedTreesRequest());
-      const treesData = await loadArbolesMapeadosConDemo();
+      const treesData = await loadArbolesMapeados({
+        frescuraMs: FRESCURA_MAPA_PUBLICO_MS,
+        alRefrescar: (datos) => dispatch(fetchMappedTreesSuccess(datos)),
+      });
       dispatch(fetchMappedTreesSuccess(treesData));
     } catch (error) {
-      console.log(error);
+      console.error("[arboles mapeados] no se pudieron cargar:", error);
 
       dispatch(fetchMappedTreesFailure(error.message));
     }
   };
 };
 
-export const fetchPlantedTrees = () => {
-  return async (dispatch) => {
+export const fetchPlantedTrees = ({ forzar = false } = {}) => {
+  return async (dispatch, getState) => {
+    if (yaEstaCargado(getState().arboles.arbolesPlantados, forzar)) return;
     try {
       dispatch(fetchPlantedTreesRequest());
-      const treesData = await loadArboles();
+      const treesData = await loadArboles({
+        frescuraMs: FRESCURA_MAPA_PUBLICO_MS,
+        alRefrescar: (datos) => dispatch(fetchPlantedTreesSuccess(datos)),
+      });
       dispatch(fetchPlantedTreesSuccess(treesData));
     } catch (error) {
-      console.log(error)
+      console.error("[arboles plantados] no se pudieron cargar:", error);
       dispatch(fetchPlantedTreesFailure(error.message));
     }
   };
 };
 
-export const fetchAllTrees = () => {
-  return async (dispatch) => {
-    await Promise.all([
-      dispatch(fetchMappedTrees()),
-      dispatch(fetchPlantedTrees()),
-      dispatch(fetchInscripcionesMapeo()),
-    ]);
-  };
-};
+/**
+ * Las inscripciones solo sirven para el escudo scout de los árboles MAPEADOS,
+ * y esa capa está apagada al entrar. Se piden la primera vez que se enciende,
+ * no al cargar la página.
+ */
+export const asegurarInscripcionesMapeo = () => {
+  return async (dispatch, getState) => {
+    const { inscripcionesMapeo } = getState().arboles;
+    if (inscripcionesMapeo.loading || inscripcionesMapeo.data.length > 0) return;
 
-export const fetchInscripcionesMapeo = () => {
-  return async (dispatch) => {
     try {
       dispatch(fetchInscripcionesMapeoRequest());
-      dispatch(fetchInscripcionesMapeoSuccess(INSCRIPCIONES_MAPEO_MOCK));
+      // Proyección sin PII: solo {id, grupo, rama}, lo justo para el escudo scout.
+      dispatch(fetchInscripcionesMapeoSuccess(await loadInscripcionesMapeoPublic()));
     } catch (error) {
-      console.log(error);
+      console.error("[inscripciones] no se pudieron cargar:", error);
       dispatch(fetchInscripcionesMapeoFailure(error.message));
     }
   };

@@ -34,9 +34,9 @@
 }
 
 .logo img {
-  height: 60px;
+  height: 40px;
   width: auto;
-  max-width: 180px;
+  max-width: 130px;
   object-fit: contain;
 }
 
@@ -60,12 +60,37 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  position: relative;
+}
+
+/* Subrayado que crece desde el centro al pasar el cursor; fijo en la activa. */
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transition: transform .25s ease;
+}
+
+.navLink:hover::after,
+.navLink.active::after {
+  transform: scaleX(1);
 }
 
 .icon {
   display: inline-flex;
   align-items: center;
   font-size: 1.2rem;
+  transition: transform .25s ease;
+}
+
+.navLink:hover .icon {
+  transform: translateY(-2px);
 }
 
 .active {
@@ -73,8 +98,8 @@
   font-weight: 500;
 }
 
-.link:hover {
-  color: #93c5fd;
+.navLink:hover {
+  color: var(--green3);
 }
 
 .hamburger {
@@ -158,8 +183,8 @@
   }
 
   .logo img {
-    height: 48px;
-    max-width: 140px;
+    height: 34px;
+    max-width: 110px;
   }
 
   .navbarWrapperMobile {
@@ -207,6 +232,10 @@
     gap: 1rem;
     border: 1px solid var(--color-border);
     border-radius: 12px;
+  }
+
+  .navLink::after {
+    display: none;
   }
 
   .navLink {

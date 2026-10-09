@@ -5,8 +5,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 7rem;
-  /* padding-bottom: 7rem; */
+  /* Portada a pantalla completa: la altura visible menos los 100px del navbar,
+     que va encima en el flujo. `svh` evita el salto de la barra del navegador
+     en móviles. */
+  min-height: calc(100vh - 100px);
+  min-height: calc(100svh - 100px);
+  padding-block: 3rem;
 }
 
 .content {
@@ -29,6 +33,9 @@
 
   .buttons {
     position: relative;
+    /* Contexto de apilamiento propio: sin él, el `z-index: -1` del degradado
+       lo manda detrás del fondo de la página y deja de verse. */
+    isolation: isolate;
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -54,41 +61,6 @@
       transition: opacity 0.2s ease;
     }
   }
-
-  .rating {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-
-    .profilePictures {
-      display: flex;
-
-      .profile {
-        width: 32px;
-
-        img {
-          border: 2px solid var(--color-avatar-border);
-          border-radius: 100px;
-          object-fit: cover;
-          width: auto;
-        }
-      }
-    }
-
-    .ratingLabel {
-      display: flex;
-      flex-direction: column;
-
-      .stars {
-        display: flex;
-      }
-
-      span {
-        font-size: 14px;
-        color: var(--color-text);
-      }
-    }
-  }
 }
 
 :global([data-theme="dark"]) .blur {
@@ -99,11 +71,29 @@
   max-width: 675px;
   max-height: 500px;
   width: 100%;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    animation: flotar 6s ease-in-out infinite;
+  }
+}
+
+.picture:hover {
+  transform: scale(1.04);
+}
+
+/* Vaivén lento de la ilustración: da vida a la portada sin distraer. */
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .picture img {
+    animation: none;
   }
 }
 
@@ -182,11 +172,6 @@
 
     p {
       font-size: 15px;
-    }
-
-    .rating {
-      flex-direction: column;
-      gap: 0.75rem;
     }
   }
 
