@@ -26,6 +26,8 @@ export const selectHayArbolesCargados = (state) =>
  */
 export const selectPlantadosActivos = (state) => plantados(state).isActive;
 export const selectMapeadosActivos = (state) => mapeados(state).isActive;
+export const selectViveros = (state) => state.arboles.viveros;
+export const selectViverosActivos = (state) => state.arboles.viveros.isActive;
 
 /** Lo que de verdad hay para pintar, ya filtrado. */
 export const selectTotalArbolesVisibles = (state) =>

@@ -14,6 +14,7 @@ import {
 } from "./treePhotos";
 import { getScoutInfoByMapeadoPor } from "../../utils/scoutEscudos";
 import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
+import { esVivero } from "../../../../helpers/viveros";
 
 export const CardTree = () => {
   const dispatch = useDispatch()
@@ -85,6 +86,8 @@ export const CardTree = () => {
   }, []);
 
   useEffect(() => {
+    if (!contentRef.current || esVivero(selectedTree)) return;
+
     if (panelState === "OPEN") {
       animate(contentRef.current, {
         minWidth: isLargeScreen ? "500px" : "100%",
@@ -145,6 +148,8 @@ export const CardTree = () => {
   const galleryKey =
     selectedTree?.id ??
     `${selectedTree?.latitud ?? ""}-${selectedTree?.longitud ?? ""}-${index}`;
+
+  if (esVivero(selectedTree)) return null;
 
   return (
     <div

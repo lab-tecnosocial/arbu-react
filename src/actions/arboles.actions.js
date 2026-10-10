@@ -31,7 +31,10 @@ export const setActiveMappedTrees = (value) => ({
  */
 export const mostrarArbolesMapeados = (visible) => (dispatch) => {
   dispatch(setActiveMappedTrees(visible));
-  if (visible) dispatch(asegurarInscripcionesMapeo());
+  if (visible) {
+    dispatch(setActiveViveros(false));
+    dispatch(asegurarInscripcionesMapeo());
+  }
 };
 
 // Action creators for planted trees (árboles plantados)
@@ -53,6 +56,15 @@ export const setActivePlantedTrees = (value) => ({
   type: types.SHOW_DATA_ARBOLES_PLANTADOS,
   payload: value,
 });
+
+export const setActiveViveros = (value) => ({
+  type: types.SHOW_DATA_VIVEROS,
+  payload: value,
+});
+
+export const mostrarViveros = (visible) => (dispatch) => {
+  dispatch(setActiveViveros(visible));
+};
 
 export const setPlantedTreesFilter = (filters) => ({
   type: types.FILTRAR_ARBOLES_PLANTADOS,
@@ -123,6 +135,7 @@ export const fetchMappedTrees = ({ forzar = false } = {}) => {
 export const fetchPlantedTrees = ({ forzar = false } = {}) => {
   return async (dispatch, getState) => {
     if (yaEstaCargado(getState().arboles.arbolesPlantados, forzar)) return;
+
     try {
       dispatch(fetchPlantedTreesRequest());
       const treesData = await loadArboles({
