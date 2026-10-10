@@ -1,6 +1,6 @@
 import { loadCampaniasPublicas } from "../helpers/campanias/loadCampanias";
 import { types } from "../types/types";
-import { mostrarArbolesMapeados, setActivePlantedTrees } from "./arboles.actions";
+import { mostrarArbolesMapeados, setActivePlantedTrees, setActiveViveros } from "./arboles.actions";
 
 export const fetchCampaniasRequest = () => ({ type: types.FETCH_CAMPANIAS_REQUEST });
 
@@ -44,6 +44,7 @@ export const fetchCampaniasPublicas = ({ forzar = false } = {}) => async (dispat
  * Va aquí y no en el Sidebar para que el componente sea presentacional.
  */
 export const selectCampania = (campaniaId) => (dispatch) => {
+  dispatch(setActiveViveros(false));
   dispatch(setCampaniaSeleccionada(campaniaId));
   dispatch(setActivePlantedTrees(true));
   dispatch(mostrarArbolesMapeados(true));
@@ -51,6 +52,7 @@ export const selectCampania = (campaniaId) => (dispatch) => {
 
 export const clearCampania = () => (dispatch) => {
   dispatch(limpiarCampaniaSeleccionada());
+  dispatch(setActiveViveros(false));
   dispatch(setActivePlantedTrees(true));
   dispatch(mostrarArbolesMapeados(false));
 };
