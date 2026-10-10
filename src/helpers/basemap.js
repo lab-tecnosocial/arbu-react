@@ -15,9 +15,28 @@ export const BASEMAP_URL = `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/
 
 export const BASEMAP_URL_DARK = `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`;
 
+export const BASEMAP_URL_SATELLITE =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+
+export const VISTA_MAPA = {
+  CALLEJERO: "callejero",
+  SATELITE: "satelite",
+};
+
 /** El basemap que corresponde al tema activo. La key va en ambos. */
 export const basemapPorTema = (tema) => (tema === "dark" ? BASEMAP_URL_DARK : BASEMAP_URL);
+
+export const urlBasemap = (tema, vista = VISTA_MAPA.CALLEJERO) => {
+  if (vista === VISTA_MAPA.SATELITE) return BASEMAP_URL_SATELLITE;
+  return basemapPorTema(tema);
+};
 
 // El tier gratuito obliga a mantener visible la atribución de CARTO y OSM.
 export const BASEMAP_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+export const SATELLITE_ATTRIBUTION =
+  'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community';
+
+export const atribucionBasemap = (vista = VISTA_MAPA.CALLEJERO) =>
+  vista === VISTA_MAPA.SATELITE ? SATELLITE_ATTRIBUTION : BASEMAP_ATTRIBUTION;

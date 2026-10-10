@@ -1,0 +1,96 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 24px 0 20px;
+  border-radius: var(--border16, 16px);
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0) 42%
+    ),
+    linear-gradient(180deg, #47c1ff 0%, #0a84ff 52%, #007aff 100%);
+  color: #ffffff;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Poppins', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+  transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow:
+    0 6px 18px rgba(0, 122, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.button:hover {
+  filter: brightness(1.05);
+  box-shadow:
+    0 8px 22px rgba(0, 122, 255, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(10, 132, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.button:active {
+  transform: scale(0.985);
+  filter: brightness(0.98);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 40, 100, 0.25));
+}
+
+.icon img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  object-fit: contain;
+}
+
+.label {
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 1px rgba(0, 50, 120, 0.2);
+}
+
+@media (max-width: 600px) {
+  .button {
+    width: 100%;
+    padding: 0 16px 0 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    height: 48px;
+    font-size: 14px;
+    font-weight: 600;
+    gap: 8px;
+    border-width: 2px;
+  }
+
+  .icon img {
+    width: 24px;
+    height: 24px;
+  }
+}

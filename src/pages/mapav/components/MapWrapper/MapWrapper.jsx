@@ -1,9 +1,9 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import { useSelector } from "react-redux";
 
 import styles from "./MapWrapper.module.css";
-import { BASEMAP_ATTRIBUTION, basemapPorTema } from "../../../../helpers/basemap";
+import { VISTA_MAPA, atribucionBasemap, urlBasemap } from "../../../../helpers/basemap";
 import { MapEvents } from "./Utils/MapEvents";
 import { customIcon, jacarandaIcon, iconoOculto } from "./Utils/CustomIcon";
 import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
@@ -14,6 +14,7 @@ import { exportarGeoJsonMunicipios } from "../../../../helpers/geo/municipios";
 import { useTheme } from "../../../../context/ThemeContext";
 import { EstadoMapa } from "./EstadoMapa";
 import { VistaCampania, VISTA_CONCURSO_PRIMAVERA } from "./Utils/VistaCampania";
+import { MapBasemapToggle } from "./MapBasemapToggle";
 
 const estiloMunicipios = {
   fill: false,
@@ -23,6 +24,7 @@ const estiloMunicipios = {
 };
 
 export const MapWrapper = () => {
+  const [vistaMapa, setVistaMapa] = useState(VISTA_MAPA.CALLEJERO);
   const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles);
   const campania = useSelector(selectCampaniaSeleccionada);
   const { resolvedTheme } = useTheme();
@@ -59,6 +61,7 @@ export const MapWrapper = () => {
   return (
     <div className={styles.map}>
       <EstadoMapa />
+      <MapBasemapToggle vistaMapa={vistaMapa} onVistaMapaChange={setVistaMapa} />
 
       <MapContainer
         center={[-17.3917, -66.1448]}
@@ -70,9 +73,9 @@ export const MapWrapper = () => {
         <ZoomControl position="bottomright" />
 
         <TileLayer
-          key={resolvedTheme}
-          attribution={BASEMAP_ATTRIBUTION}
-          url={basemapPorTema(resolvedTheme)}
+          key={`${resolvedTheme}-${vistaMapa}`}
+          attribution={atribucionBasemap(vistaMapa)}
+          url={urlBasemap(resolvedTheme, vistaMapa)}
         />
 
         <MapEvents />
