@@ -1,6 +1,7 @@
 import { Button } from "../../../../components/button/Button";
 import { AppStoreButton } from "../../../../components/button/AppStoreButton";
 import { ARBU_APP_STORE_URL, ARBU_GOOGLE_PLAY_URL } from "../../../../constants/arbuStoreLinks";
+import { trackDescargaAndroid } from "../../../../analytics/arbuAnalytics";
 import styles from "./Hero.module.css";
 
 export const Hero = () => {
@@ -16,13 +17,18 @@ export const Hero = () => {
                 variant="primary"
                 className={styles.storeDownloadButton}
                 icon={<img src="icons/googleplay.png" alt="" />}
-                onClick={() =>
+                onClick={() => {
+                  trackDescargaAndroid('home_hero')
                   window.open(ARBU_GOOGLE_PLAY_URL, "_blank", "noopener,noreferrer")
-                }
+                }}
               >
                 Descargar Arbu
               </Button>
-              <AppStoreButton href={ARBU_APP_STORE_URL} className={styles.storeDownloadButton} />
+              <AppStoreButton
+                href={ARBU_APP_STORE_URL}
+                className={styles.storeDownloadButton}
+                analyticsOrigen="home_hero"
+              />
             </div>
             <Button
               variant="terciary"

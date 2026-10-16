@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { ARBU_FACEBOOK_PAGE_URL } from '../../../../constants/arbuSocialLinks'
 import { loadFacebookSdk } from '../../../../utils/loadFacebookSdk'
+import { trackClicFacebook } from '../../../../analytics/arbuAnalytics'
 import styles from './FacebookPageFeed.module.css'
 
 export const FacebookPageFeed = () => {
@@ -32,7 +33,12 @@ export const FacebookPageFeed = () => {
               <h2 id='facebook-feed-title'>Novedades en Facebook</h2>
               <p>
                 Últimas publicaciones de{' '}
-                <a href={ARBU_FACEBOOK_PAGE_URL} target='_blank' rel='noopener noreferrer'>
+                <a
+                  href={ARBU_FACEBOOK_PAGE_URL}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  onClick={() => trackClicFacebook('home_facebook_feed')}
+                >
                   Arbu en Facebook
                 </a>
                 .
@@ -41,7 +47,12 @@ export const FacebookPageFeed = () => {
 
             <p className={styles.fallback}>
               ¿No ves las publicaciones?{' '}
-              <a href={ARBU_FACEBOOK_PAGE_URL} target='_blank' rel='noopener noreferrer'>
+              <a
+                href={ARBU_FACEBOOK_PAGE_URL}
+                target='_blank'
+                rel='noopener noreferrer'
+                onClick={() => trackClicFacebook('home_facebook_feed')}
+              >
                 Abrir la página en Facebook
               </a>
             </p>

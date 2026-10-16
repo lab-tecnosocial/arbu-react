@@ -6,11 +6,12 @@ import Acerca from './components/acerca/Acerca';
 import { Navbar } from './components/navbar/Navbar.jsx';
 import { HomePage } from './pages/homev/HomePage.jsx';
 import './index.css';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Suspense, lazy, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth"
 import { authLogin } from "./actions/auth.actions.jsx";
 import { auth } from "./firebase/firebase-config.js";
+import { setAnalyticsUserId } from "./analytics/arbuAnalytics";
 import { Inscripcion } from "./pages/inscripcion/Inscripcion.jsx";
 import { BlogPage } from "./pages/blog/BlogPage.jsx";
 import { EntradaBlog } from "./pages/blog/EntradaBlog.jsx";
@@ -53,6 +54,7 @@ const ActaResultados = lazy(() => import('./components/concurso/ActaResultados.j
 
 const App = () => {
   const dispatch = useDispatch();
+  const authUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -60,7 +62,11 @@ const App = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    void setAnalyticsUserId(authUser?.uid ?? null);
+  }, [authUser?.uid]);
 
   return (
     <BrowserRouter>

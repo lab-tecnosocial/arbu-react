@@ -12,6 +12,11 @@ import { startLoadEspeciesCatalogo } from '../../actions/catalogoActions'
 import { APRENDE_NIGHT_MODE_CLASS } from './aprendeTheme.config'
 import { useTheme } from '../../context/ThemeContext'
 import './aprende-theme.css'
+import {
+  trackVerCatalogoEspecies,
+  trackVerGuiaPlantacion,
+  trackVerGuiaSeleccion,
+} from '../../analytics/arbuAnalytics'
 
 const CatalogoComponent = () => {
   const dispatch = useDispatch()
@@ -25,6 +30,12 @@ const CatalogoComponent = () => {
   useEffect(() => {
     dispatch(startLoadEspeciesCatalogo())
   }, [dispatch])
+
+  useEffect(() => {
+    if (activeTab === 'catalogo') trackVerCatalogoEspecies('aprende')
+    if (activeTab === 'guia-seleccion') trackVerGuiaSeleccion('aprende')
+    if (activeTab === 'guia-plantacion') trackVerGuiaPlantacion('aprende')
+  }, [activeTab])
 
   const handleTabChange = (nextTab) => {
     const nextParams = new URLSearchParams(searchParams)
