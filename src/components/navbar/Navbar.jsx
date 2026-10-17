@@ -38,15 +38,15 @@ export const Navbar = ({
       href: "/aprende",
       icon: <BookMarked size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
+    /**{
+      label: "Api",
+      href: "/api",
+      icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
+    },*/
     {
       label: "Blog",
       href: "/blog",
       icon: <Newspaper size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
-    },
-    {
-      label: "Api",
-      href: "/api",
-      icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
     // "Admin" solo se muestra a quien puede entrar: el resto veía un enlace
     // que siempre acababa en /no-autorizado.
