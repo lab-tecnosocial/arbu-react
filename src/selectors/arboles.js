@@ -16,6 +16,17 @@ export const selectArbolesError = (state) =>
 export const selectHayArbolesCargados = (state) =>
   plantados(state).data.length > 0 || mapeados(state).data.length > 0;
 
+/**
+ * Qué capas están encendidas.
+ *
+ * Los chips de la barra lateral se leen de aquí y no de un estado suyo: la
+ * selección puede venir de un sitio que el Sidebar no ve —un enlace
+ * `/mapa?actividad=…`, que enciende las dos capas—, y una copia local del dato
+ * se queda mostrando lo contrario de lo que pinta el mapa.
+ */
+export const selectPlantadosActivos = (state) => plantados(state).isActive;
+export const selectMapeadosActivos = (state) => mapeados(state).isActive;
+
 /** Lo que de verdad hay para pintar, ya filtrado. */
 export const selectTotalArbolesVisibles = (state) =>
   (plantados(state).isActive ? plantados(state).visibleData.length : 0) +

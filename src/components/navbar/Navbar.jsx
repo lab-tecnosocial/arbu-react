@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../button/Button";
-import { BookMarked, FolderCode, Map, Medal, Menu, X, User, ShieldCheck } from "lucide-react"
+import { BookMarked, FolderCode, Map, Medal, Menu, Newspaper, X, User, ShieldCheck } from "lucide-react"
 import styles from "./Navbar.module.css"
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -38,10 +38,15 @@ export const Navbar = ({
       href: "/aprende",
       icon: <BookMarked size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
-    {
+    /**{
       label: "Api",
       href: "/api",
       icon: <FolderCode size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
+    },*/
+    {
+      label: "Blog",
+      href: "/blog",
+      icon: <Newspaper size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
     },
     // "Admin" solo se muestra a quien puede entrar: el resto veía un enlace
     // que siempre acababa en /no-autorizado.
@@ -84,7 +89,7 @@ export const Navbar = ({
         <ul className={styles.navLinks}>
           {links.map((link) => (
             <li key={link.href}>
-              <Link to={link.href} className={`${styles.navLink} ${location.pathname === link.href ? styles.active : ""}`}>
+              <Link to={link.href} className={`${styles.navLink} ${location.pathname.startsWith(link.href) ? styles.active : ""}`}>
                 {link.icon && <span className={styles.icon}>{link.icon}</span>}
                 {link.label}
               </Link>
@@ -114,7 +119,7 @@ export const Navbar = ({
         <ul className={`${styles.navLinks} ${isMenuOpen ? styles.open : ''}`}>
           {links.map((link) => (
             <li key={link.href}>
-              <Link to={link.href} className={`${styles.navLink} ${location.pathname === link.href ? styles.active : ""}`} onClick={() => setIsMenuOpen(false)}>
+              <Link to={link.href} className={`${styles.navLink} ${location.pathname.startsWith(link.href) ? styles.active : ""}`} onClick={() => setIsMenuOpen(false)}>
                 {link.icon && <span className={styles.icon}>{link.icon}</span>}
                 {link.label}
               </Link>

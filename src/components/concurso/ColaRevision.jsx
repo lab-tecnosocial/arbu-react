@@ -11,6 +11,7 @@ import {
   MOTIVO_INVALIDO, MOTIVO_DESCALIFICACION, VEREDICTO, ESTADO_PARTICIPANTE,
 } from "../../helpers/campanias/revisiones";
 import { formatFechaHora } from "../../helpers/fechaArbol";
+import { ETIQUETA_ORIGEN, ORIGEN } from "../../helpers/campanias/origenArbol";
 
 const MODOS = {
   dudosos: "Solo dudosos",
@@ -206,6 +207,7 @@ const ColaRevision = () => {
               </Typography>
               <Typography variant="body2" sx={{ fontFamily: "Poppins", color: "#6b7a7a", mb: 1 }}>
                 {formatFechaHora(actual.fecha)} · {actual.municipio?.nombre ?? "fuera del área"}
+                {actual.origen === ORIGEN.PLANTADO && ` · ${ETIQUETA_ORIGEN[ORIGEN.PLANTADO]}`}
               </Typography>
 
               <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap", mb: 2 }}>

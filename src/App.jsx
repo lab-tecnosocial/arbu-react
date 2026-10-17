@@ -12,6 +12,8 @@ import { onAuthStateChanged } from "firebase/auth"
 import { authLogin } from "./actions/auth.actions.jsx";
 import { auth } from "./firebase/firebase-config.js";
 import { Inscripcion } from "./pages/inscripcion/Inscripcion.jsx";
+import { BlogPage } from "./pages/blog/BlogPage.jsx";
+import { EntradaBlog } from "./pages/blog/EntradaBlog.jsx";
 
 // Las rutas de guardia sí se cargan siempre: son las que deciden el acceso.
 import ProtectedRoute from './components/autenticacion/ProtectedRoute.jsx';
@@ -35,6 +37,7 @@ const Tabla = lazy(() => import('./components/tabla/Tabla.jsx'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard.jsx'));
 const GestionAccesos = lazy(() => import('./components/admin/GestionAccesos.jsx'));
 const MapeoScoutComponent = lazy(() => import('./components/mapeo-scout/MapeoScoutComponent.jsx'));
+const Aportes = lazy(() => import('./components/aportes/Aportes.jsx'));
 const ProyectosComponent = lazy(() => import('./components/proyectos/ProyectosComponent.jsx'));
 const DetalleProyecto = lazy(() => import('./components/proyectos/DetalleProyecto.jsx'));
 const ProyectosLayout = lazy(() => import('./components/proyectos/ProyectosLayout.jsx'));
@@ -78,6 +81,8 @@ const App = () => {
             <Route path='licencias-limitaciones' element={<Licencias />} />
           </Route>
           <Route path="acerca" element={<Acerca />} />
+          <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/:slug" element={<EntradaBlog />} />
 
           {/* Arbu Pro */}
           <Route path="login" element={<PublicRoute element={<IniciarSesion />} />} />
@@ -87,6 +92,7 @@ const App = () => {
           <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} permiso="dashboard" />} />
           <Route path="tabla" element={<ProtectedRoute element={<Tabla />} permiso="tabla" />} />
           <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} permiso="mapeoScout" />} />
+          <Route path="admin/aportes" element={<ProtectedRoute element={<Aportes />} permiso="aportes" />} />
 
           {/* Gestión de proyectos, con layout compartido */}
           <Route path="proyectos" element={<ProtectedRoute element={<ProyectosLayout />} permiso="proyectos" />}>

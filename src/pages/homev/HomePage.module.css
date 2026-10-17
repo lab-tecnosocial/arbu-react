@@ -5,3 +5,61 @@
   width: 100%;
   overflow-x: hidden;
 }
+
+/*
+ * Animación de entrada al hacer scroll (ver useReveal.js).
+ *
+ * Es una `animation` y no una `transition` a propósito: con `fill-mode:
+ * backwards` el estado inicial solo se aplica mientras dura, y al terminar el
+ * elemento vuelve a sus estilos normales. Así los `transform` de los hovers
+ * (tarjetas que se elevan, imágenes que crecen) siguen funcionando después.
+ *
+ * Variantes: data-reveal="" (sube), "left", "right", "zoom".
+ */
+.homePage :global([data-reveal]:not([data-visible])) {
+  opacity: 0;
+}
+
+.homePage :global([data-reveal][data-visible]) {
+  animation: revelarArriba 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.homePage :global([data-reveal="left"][data-visible]) {
+  animation-name: revelarIzquierda;
+}
+
+.homePage :global([data-reveal="right"][data-visible]) {
+  animation-name: revelarDerecha;
+}
+
+.homePage :global([data-reveal="zoom"][data-visible]) {
+  animation-name: revelarZoom;
+}
+
+@keyframes revelarArriba {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes revelarIzquierda {
+  from { opacity: 0; transform: translateX(-36px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes revelarDerecha {
+  from { opacity: 0; transform: translateX(36px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes revelarZoom {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homePage :global([data-reveal]) {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}

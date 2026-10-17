@@ -7,6 +7,8 @@ import { setPanelState, setSelectedCoords, setSelectedTree } from "../../../../.
 export default function ClusterArbolesPlantados({
   arbolesPlantados,
   customIcon,
+  iconoDe,
+  agrupar = true,
 }) {
   const dispatch = useDispatch();
 
@@ -16,7 +18,7 @@ export default function ClusterArbolesPlantados({
         key={arbol.id}
         position={[arbol.latitud, arbol.longitud]}
         title={arbol.nombrePropio}
-        icon={customIcon}
+        icon={iconoDe ? iconoDe(arbol) : customIcon}
         eventHandlers={{
           click: () => {
             dispatch(setPanelState("OPEN"));
@@ -26,11 +28,14 @@ export default function ClusterArbolesPlantados({
         }}
       />
     ));
-  }, [arbolesPlantados.visibleData, customIcon, dispatch]);
+  }, [arbolesPlantados.visibleData, customIcon, iconoDe, dispatch]);
 
   // El return condicional va DESPUÉS de los hooks: si no, alternar la capa cambia
   // el número de hooks entre renders y React lanza "Rendered more hooks…".
   if (!arbolesPlantados.isActive) return null;
+
+  // Sin agrupar, los marcadores cuelgan directo del mapa.
+  if (!agrupar) return <>{markers}</>;
 
   return (
     <MarkerClusterGroup chunkedLoading>

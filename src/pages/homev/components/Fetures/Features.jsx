@@ -1,71 +1,51 @@
+import { Contador } from '../Contador/Contador';
 import styles from './Features.module.css';
+
+// Las cifras van aparte para que el contador las anime al entrar en pantalla.
+const logros = [
+  { icono: "ficon1.png", titulo: "Actividades de forestación", texto: (c) => <>Más de {c(1600)} árboles plantados en el centro urbano.</> },
+  { icono: "ficon2.png", titulo: "Premios y distinciones", texto: () => <>Reconocidos a nivel nacional por nuestras actividades ambientales.</> },
+  { icono: "ficon3.png", titulo: "Participación comunitaria", texto: (c) => <>Más de {c(500)} voluntarios activos en jornadas ambientales.</> },
+  { icono: "ficon4.png", titulo: "Monitoreo de árboles", texto: (c) => <>Más de {c(2600)} árboles registrados y geolocalizados en ARBU.</> },
+  { icono: "ficon5.png", titulo: "Adopciones de árboles", texto: (c) => <>{c(850)} árboles urbanos adoptados por vecinos y vecinas.</> },
+  { icono: "ficon6.png", titulo: "Colaboraciones", texto: (c) => <>Alianzas con {c(10)} organizaciones para proyectos de reforestación.</> },
+];
+
+const cifra = (valor) => (
+  <strong className={styles.cifra}>
+    <Contador valor={valor} />
+  </strong>
+);
 
 export const Features = () => {
   return (
     <section>
       <div className={styles.features}>
-        <div className={styles.featuresHeader}>
+        <div className={styles.featuresHeader} data-reveal="">
           <h2>El impacto de <span className="text-green">ARBU</span> a través del tiempo</h2>
           <p>Cada logro cuenta una historia de esfuerzo y colaboración. Descubre cómo ARBU ha contribuido a un entorno más verde y consciente desde sus inicios.</p>
         </div>
         <div className={styles.featuresCards}>
-          <div className={styles.card}>
-            <div className={styles.icon}>
-              <img src="ficon1.png" alt="feature icon 1" />
+          {logros.map((logro, i) => (
+            <div
+              key={logro.titulo}
+              className={styles.card}
+              data-reveal=""
+              // Escalonado por columna (3 por fila), no por posición absoluta:
+              // la segunda fila no debe esperar a que termine la primera.
+              style={{ "--reveal-delay": `${(i % 3) * 110}ms` }}
+            >
+              <div className={styles.icon}>
+                <img src={logro.icono} alt="" />
+              </div>
+              <div className={styles.content}>
+                <h3>{logro.titulo}</h3>
+                <p>{logro.texto(cifra)}</p>
+              </div>
             </div>
-            <div className={styles.content}>
-              <h3>Actividades de forestación</h3>
-              <p>Más de 1.600 árboles plantados en el centro urbano.</p>
-            </div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>
-              <img src="ficon2.png" alt="feature icon 1" />
-            </div>
-            <div className={styles.content}>
-              <h3>Premios y distinciones</h3>
-              <p>Reconocidos a nivel nacional por nuestras actividades ambientales.</p>
-            </div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>
-              <img src="ficon3.png" alt="feature icon 1" />
-            </div>
-            <div className={styles.content}>
-              <h3>Participación comunitaria</h3>
-              <p>Más de 500 voluntarios activos en jornadas ambientales.</p>
-            </div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>
-              <img src="ficon4.png" alt="feature icon 1" />
-            </div>
-            <div className={styles.content}>
-              <h3>Monitoreo de árboles</h3>
-              <p>Más de 2600 árboles registrados y geolocalizados en ARBU.</p>
-            </div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>
-              <img src="ficon5.png" alt="feature icon 1" />
-            </div>
-            <div className={styles.content}>
-              <h3>Adopciones de árboles</h3>
-              <p>850 árboles urbanos adoptados por vecinos y vecinas.</p>
-            </div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>
-              <img src="ficon6.png" alt="feature icon 1" />
-            </div>
-            <div className={styles.content}>
-              <h3>Colaboraciones</h3>
-              <p>Alianzas con 10 organizaciones para proyectos de reforestación.</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
   )
 }
-

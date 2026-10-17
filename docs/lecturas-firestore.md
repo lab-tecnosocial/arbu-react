@@ -179,6 +179,14 @@ Conviene hacer las dos cosas, y medir cada una por separado.
 - **`selectCampaniasActivas` / `selectCampaniasPasadas` no están memoizados** y
   Redux avisa en consola: devuelven un array nuevo en cada llamada. No es coste
   de Firestore, es repintado.
+- **El panel del concurso lee las dos colecciones de árboles** desde que una
+  campaña también cuenta lo registrado desde iOS, que llega por
+  `arbolesPlantados` (19/09/2026): ~3.200 docs de `arbolesMapeados` + ~1.600 de
+  `arbolesPlantados` por cada recarga del panel. Arbu Pro lee fresco a
+  propósito, así que aquí no cabe la ventana de frescura del mapa público; lo
+  que sí cabe, si molesta, es que el panel pida los plantados solo cuando la
+  campaña esté abierta y no en cada `recargar()`. El mapa público no cambia:
+  ya cargaba las dos capas.
 
 ## Opción B — el artefacto estático del mapa (por hacer)
 

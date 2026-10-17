@@ -131,6 +131,14 @@ generalizó sin migrar ningún documento) y se crean desde **Proyectos**.
   que cae dentro de la ventana. Así un ejemplar mapeado por varias personas vale
   para todas —lo exigen las bases del concurso— y un árbol antiguo remonitoreado
   durante la campaña cuenta, con las fotos de *ese* monitoreo.
+- **Una campaña mira las DOS colecciones de árboles**, porque cada app registra
+  en la suya: Android mapea en `arbolesMapeados` y iOS —que no tiene pantalla de
+  mapeo— registra por *Adopta*, en `arbolesPlantados`. Las diferencias de
+  esquema (`mapeadoPor`/`plantadoPor`, `fotografia`/`fotoArbolCompleto`) se
+  normalizan en `helpers/campanias/origenArbol.js`, y cada registro lleva su
+  `origen`. De una adopción cuenta solo el **alta** —su primer monitoreo—: los
+  posteriores son cuidado, y contarlos metería en la campaña todo el arbolado
+  plantado que alguien riegue durante el concurso.
 - **La especie no oculta nada**: el filtro público es la ventana de fechas. La
   especie decide el icono del marcador y cuenta para la validez, pero un
   jacarandá mal etiquetado sigue apareciendo en el mapa y va a la cola de
@@ -152,6 +160,36 @@ generalizó sin migrar ningún documento) y se crean desde **Proyectos**.
   caer del lado equivocado. La válvula de escape es la revisión humana, no un
   buffer.
 
+### Enlace directo a una actividad
+
+`/mapa?actividad=<slug>` abre el mapa **ya puesto** en esa actividad, con sus
+dos capas encendidas:
+
+```
+https://arbu.app/mapa?actividad=mapa-de-la-primavera-2026
+```
+
+Funciona **sin sesión**: las campañas con `publica: true` se leen sin
+autenticar, que es de donde sale el selector del mapa.
+
+- El parámetro acepta el `slug` de la campaña, su id de documento y el slug sin
+  el sufijo del id. Un enlace compartido se reenvía durante meses y a veces se
+  teclea a mano: lo caro es que deje de abrir.
+- **La URL se mantiene sola**: elegir una actividad la reescribe (con `replace`,
+  para no llenar el historial), así que compartir es copiar la barra de
+  direcciones. En la barra lateral hay además un botón «Copiar enlace de esta
+  actividad».
+- Un slug que no existe —campaña borrada, errata— no rompe nada: el mapa abre
+  normal y el parámetro se limpia.
+- Qué capas están encendidas se lee del store (`selectPlantadosActivos`,
+  `selectMapeadosActivos`) y no de un estado del Sidebar, porque la selección
+  puede venir del enlace y una copia local mostraría lo contrario de lo que
+  pinta el mapa.
+
+Las piezas: `helpers/campanias/enlaceCampania.js` (el parámetro y su
+resolución, sin React) y `pages/mapav/hooks/useActividadEnUrl.js` (la
+sincronización en los dos sentidos).
+
 ## Capa geográfica de grupos scouts (retirada)
 
 El sidebar tenía un bloque "Geo Visualización" con Normal / OTBs / Scouts.
@@ -170,15 +208,20 @@ El sidebar tenía un bloque "Geo Visualización" con Normal / OTBs / Scouts.
   dentro de `onEachFeature`, que es un hook fuera de componente y habría
   reventado igualmente.
 
-## Mapeo desde la web (pendiente)
+## Mapeo desde la web
 
-`TreeMappingForm` se retiró: era inalcanzable (su botón llevaba tiempo
-comentado) y escribía a `mapeos_test` con un esquema incompatible con
-`arbolesMapeados` —`lugarPlantacion` en vez de `lugarDePlantacion`, `diametro`
-suelto, `fechaCreacion`— y **sin latitud, longitud ni `mapeadoPor`**. Aunque se
-reactivara, produciría documentos que el mapa no puede pintar ni atribuir a
-nadie. Para revivirlo hay que escribir en `arbolesMapeados` con el esquema real
-(incluido el envoltorio `monitoreos`) y añadir su regla de Firestore.
+Hecho, en `/admin/aportes` (área `aportes`). Un administrador registra árboles
+que no entraron por la app, corrige los existentes —incluidas coordenadas y
+fotos— e importa planillas. Las fotos se arrastran a sus casillas y, si
+conservan el EXIF de la cámara, **la ubicación y la fecha se rellenan solas**.
+Los detalles, el modelo de datos y los sitios donde es fácil equivocarse están
+en **`docs/aportes-web.md`**.
+
+El antiguo `TreeMappingForm` se había retirado por escribir a `mapeos_test` con
+un esquema incompatible (`lugarPlantacion` en vez de `lugarDePlantacion`,
+`diametro` suelto, y **sin latitud, longitud ni `mapeadoPor`**): producía
+documentos que el mapa no podía pintar ni atribuir a nadie. Lo de ahora escribe
+en `arbolesMapeados` con el esquema real, envoltorio `monitoreos` incluido.
 
 ## Service worker, caché y "no veo mis cambios"
 
@@ -201,6 +244,31 @@ llegó, y conviene entender el reparto:
 Si aun así ves algo viejo: DevTools → Application → Clear site data. Y para
 trabajar cómodo contra preview, marca "Update on reload" en Application →
 Service Workers.
+
+### Por qué un despliegue tardaba en verse (21/09/2026)
+
+Tres cosas se sumaban, y la primera era la gorda:
+
+- **Firebase Hosting servía `index.html`, `sw.js` y `registerSW.js` con
+  `Cache-Control: max-age=3600`**, que es su valor por defecto. Durante una hora
+  el navegador no volvía a pedirlos: daba igual lo que se hubiera desplegado,
+  porque lo que decide *qué versión se usa* estaba congelado. Ahora
+  `firebase.json` les pone `no-cache` —que no es "no guardes", sino "revalida
+  siempre": con el ETag, si no cambió nada la respuesta es un 304 vacío— y a
+  `/assets/**` le pone un año `immutable`, que es seguro porque esos nombres
+  llevan hash.
+- **El precache pesaba 3,9 MB.** El service worker nuevo no se activa hasta
+  haberlo descargado entero, así que cuanto más pesa, más rato sigue sirviendo
+  la versión anterior. Se sacaron del precache `swagger-ui` (938 KB, solo la
+  documentación de la API) y `xlsx` (424 KB, solo importar planillas): quedó en
+  2,5 MB. Siguen cacheándose, pero en runtime, cuando alguien abre esas
+  pantallas.
+- **Solo se comprobaba si había versión nueva al cargar la página.** Una pestaña
+  abierta toda la tarde —lo normal en el back-office— no se enteraba nunca.
+  Ahora `src/index.jsx` pregunta también cada hora.
+
+Síntoma que se veía: entrar a un enlace recién desplegado y que la función nueva
+no estuviera, dos veces seguidas, y a la tercera sí.
 
 ## Imágenes y caché
 

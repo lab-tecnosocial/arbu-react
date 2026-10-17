@@ -25,6 +25,12 @@ export const PERMISOS = [
     ruta: "/proyectos",
   },
   {
+    id: "aportes",
+    etiqueta: "Aportes",
+    descripcion: "Registrar, corregir e importar aportes de mapeo.",
+    ruta: "/admin/aportes",
+  },
+  {
     id: "tabla",
     etiqueta: "Tabla de árboles",
     descripcion: "Edición y validación de los datos de árboles.",

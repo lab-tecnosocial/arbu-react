@@ -47,3 +47,8 @@
     height: auto;
   }
 }
+/* Árboles fuera de la especie de la campaña: invisibles y sin clic. */
+.map :global(.icono-oculto) {
+  opacity: 0;
+  pointer-events: none;
+}

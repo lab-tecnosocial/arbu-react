@@ -8,6 +8,7 @@ import ApiIcon from '@mui/icons-material/Api';
 import FolderIcon from '@mui/icons-material/Folder';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { useAutorizacion } from '../../helpers/useAutorizacion';
 
 const AdminDashboard = () => {
@@ -30,6 +31,13 @@ const AdminDashboard = () => {
       icon: <FolderIcon sx={{ fontSize: 60, color: '#268576' }} />,
       path: '/proyectos',
       permiso: 'proyectos'
+    },
+    {
+      title: 'Aportes',
+      description: 'Registrar, corregir e importar aportes de mapeo.',
+      icon: <AddLocationAltIcon sx={{ fontSize: 60, color: '#268576' }} />,
+      path: '/admin/aportes',
+      permiso: 'aportes'
     },
     {
       title: 'Tabla',

@@ -46,9 +46,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
 
     .icon img {
       display: block;
+      transition: transform .5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .cifra {
+      color: var(--green2);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
     }
 
     .content {
@@ -57,8 +65,16 @@
         margin-bottom: 8px;
       }
     }
+  }
 
+  .card:hover {
+    border-color: var(--green2);
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -20px rgba(23, 77, 68, 0.4);
 
+    .icon img {
+      transform: scale(1.15) rotate(-6deg);
+    }
   }
 }
 

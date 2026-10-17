@@ -22,13 +22,13 @@ export const Editions = () => {
   return (
     <section className={styles.editionsSection}>
       <div className={styles.editions}>
-        <div className={styles.editionsHeader}>
+        <div className={styles.editionsHeader} data-reveal="">
           <h2>Arbu y <span className="text-green">Arbu Pro</span></h2>
           <p>La misma plataforma con dos caras: una abierta a toda la ciudadanía y otra para los equipos que organizan y administran el mapeo del arbolado.</p>
         </div>
 
         <div className={styles.editionsCards}>
-          <article className={styles.card}>
+          <article className={styles.card} data-reveal="left">
             <header className={styles.cardHeader}>
               <span className={styles.badge}>Abierto a todos</span>
               <h3>Arbu</h3>
@@ -47,7 +47,7 @@ export const Editions = () => {
             </Button>
           </article>
 
-          <article className={`${styles.card} ${styles.cardPro}`}>
+          <article className={`${styles.card} ${styles.cardPro}`} data-reveal="right" style={{ "--reveal-delay": "120ms" }}>
             <header className={styles.cardHeader}>
               <span className={`${styles.badge} ${styles.badgePro}`}>Requiere cuenta autorizada</span>
               <h3>Arbu Pro</h3>
