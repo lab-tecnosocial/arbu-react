@@ -13,6 +13,8 @@ import aprendelogo from "./aprendelogo.png";
 import arbolitos1 from "./arbolitos1.png";
 import Footer from "../footer/Footer";
 import PricingComponent from "../pricing/PricingComponent";
+import { ARBU_GOOGLE_PLAY_URL } from "../../constants/arbuStoreLinks";
+import { trackDescargaAndroid } from "../../analytics/arbuAnalytics";
 const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
@@ -69,7 +71,12 @@ const HomeComponent = () => {
                   </center>
                   <br />
                   <div>
-                    <a href="https://play.google.com/store/apps/details?id=org.labtecnosocial.arbu.android&hl=es_BO&gl=US" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={ARBU_GOOGLE_PLAY_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => trackDescargaAndroid('home_legacy')}
+                    >
                     <img className="googleplaybutton" src={googleplaybutton} alt="" width={200} />
                     </a>
                   </div>

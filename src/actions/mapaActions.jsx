@@ -2,6 +2,7 @@ import { loadArboles } from "../helpers/loadArboles"
 import { loadArbolesMapeados } from "../helpers/loadArbolesMapeados"
 import { loadUsuarios, loadUsuariosPorIds } from "../helpers/loadUsuarios"
 import { types } from "../types/types"
+import { trackVerArbolMapa } from "../analytics/arbuAnalytics"
 
 export const setPanelState = (panelState) => {
   return {
@@ -17,7 +18,10 @@ export const setModalState = (modalState) => {
   }
 }
 
-export const setSelectedTree = (index, selectedTree) => {
+export const setSelectedTree = (index, selectedTree, origen = 'mapa') => {
+  if (selectedTree && Object.keys(selectedTree).length > 0) {
+    trackVerArbolMapa(selectedTree, origen)
+  }
   return {
     type: types.SET_SELECTED_TREE,
     payload: {

@@ -1,7 +1,15 @@
 import styles from './AppStoreButton.module.css'
+import { trackDescargaIos } from '../../analytics/arbuAnalytics'
 
-export const AppStoreButton = ({ href, className = '', onClick, fullWidth = false }) => {
+export const AppStoreButton = ({
+  href,
+  className = '',
+  onClick,
+  fullWidth = false,
+  analyticsOrigen = 'app_store_button',
+}) => {
   const openStore = () => {
+    trackDescargaIos(analyticsOrigen)
     if (onClick) {
       onClick()
       return

@@ -1,5 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import {
+  ARBU_FACEBOOK_PAGE_URL,
+  ARBU_INSTAGRAM_URL,
+} from '../../../constants/arbuSocialLinks'
+import { trackClicFacebook, trackClicInstagram } from '../../../analytics/arbuAnalytics'
 
 const ContactoSoporte = () => {
   return (
@@ -14,7 +19,7 @@ const ContactoSoporte = () => {
         <ul>
           <li>Correo Electrónico: info@arbu.com</li>
           <li>Formulario de Contacto: Completa nuestro formulario de contacto en línea enlace al formulario y nos pondremos en contacto contigo lo antes posible.</li>
-          <li>Foro de Soporte: Visita nuestro foro de soporte en línea en <a href="https://www.facebook.com/ArbuCb/" target="_blank" rel="noopener" style={{ textDecoration: 'underline' }}>FACEBOOk</a> donde puedes publicar tus preguntas y recibir ayuda de la comunidad y nuestro equipo de soporte técnico.</li>
+          <li>Foro de Soporte: Visita nuestro foro de soporte en línea en <a href={ARBU_FACEBOOK_PAGE_URL} target="_blank" rel="noopener" style={{ textDecoration: 'underline' }} onClick={() => trackClicFacebook('api_contacto_soporte')}>FACEBOOk</a> donde puedes publicar tus preguntas y recibir ayuda de la comunidad y nuestro equipo de soporte técnico.</li>
         </ul>
       </div>
       <div className='apidocs__panel-row'>
@@ -22,7 +27,13 @@ const ContactoSoporte = () => {
         <p>También puedes seguirnos en nuestras redes sociales para estar al tanto de las últimas actualizaciones, anuncios y noticias relacionadas con nuestra API:</p>
         <ul>
           <li>
-            <a href="https://www.facebook.com/ArbuCb/" target="_blank" rel="noopener" style={{ textDecoration: 'underline' }}>
+            <a
+              href={ARBU_FACEBOOK_PAGE_URL}
+              target="_blank"
+              rel="noopener"
+              style={{ textDecoration: 'underline' }}
+              onClick={() => trackClicFacebook('api_contacto_soporte')}
+            >
               Enlace a la página de Facebook
             </a>
           </li>
@@ -32,7 +43,13 @@ const ContactoSoporte = () => {
             </a>
           </li>
           <li>
-            <a href="https://www.instagram.com/arbucbba/" target="_blank" rel="noopener" style={{ textDecoration: 'underline' }}>
+            <a
+              href={ARBU_INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener"
+              style={{ textDecoration: 'underline' }}
+              onClick={() => trackClicInstagram('api_contacto_soporte')}
+            >
               Enlace a la página de Instagram
             </a>
           </li>

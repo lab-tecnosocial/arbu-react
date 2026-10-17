@@ -11,6 +11,8 @@ import lourdes from './team/lourdes.jpg';
 import dayra from './team/dayra.png';
 import luis from './team/luis.png';
 import marian from './team/marian.png';
+import { ARBU_GOOGLE_PLAY_URL } from '../../constants/arbuStoreLinks';
+import { trackDescargaAndroid } from '../../analytics/arbuAnalytics';
 
 
 const Acerca = () => {
@@ -18,7 +20,12 @@ const Acerca = () => {
     <div>
      <br />
       <center>
-      <a href="https://play.google.com/store/apps/details?id=org.labtecnosocial.arbu.android&hl=es_BO&gl=US" target="_blank" rel="noopener noreferrer">
+      <a
+        href={ARBU_GOOGLE_PLAY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => trackDescargaAndroid('acerca')}
+      >
         
         <img src={iconoarbu} alt="" />
         </a>

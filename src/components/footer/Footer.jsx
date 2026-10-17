@@ -4,6 +4,12 @@ import { Link } from "react-router-dom";
 
 import { Facebook, Instagram } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
+import {
+  ARBU_FACEBOOK_PAGE_URL,
+  ARBU_INSTAGRAM_URL,
+  ARBU_TIKTOK_URL,
+} from "../../constants/arbuSocialLinks";
+import { trackClicFacebook, trackClicInstagram, trackClicTiktok } from "../../analytics/arbuAnalytics";
 
 const year = new Date().getFullYear();
 const Footer = () => {
@@ -21,12 +27,22 @@ const Footer = () => {
             <p>Arbu nace para cuidar lo que nos da vida: los árboles de nuestra ciudad.</p>
             <div className={styles.socialIcons}>
               <span>
-                <a href="https://www.facebook.com/ArbuCb" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={ARBU_FACEBOOK_PAGE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackClicFacebook('footer')}
+                >
                   <Facebook />
                 </a>
               </span>
               <span>
-                <a href="https://www.tiktok.com/@arbuapp" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={ARBU_TIKTOK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackClicTiktok('footer')}
+                >
                   <svg
                     viewBox="0 0 24 24"
                     width="25"
@@ -42,7 +58,12 @@ const Footer = () => {
                 </a>
               </span>
               <span>
-                <a href="https://www.instagram.com/arbucbba/" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={ARBU_INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackClicInstagram('footer')}
+                >
                   <Instagram />
                 </a>
               </span>

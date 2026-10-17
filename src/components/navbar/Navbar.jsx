@@ -9,6 +9,8 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase-config";
 import { ThemeToggle } from "../theme/ThemeToggle";
 import { useTheme } from "../../context/ThemeContext";
+import { ARBU_GOOGLE_PLAY_URL } from "../../constants/arbuStoreLinks";
+import { trackDescargaAndroid } from "../../analytics/arbuAnalytics";
 
 export const Navbar = ({
   logo = "Logo.png",
@@ -74,7 +76,13 @@ export const Navbar = ({
     </div>
   ) : (
     <Button className={className} icon={<img src="icons/googleplay.png" alt="" />}>
-      <a target="_blank" rel="noopener noreferrer" style={{ color: 'white' }} href="https://play.google.com/store/apps/details?id=org.labtecnosocial.arbu.android&pcampaignid=web_share">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: 'white' }}
+        href={ARBU_GOOGLE_PLAY_URL}
+        onClick={() => trackDescargaAndroid('navbar')}
+      >
         Descargar Arbu
       </a>
     </Button>
