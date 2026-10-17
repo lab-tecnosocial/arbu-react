@@ -34,3 +34,10 @@ export const iconoOculto = new L.DivIcon({
   html: "",
   iconSize: new L.Point(0, 0),
 });
+
+export const viveroIcon = new L.Icon({
+  iconUrl: "/icons/vivero.png",
+  iconSize: new L.Point(44, 44),
+  iconAnchor: new L.Point(22, 42),
+  popupAnchor: new L.Point(0, -36),
+});

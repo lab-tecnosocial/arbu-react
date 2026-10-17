@@ -1,0 +1,93 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.157, -17.3936] },
+      "properties": {
+        "id": "vivero-municipal-cercado",
+        "nombre": "Vivero Municipal Cercado",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FJacarand%C3%A1%2F0.png?alt=media&token=4cc98f1e-5a36-40bc-9169-6e3315223511",
+        "contacto": "Tel. 4 425 2100 · vivero.municipal@cochabamba.bo",
+        "especies": ["Jacarandá", "Tipa", "Molle", "Tajibo"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.145, -17.4035] },
+      "properties": {
+        "id": "vivero-alalay",
+        "nombre": "Vivero Laguna Alalay",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FMolle%2F0.jpg?alt=media&token=b05d56df-69be-41fa-9bf1-576ab2c05842",
+        "contacto": "Tel. 4 423 8811 · alalay@viveros.cbba",
+        "especies": ["Molle", "Algarrobo", "Soto", "Chacatea"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.2158, -17.3382] },
+      "properties": {
+        "id": "vivero-tiquipaya",
+        "nombre": "Vivero Tiquipaya",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FTipa%2F0.png?alt=media&token=be81e303-809f-46f5-aac2-22b5e4a9053a",
+        "contacto": "Tel. 4 431 2200 · tiquipaya@viveros.cbba",
+        "especies": ["Tipa", "Pacay", "Cedro", "Cepillo"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.0383, -17.3979] },
+      "properties": {
+        "id": "vivero-sacaba",
+        "nombre": "Vivero Sacaba",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FTajibo%2F0.png?alt=media&token=6f397d40-f8ee-4fb0-a0aa-66c7c18f46d5",
+        "contacto": "Tel. 4 470 1450 · sacaba@viveros.cbba",
+        "especies": ["Tajibo", "Tara", "Jarca", "Pata de buey"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.2784, -17.3923] },
+      "properties": {
+        "id": "vivero-quillacollo",
+        "nombre": "Vivero Quillacollo",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FAlgarrobo%2F0.png?alt=media&token=8f5147cc-1e77-42a5-ae21-56f0cf3aaecc",
+        "contacto": "Tel. 4 436 0910 · quillacollo@viveros.cbba",
+        "especies": ["Algarrobo", "Molle", "Ciprés vela", "Níspero"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.1542, -17.3758] },
+      "properties": {
+        "id": "vivero-recoleta",
+        "nombre": "Vivero La Recoleta",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FMagnolia%2F0.png?alt=media&token=d0ac4bb7-6675-470b-b29a-f5bf861cc2ac",
+        "contacto": "Tel. 4 425 7788 · recoleta@viveros.cbba",
+        "especies": ["Magnolia", "Cucarda", "Flor de júpiter", "Caliandra"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.165, -17.3605] },
+      "properties": {
+        "id": "vivero-tunari",
+        "nombre": "Vivero Parque Tunari",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FCedro%2F0.png?alt=media&token=21c165bf-8ab5-4356-ab77-87995ad6d921",
+        "contacto": "Tel. 4 448 3300 · tunari@viveros.cbba",
+        "especies": ["Cedro", "Chillijchi, Ceibo", "Lloque", "Soto"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-66.2268, -17.3865] },
+      "properties": {
+        "id": "vivero-colcapirhua",
+        "nombre": "Vivero Colcapirhua",
+        "foto": "https://firebasestorage.googleapis.com/v0/b/arbu-c574d.appspot.com/o/imagenesEspeciesCatalogo%2FChacatea%2F0.png?alt=media&token=de6e458b-6277-485f-9a98-2b6f992da9b2",
+        "contacto": "Tel. 4 438 6612 · colcapirhua@viveros.cbba",
+        "especies": ["Chacatea", "Palo verde, Cina cina", "Moto moto", "Garrocha"]
+      }
+    }
+  ]
+}

@@ -3,6 +3,10 @@ export const optionsArbol = [
   { value: "mapeados", label: "Mapeados" },
 ];
 
+export const optionsViveros = [
+  { value: "viveros", label: "Viveros" },
+];
+
 export const CAMPO_TODOS = "todos";
 
 export const optionsCategorias = [

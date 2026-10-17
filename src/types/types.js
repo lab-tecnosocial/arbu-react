@@ -19,6 +19,8 @@ export const types = {
   FILTRAR_ARBOLES_MAPEADOS: '[ARBOL] filtrar arboles mapeados',
   RESET_MAPEADOS_FILTRADOS: '[ARBOL] reset arboles mapeados filtrados',
 
+  SHOW_DATA_VIVEROS: '[MAPA] show data viveros',
+
   FETCH_INSCRIPCIONES_MAPEO_REQUEST: '[ARBOL] fetch inscripciones mapeo request',
   FETCH_INSCRIPCIONES_MAPEO_SUCCESS: '[ARBOL] fetch inscripciones mapeo success',
   FETCH_INSCRIPCIONES_MAPEO_FAILURE: '[ARBOL] fetch inscripciones mapeo failure',

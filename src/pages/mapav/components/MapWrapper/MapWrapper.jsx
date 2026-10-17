@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 import styles from "./MapWrapper.module.css";
 import { VISTA_MAPA, atribucionBasemap, urlBasemap } from "../../../../helpers/basemap";
 import { MapEvents } from "./Utils/MapEvents";
-import { customIcon, jacarandaIcon, iconoOculto } from "./Utils/CustomIcon";
+import { customIcon, jacarandaIcon, iconoOculto, viveroIcon } from "./Utils/CustomIcon";
 import ClusterArbolesPlantados from "./Utils/ClusterArbolesPlantados";
 import ClusterArbolesMapeados from "./Utils/ClusterArbolesMapeados";
+import ClusterViveros from "./Utils/ClusterViveros";
 import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 import { coincideEspecie } from "../../../../helpers/campanias/especies";
 import { exportarGeoJsonMunicipios } from "../../../../helpers/geo/municipios";
@@ -24,8 +25,10 @@ const estiloMunicipios = {
 };
 
 export const MapWrapper = () => {
+
   const [vistaMapa, setVistaMapa] = useState(VISTA_MAPA.CALLEJERO);
-  const { arbolesPlantados, arbolesMapeados } = useSelector((state) => state.arboles);
+  
+  const { arbolesPlantados, arbolesMapeados, viveros } = useSelector((state) => state.arboles);
   const campania = useSelector(selectCampaniaSeleccionada);
   const { resolvedTheme } = useTheme();
 
@@ -97,6 +100,7 @@ export const MapWrapper = () => {
           iconoDe={iconoDe}
           agrupar={agrupar}
         />
+        <ClusterViveros viveros={viveros} icono={viveroIcon} />
       </MapContainer>
     </div>
   );

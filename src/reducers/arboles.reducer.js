@@ -2,6 +2,7 @@ import { types } from "../types/types";
 import { filtrarArbolesDeCampania } from "../helpers/campanias/registros";
 import { ORIGEN } from "../helpers/campanias/origenArbol";
 import { EMPTY_FILTERS, applyTreeFilters, hasActiveFilters } from "../pages/mapav/utils/treeFilters";
+import { loadViveros } from "../helpers/viveros";
 
 const initialMappedTreesState = {
   data: [],
@@ -35,11 +36,17 @@ const initialCampaniasState = {
   error: null,
 };
 
+const initialViverosState = {
+  data: loadViveros(),
+  isActive: false,
+};
+
 const initialState = {
   arbolesMapeados: initialMappedTreesState,
   arbolesPlantados: initialPlantedTreesState,
   inscripcionesMapeo: initialInscripcionesMapeoState,
   campanias: initialCampaniasState,
+  viveros: initialViverosState,
   filters: EMPTY_FILTERS,
 };
 
@@ -104,6 +111,15 @@ const inscripcionesMapeoReducer = (state = initialInscripcionesMapeoState, actio
     case types.FETCH_INSCRIPCIONES_MAPEO_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
+    default:
+      return state;
+  }
+};
+
+const viverosReducer = (state = initialViverosState, action) => {
+  switch (action.type) {
+    case types.SHOW_DATA_VIVEROS:
+      return { ...state, isActive: action.payload };
     default:
       return state;
   }
@@ -200,6 +216,7 @@ const treeReducers = (state = initialState, action) => {
     arbolesPlantados: arbolesPlantadosReducer(state.arbolesPlantados, action),
     inscripcionesMapeo: inscripcionesMapeoReducer(state.inscripcionesMapeo, action),
     campanias: campaniasReducer(state.campanias, action),
+    viveros: viverosReducer(state.viveros, action),
     filters: filtersReducer(state.filters, action),
   };
 

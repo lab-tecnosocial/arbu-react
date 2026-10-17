@@ -12,13 +12,16 @@ import {
   optionsCategorias,
   optionsRiegos,
   optionsMonitoreos,
+  optionsViveros,
   MONITOREO_PERSONALIZADO,
 } from "./Utils/filterOptions";
 import { especies } from "../../utils/especies";
 import {
   mostrarArbolesMapeados,
+  mostrarViveros,
   resetPlantedTreesFilter,
   setActivePlantedTrees,
+  setActiveViveros,
   setPlantedTreesFilter,
 } from "../../../../actions/arboles.actions";
 import {
@@ -37,12 +40,14 @@ import {
   selectArbolesCargando,
   selectMapeadosActivos,
   selectPlantadosActivos,
+  selectViverosActivos,
 } from "../../../../selectors/arboles";
 import { enlaceDeCampania } from "../../../../helpers/campanias/enlaceCampania";
 import { Skeleton } from "../../../../components/Skeleton/Skeleton";
 import { ESTADO_CAMPANIA } from "../../../../helpers/campanias/campaniaModel";
 import { Checkbox } from "../../../../components/Checkbox/Checkbox";
 import { Input } from "../../../../components/input/Input";
+import { setPanelState } from "../../../../actions/mapaActions";
 
 export const Sidebar = () => {
   const dispatch = useDispatch()
@@ -60,6 +65,7 @@ export const Sidebar = () => {
   const { arbolesPlantados } = useSelector((state) => state.arboles)
   const plantadosActivos = useSelector(selectPlantadosActivos);
   const mapeadosActivos = useSelector(selectMapeadosActivos);
+  const viverosActivos = useSelector(selectViverosActivos);
   const campaniasActivas = useSelector(selectCampaniasActivas);
   const campaniasPasadas = useSelector(selectCampaniasPasadas);
   const campaniaSeleccionadaId = useSelector(selectCampaniaSeleccionadaId);
@@ -95,8 +101,20 @@ export const Sidebar = () => {
     }
 
     if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
+    dispatch(setActiveViveros(false));
+    dispatch(setPanelState("CLOSE"));
     if (value === 'plantados') dispatch(setActivePlantedTrees(true))
     if (value === 'mapeados') dispatch(mostrarArbolesMapeados(true))
+  };
+
+  const handleToggleViveros = () => {
+    dispatch(setPanelState("CLOSE"));
+    if (viverosActivos) {
+      dispatch(mostrarViveros(false));
+      return;
+    }
+    if (campaniaSeleccionadaId) dispatch(limpiarCampaniaSeleccionada());
+    dispatch(mostrarViveros(true));
   };
 
   // La coreografía de capas vive en los thunks, no aquí.
@@ -403,6 +421,23 @@ export const Sidebar = () => {
                 )}
               </div>
             )}
+            {/*
+            <div className={styles.rowSidebar}>
+              <div className={styles.options}>
+                {optionsViveros.map((option) => (
+                  <OptionChip
+                    key={option.value}
+                    control="checkbox"
+                    onClick={handleToggleViveros}
+                    checked={viverosActivos}
+                    fullWidth
+                  >
+                    {option.label}
+                  </OptionChip>
+                ))}
+              </div>
+            </div>
+            */}
           </>
         )}
 

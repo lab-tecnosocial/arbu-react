@@ -5,6 +5,7 @@ import styles from "./MapaPage.module.css";
 import { MapWrapper } from "./components/MapWrapper/MapWrapper";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { CardTree } from "./components/CardTree/CardTree";
+import { CardVivero } from "./components/CardTree/CardVivero";
 import { cargarDatosMapaPublico } from "../../actions/mapaPublico.actions";
 import { useActividadEnUrl } from "./hooks/useActividadEnUrl";
 import { ErrorBoundary } from "../../components/ErrorBoundary/ErrorBoundary";
@@ -25,6 +26,7 @@ const MapaComponent = () => {
       <Sidebar />
       <ErrorBoundary>
         <CardTree />
+        <CardVivero />
       </ErrorBoundary>
       <ErrorBoundary fallback={<div style={{ padding: "1rem" }}>No se pudo cargar el mapa.</div>}>
         <MapWrapper />
