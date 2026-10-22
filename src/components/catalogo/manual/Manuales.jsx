@@ -1,93 +1,59 @@
 import React from 'react'
 import './Manuales.css'
-import dataSlider from './dataSlider'
-import { Link } from 'react-router-dom';
-const guiaTitles = [
-    ['CATÁLOGO DE', 'ESPECIES'],
-    ['GUÍA DE', 'SELECCIÓN DE ESPECIES'],
-    ['GUÍA DE', 'PLANTACIÓN'],
-    
-]
+import { Link } from 'react-router-dom'
 
-const guiaImages = [
-    '/Imgs/catalogodeespecies.svg',
-    '/Imgs/guiadeseleccion.svg',
-    '/Imgs/guiadeplantacion.svg',
-    
+const GUIAS = [
+  {
+    id: 'catalogo',
+    titles: ['CATÁLOGO DE', 'ESPECIES'],
+    image: '/Imgs/catalogodeespecies.svg',
+    tab: 'catalogo',
+  },
+  {
+    id: 'guia-seleccion',
+    titles: ['GUÍA DE', 'SELECCIÓN DE ESPECIES'],
+    image: '/Imgs/guiadeseleccion.svg',
+    tab: 'guia-seleccion',
+  },
+  {
+    id: 'guia-plantacion',
+    titles: ['GUÍA DE', 'PLANTACIÓN'],
+    image: '/Imgs/guiadeplantacion.svg',
+    tab: 'guia-plantacion',
+  },
+  {
+    id: 'identificacion-especies',
+    titles: ['IDENTIFICACIÓN', 'DE ESPECIES'],
+    image: '/Imgs/idespecie.svg',
+    tab: 'identificacion-especies',
+  },
 ]
-
 
 export default function Slider() {
-    return (
-        <>
-            <section className='manuales-container'>
-                {dataSlider.slice(0, 3).map((obj, index) => {
-                    const content = (
-                        <>
-                            <div className='guia-content'>
-                                <h2 className='guia-title'>
-                                    {guiaTitles[index].map((line, lineIndex) => (
-                                        <span key={`${obj.id}-${lineIndex}`}>
-                                            {line}
-                                            {lineIndex < guiaTitles[index].length - 1 ? <br /> : null}
-                                        </span>
-                                    ))}
-                                </h2>
-                            </div>
+  return (
+    <section className='manuales-container'>
+      {GUIAS.map((guia) => (
+        <Link
+          key={guia.id}
+          to={`/aprende?tab=${guia.tab}`}
+          className='guia-card guia-link'
+        >
+          <div className='guia-content'>
+            <h2 className='guia-title'>
+              {guia.titles.map((line, lineIndex) => (
+                <span key={`${guia.id}-${lineIndex}`}>
+                  {line}
+                  {lineIndex < guia.titles.length - 1 ? <br /> : null}
+                </span>
+              ))}
+            </h2>
+          </div>
 
-                            <div className='guia-visual' aria-label='Ilustracion de la guia'>
-                                <img
-                                    className='guia-visual-image'
-                                    src={guiaImages[index]}
-                                    alt={guiaTitles[index].join(' ')}
-                                />
-                            </div>
-                        </>
-                    )
-
-                    if (index === 0 || index === 3) {
-                        return (
-                            <Link
-                                to={'/aprende?tab=catalogo'}
-                                key={obj.id}
-                                className='guia-card guia-link'
-                            >
-                                {content}
-                            </Link>
-                        )
-                    }
-
-                    if (index === 1) {
-                        return (
-                            <Link
-                                to='/aprende?tab=guia-seleccion'
-                                key={obj.id}
-                                className='guia-card guia-link'
-                            >
-                                {content}
-                            </Link>
-                        )
-                    }
-
-                    if (index === 2) {
-                        return (
-                            <Link
-                                to='/aprende?tab=guia-plantacion'
-                                key={obj.id}
-                                className='guia-card guia-link'
-                            >
-                                {content}
-                            </Link>
-                        )
-                    }
-
-                    return (
-                        <article key={obj.id} className='guia-card'>
-                            {content}
-                        </article>
-                    )
-                })}
-            </section>
-        </>
-    )
+          <div className='guia-visual' aria-label='Ilustracion de la guia'>
+            <img className='guia-visual-image' src={guia.image} alt={guia.titles.join(' ')} />
+          </div>
+        </Link>
+      ))}
+    </section>
+  )
 }
