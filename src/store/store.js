@@ -6,6 +6,7 @@ import { mapaReducer } from "../reducers/mapaReducer";
 import treeReducers from "../reducers/arboles.reducer";
 import { authReducer } from "../reducers/auth.reducer";
 import { dashboardReducer } from "../reducers/dashboardReducer";
+import { viverosReducer } from "../reducers/viveros.reducer";
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const reducers = combineReducers({
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   leaderboard: leaderboardReducer,
   arboles: treeReducers,
   dashboard: dashboardReducer,
+  viveros: viverosReducer,
 });
 export const store = createStore(reducers
   ,

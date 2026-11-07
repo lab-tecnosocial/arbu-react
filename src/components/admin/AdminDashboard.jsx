@@ -9,6 +9,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useAutorizacion } from '../../helpers/useAutorizacion';
 
 const AdminDashboard = () => {
@@ -52,6 +53,13 @@ const AdminDashboard = () => {
       icon: <MapIcon sx={{ fontSize: 60, color: '#268576' }} />,
       path: '/mapeo-scout',
       permiso: 'mapeoScout'
+    },
+    {
+      title: 'Viveros',
+      description: 'Registro y consulta de viveros.',
+      icon: <StorefrontIcon sx={{ fontSize: 60, color: '#268576' }} />,
+      path: '/viveros',
+      permiso: null
     },
     {
       title: 'API',

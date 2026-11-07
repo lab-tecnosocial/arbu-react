@@ -38,6 +38,7 @@ const Tabla = lazy(() => import('./components/tabla/Tabla.jsx'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard.jsx'));
 const GestionAccesos = lazy(() => import('./components/admin/GestionAccesos.jsx'));
 const MapeoScoutComponent = lazy(() => import('./components/mapeo-scout/MapeoScoutComponent.jsx'));
+const ListaViveros = lazy(() => import('./components/viveros/ListaViveros.jsx'));
 const Aportes = lazy(() => import('./components/aportes/Aportes.jsx'));
 const ProyectosComponent = lazy(() => import('./components/proyectos/ProyectosComponent.jsx'));
 const DetalleProyecto = lazy(() => import('./components/proyectos/DetalleProyecto.jsx'));
@@ -98,6 +99,7 @@ const App = () => {
           <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} permiso="dashboard" />} />
           <Route path="tabla" element={<ProtectedRoute element={<Tabla />} permiso="tabla" />} />
           <Route path="mapeo-scout" element={<ProtectedRoute element={<MapeoScoutComponent />} permiso="mapeoScout" />} />
+          <Route path="viveros" element={<ProtectedRoute element={<ListaViveros />} requiresAuthorization={true} />} />
           <Route path="admin/aportes" element={<ProtectedRoute element={<Aportes />} permiso="aportes" />} />
 
           {/* Gestión de proyectos, con layout compartido */}
