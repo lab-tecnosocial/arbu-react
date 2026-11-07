@@ -1,13 +1,57 @@
-import { defineConfig } from 'vite';
+import { cpSync, existsSync, mkdirSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import { VitePWA } from 'vite-plugin-pwa'; 
+import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig(() => {
+const rootDir = dirname(fileURLToPath(import.meta.url));
+
+function copyMediapipeWasm() {
+  const src = resolve(rootDir, 'node_modules/@mediapipe/tasks-vision/wasm');
+  const dest = resolve(rootDir, 'public/mediapipe/wasm');
+  if (!existsSync(src)) return;
+  mkdirSync(dest, { recursive: true });
+  cpSync(src, dest, { recursive: true });
+}
+
+function mediapipeWasmPlugin() {
   return {
+    name: 'copy-mediapipe-wasm',
+    buildStart() {
+      copyMediapipeWasm();
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, rootDir, '')
+  const bucket = env.VITE_STORAGE_BUCKET
+
+  return {
+    optimizeDeps: {
+      exclude: ['@mediapipe/tasks-vision'],
+    },
+    server: {
+      proxy: bucket
+        ? {
+            '/api/storage-modelos': {
+              target: 'https://firebasestorage.googleapis.com',
+              changeOrigin: true,
+              rewrite: (path) => {
+                const archivo = path.replace(/^\/api\/storage-modelos\//, '')
+                const objeto = encodeURIComponent(`modelos/identificacion/${archivo}`)
+                return `/v0/b/${bucket}/o/${objeto}?alt=media`
+              },
+            },
+          }
+        : undefined,
+    },
     build: {
       outDir: 'build',
     },
     plugins: [
+      mediapipeWasmPlugin(),
       react(),
       VitePWA({
         registerType: 'autoUpdate',
@@ -27,8 +71,29 @@ export default defineConfig(() => {
           // es la documentación de la API y `xlsx` la importación de planillas
           // del back-office: quien las abre se las descarga entonces, y
           // `runtimeCaching` se las guarda para la próxima.
-          globIgnores: ['**/swagger-ui-*.js', '**/xlsx-*.js'],
+          globIgnores: [
+            '**/swagger-ui-*.js',
+            '**/xlsx-*.js',
+            '**/mediapipe/**',
+            '**/models/**',
+          ],
           runtimeCaching: [
+            {
+              urlPattern: ({ url, sameOrigin }) =>
+                sameOrigin && (
+                  url.pathname.startsWith('/models/') ||
+                  url.pathname.startsWith('/mediapipe/')
+                ),
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'arbu-identificacion',
+                expiration: {
+                  maxEntries: 12,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+                cacheableResponse: { statuses: [200] },
+              },
+            },
             {
               // Los chunks que quedaron fuera del precache. Llevan hash en el
               // nombre, así que una respuesta cacheada nunca es "vieja": o es

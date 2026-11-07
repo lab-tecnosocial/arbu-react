@@ -38,10 +38,140 @@
   line-height: 1.45;
 }
 
-.id-especie__pickers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.id-especie__upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.id-especie__tipo-label {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--aprende-accent-dark);
+}
+
+.id-especie__tipo {
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 10px;
+  border: 1px solid var(--aprende-border-strong);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: var(--aprende-bg);
+  color: var(--aprende-text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.id-especie__tipo:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--aprende-focus);
+}
+
+.id-especie__acciones {
+  margin-top: 18px;
+}
+
+.id-especie__identificar {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--aprende-btn-primary-bg);
+  color: var(--aprende-btn-primary-text);
+}
+
+.id-especie__identificar:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.id-especie__identificar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.id-especie__error {
+  margin: 14px 0 0;
+  color: #c62828;
+  font-size: 0.9rem;
+}
+
+.id-especie__resultados {
+  margin-top: 22px;
+}
+
+.id-especie__resultados h3 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: var(--aprende-accent-dark);
+}
+
+.id-especie__aviso {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--aprende-warning-text) 12%, var(--aprende-bg));
+  color: var(--aprende-warning-text);
+  font-size: 0.9rem;
+}
+
+.id-especie__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.id-especie__lista > li {
+  padding: 12px 14px;
+  border: 1px solid var(--aprende-border-strong);
+  border-radius: 12px;
+  background: var(--aprende-bg);
+}
+
+.id-especie__prediccion {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.98rem;
+}
+
+.id-especie__barra {
+  margin: 8px 0 10px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--aprende-border);
+  overflow: hidden;
+}
+
+.id-especie__barra::after {
+  content: '';
+  display: block;
+  width: var(--confianza, 0%);
+  height: 100%;
+  background: var(--aprende-accent);
+}
+
+.id-especie__ficha {
+  border: 1px solid var(--aprende-btn-secondary-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: var(--aprende-btn-secondary-bg);
+  color: var(--aprende-btn-secondary-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.id-especie__sin-ficha {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--aprende-text-muted);
 }
 
 .id-especie__fase-nota {
@@ -173,7 +303,7 @@
 }
 
 @media (max-width: 768px) {
-  .id-especie__pickers {
-    grid-template-columns: 1fr;
+  .id-especie__tipo {
+    max-width: none;
   }
 }

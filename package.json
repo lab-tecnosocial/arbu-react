@@ -6,6 +6,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@mediapipe/tasks-vision": "^1.2.2",
     "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.8.5",
     "@mui/x-date-pickers": "^6.20.2",
@@ -51,6 +52,7 @@
     "deploy:rules": "firebase deploy --only firestore:rules",
     "rules:test": "firebase emulators:start --only firestore",
     "deploy:storage": "firebase deploy --only storage",
+    "storage:cors": "node scripts/aplicar-cors-storage.mjs",
     "esquema:app": "node scripts/reparar-esquema-app.mjs"
   },
   "eslintConfig": {
