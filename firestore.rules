@@ -27,6 +27,11 @@ service cloud.firestore {
       allow create: if request.auth.uid != null;
       allow update: if request.auth.uid != null;
     }
+    match /viveros/{document=**} {
+      allow read: if true;
+      allow create: if request.auth.uid != null;
+      allow update: if request.auth.uid != null;
+    }
     match /especiesCatalogo/{document=**} {
       allow read: if true;
     }
