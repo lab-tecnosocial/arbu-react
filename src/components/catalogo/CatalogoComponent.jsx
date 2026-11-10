@@ -8,6 +8,7 @@ import DetailEspecie from './DetailEspecie'
 import Footer from '../footer/Footer'
 import SelectionGuide from './manual/SelectionGuide'
 import PlantacionGuide from './manual/PlantacionGuide'
+import IdentificacionEspecie from './identificacion/IdentificacionEspecie'
 import { startLoadEspeciesCatalogo } from '../../actions/catalogoActions'
 import { APRENDE_NIGHT_MODE_CLASS } from './aprendeTheme.config'
 import { useTheme } from '../../context/ThemeContext'
@@ -24,7 +25,9 @@ const CatalogoComponent = () => {
   const isDark = resolvedTheme === 'dark'
   const [searchParams, setSearchParams] = useSearchParams()
   const tab = searchParams.get('tab')
-  const activeTab = ['catalogo', 'guia-seleccion', 'guia-plantacion'].includes(tab) ? tab : 'guias'
+  const activeTab = ['catalogo', 'guia-seleccion', 'guia-plantacion', 'identificacion-especies'].includes(tab)
+    ? tab
+    : 'guias'
   const { activeEspecie } = useSelector((state) => state.catalogo)
 
   useEffect(() => {
@@ -40,7 +43,12 @@ const CatalogoComponent = () => {
   const handleTabChange = (nextTab) => {
     const nextParams = new URLSearchParams(searchParams)
 
-    if (nextTab === 'catalogo' || nextTab === 'guia-seleccion' || nextTab === 'guia-plantacion') {
+    if (
+      nextTab === 'catalogo' ||
+      nextTab === 'guia-seleccion' ||
+      nextTab === 'guia-plantacion' ||
+      nextTab === 'identificacion-especies'
+    ) {
       nextParams.set('tab', nextTab)
     } else {
       nextParams.delete('tab')
@@ -56,6 +64,9 @@ const CatalogoComponent = () => {
     }
     if (activeTab === 'guia-plantacion') {
       return <PlantacionGuide isModal={false} onClose={() => handleTabChange('guias')} />
+    }
+    if (activeTab === 'identificacion-especies') {
+      return <IdentificacionEspecie />
     }
     return <Manuales />
   }

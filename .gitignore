@@ -31,5 +31,11 @@ pnpm-debug.log*
 # artefactos del service worker en desarrollo (vite-plugin-pwa)
 /dev-dist
 
+# WASM de MediaPipe (se copia desde node_modules al arrancar Vite)
+/public/mediapipe
+
+# Modelos TFLite: viven en Firebase Storage (modelos/identificacion/)
+/public/models/identificacion/*.tflite
+
 # instrucciones locales para agentes (repo público)
 CLAUDE.md
