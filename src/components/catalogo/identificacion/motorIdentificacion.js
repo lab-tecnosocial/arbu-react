@@ -55,8 +55,9 @@ async function bytesDesdeRespuesta(respuesta) {
   return bytes
 }
 
-async function descargarModelo(tipo) {
+async function descargarModelo(tipo, onEstado) {
   if (buffersModelo[tipo]) return buffersModelo[tipo]
+  onEstado?.('descargando')
 
   const modelo = MODELOS_IDENTIFICACION[tipo]
   if (!modelo) throw new Error('Tipo de foto no válido')
@@ -121,10 +122,10 @@ async function cargarVision() {
   throw ultimoError ?? new Error('No se pudo cargar el runtime de identificación')
 }
 
-async function crearClasificador(tipo, delegate) {
+async function crearClasificador(tipo, delegate, onEstado) {
   const { ImageClassifier } = await import('@mediapipe/tasks-vision')
   const vision = await cargarVision()
-  const modeloBytes = await descargarModelo(tipo)
+  const modeloBytes = await descargarModelo(tipo, onEstado)
 
   return ImageClassifier.createFromOptions(vision, {
     baseOptions: {
@@ -137,7 +138,7 @@ async function crearClasificador(tipo, delegate) {
   })
 }
 
-export async function prepararMotorIdentificacion(tipo) {
+export async function prepararMotorIdentificacion(tipo, onEstado) {
   if (!MODELOS_IDENTIFICACION[tipo]) {
     throw new Error('Tipo de foto no válido')
   }
@@ -161,7 +162,7 @@ export async function prepararMotorIdentificacion(tipo) {
     const errores = []
     for (const delegate of ['CPU', 'GPU']) {
       try {
-        clasificador = await crearClasificador(tipo, delegate)
+        clasificador = await crearClasificador(tipo, delegate, onEstado)
         tipoCargado = tipo
         return clasificador
       } catch (error) {
@@ -185,11 +186,17 @@ function categoriasDeResultado(resultado) {
   return [...categorias].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
 }
 
-export async function identificarEspecie(tipo, archivo, especiesCatalogo = []) {
+export function modeloIdentificacionEnCache(tipo) {
+  return Boolean(buffersModelo[tipo])
+}
+
+export async function identificarEspecie(tipo, archivo, especiesCatalogo = [], onEstado) {
   if (!archivo) throw new Error('Falta la foto')
   let motor
   try {
-    motor = await prepararMotorIdentificacion(tipo)
+    if (!modeloIdentificacionEnCache(tipo)) onEstado?.('descargando')
+    motor = await prepararMotorIdentificacion(tipo, onEstado)
+    onEstado?.('analizando')
   } catch (error) {
     throw new Error(mensajeErrorIdentificacion(error))
   }

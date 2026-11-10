@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setActiveEspecie } from '../../../actions/catalogoActions'
 import ImageFilePicker from './ImageFilePicker'
-import { MODELOS_IDENTIFICACION, identificarEspecie, liberarMotorIdentificacion } from './motorIdentificacion'
+import {
+  MODELOS_IDENTIFICACION,
+  identificarEspecie,
+  liberarMotorIdentificacion,
+  modeloIdentificacionEnCache,
+} from './motorIdentificacion'
 import './IdentificacionEspecie.css'
 
 const TIPOS_FOTO = {
@@ -33,6 +38,7 @@ export default function IdentificacionEspecie() {
   const [tipoFoto, setTipoFoto] = useState(TIPOS_FOTO.hoja.value)
   const [foto, setFoto] = useState(null)
   const [analizando, setAnalizando] = useState(false)
+  const [descargandoModelo, setDescargandoModelo] = useState(false)
   const [resultados, setResultados] = useState(null)
   const [error, setError] = useState(null)
   const tipoActual = TIPOS_FOTO[tipoFoto] ?? TIPOS_FOTO.hoja
@@ -56,9 +62,12 @@ export default function IdentificacionEspecie() {
   const handleIdentificar = async () => {
     if (!foto || analizando) return
     setAnalizando(true)
+    setDescargandoModelo(!modeloIdentificacionEnCache(tipoFoto))
     setError(null)
     try {
-      const predicciones = await identificarEspecie(tipoFoto, foto, especies)
+      const predicciones = await identificarEspecie(tipoFoto, foto, especies, (estado) => {
+        setDescargandoModelo(estado === 'descargando')
+      })
       setResultados(predicciones)
     } catch (err) {
       console.error(err)
@@ -66,6 +75,7 @@ export default function IdentificacionEspecie() {
       setError(err?.message || 'No se pudo analizar la foto. Prueba de nuevo o usa Chrome.')
     } finally {
       setAnalizando(false)
+      setDescargandoModelo(false)
     }
   }
 
@@ -120,9 +130,14 @@ export default function IdentificacionEspecie() {
             type='button'
             className='id-especie__identificar'
             disabled={!foto || analizando}
+            aria-live='polite'
             onClick={handleIdentificar}
           >
-            {analizando ? 'Analizando…' : 'Identificar especie'}
+            {descargandoModelo
+              ? 'Descargando modelo…'
+              : analizando
+                ? 'Analizando…'
+                : 'Identificar especie'}
           </button>
         </div>
 
