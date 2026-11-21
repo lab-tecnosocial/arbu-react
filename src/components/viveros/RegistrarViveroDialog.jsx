@@ -18,7 +18,8 @@ import L from "leaflet";
 import { useSelector } from "react-redux";
 import { atribucionBasemap, urlBasemap } from "../../helpers/basemap";
 import { ACCEPT_FOTOS } from "../../helpers/aportes/subirFoto";
-import { guardarVivero } from "../../helpers/guardarViveroFirestore";
+import { actualizarVivero, guardarVivero } from "../../helpers/guardarViveroFirestore";
+import { ubicacionDeVivero } from "../../helpers/viveros";
 import { useTheme } from "../../context/ThemeContext";
 import { especies } from "../mapa/filtro/especies";
 
@@ -46,6 +47,31 @@ const opcionesEspecies = especies.map((especie) => ({
   nombreCientifico: especie.nombreCientifico,
 }));
 
+const formDesdeVivero = (vivero) => ({
+  nombre: vivero?.nombre ?? "",
+  descripcion: vivero?.descripcion ?? "",
+  contactoCorreo: vivero?.contactoCorreo ?? "",
+  contactoTelefono: String(vivero?.contactoTelefono ?? ""),
+  especies: (vivero?.especies ?? []).map((especie) => {
+    const nombreComun = typeof especie === "string" ? especie : especie.nombreComun;
+    return (
+      opcionesEspecies.find((opcion) => opcion.nombreComun === nombreComun) ?? {
+        nombreComun,
+        nombreCientifico: "",
+      }
+    );
+  }),
+  foto: null,
+});
+
+const ubicacionDesdeVivero = (vivero) => {
+  const ubicacion = ubicacionDeVivero(vivero);
+  return ubicacion ? L.latLng(ubicacion.latitud, ubicacion.longitud) : null;
+};
+
+const fotoGuardada = (vivero) =>
+  typeof vivero?.foto === "string" && vivero.foto.length > 0 ? vivero.foto : null;
+
 const CapturarClickMapa = ({ onPunto }) => {
   useMapEvents({
     click: (evento) => onPunto(evento.latlng),
@@ -65,34 +91,40 @@ const AjustarTamanoMapa = () => {
   return null;
 };
 
-const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
+const RegistrarViveroDialog = ({ abierto, vivero = null, onCerrar, onGuardado }) => {
   const user = useSelector((state) => state.auth.user);
   const { resolvedTheme } = useTheme();
-  const [form, setForm] = useState(FORM_VACIO);
-  const [ubicacion, setUbicacion] = useState(null);
+  const colorMarca = resolvedTheme === "dark" ? "var(--green3)" : "var(--green2)";
+  const [form, setForm] = useState(() => (vivero ? formDesdeVivero(vivero) : FORM_VACIO));
+  const [fotoActual, setFotoActual] = useState(() => fotoGuardada(vivero));
+  const [ubicacion, setUbicacion] = useState(() => ubicacionDesdeVivero(vivero));
   const [intentado, setIntentado] = useState(false);
   const [mensaje, setMensaje] = useState(null);
   const [guardando, setGuardando] = useState(false);
   const [progreso, setProgreso] = useState(0);
 
+  const esEdicion = Boolean(vivero?.id);
+
   useEffect(() => {
     if (!abierto) return;
-    setForm(FORM_VACIO);
-    setUbicacion(null);
+    setForm(vivero ? formDesdeVivero(vivero) : FORM_VACIO);
+    setFotoActual(fotoGuardada(vivero));
+    setUbicacion(ubicacionDesdeVivero(vivero));
     setIntentado(false);
     setMensaje(null);
     setGuardando(false);
     setProgreso(0);
-  }, [abierto]);
+  }, [abierto, vivero]);
 
-  const preview = useMemo(
-    () => (form.foto ? URL.createObjectURL(form.foto) : null),
-    [form.foto]
-  );
+  const preview = useMemo(() => {
+    if (form.foto) return URL.createObjectURL(form.foto);
+    return fotoActual;
+  }, [form.foto, fotoActual]);
 
-  useEffect(() => () => {
-    if (preview) URL.revokeObjectURL(preview);
-  }, [preview]);
+  useEffect(() => {
+    if (!form.foto) return undefined;
+    return () => URL.revokeObjectURL(preview);
+  }, [form.foto, preview]);
 
   const errores = {
     nombre: form.nombre.trim() ? "" : "Ingresa el nombre del vivero.",
@@ -117,6 +149,12 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
     setMensaje(null);
   };
 
+  const quitarImagen = () => {
+    setForm((prev) => ({ ...prev, foto: null }));
+    setFotoActual(null);
+    setMensaje(null);
+  };
+
   const guardar = async () => {
     setIntentado(true);
     if (hayErrores) return;
@@ -125,22 +163,31 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
     setMensaje(null);
     setProgreso(0);
 
-    const resultado = await guardarVivero(
-      {
-        nombre: form.nombre.trim(),
-        descripcion: form.descripcion.trim(),
-        contactoCorreo: form.contactoCorreo.trim(),
-        contactoTelefono: form.contactoTelefono,
-        ubicacion: {
-          latitud: ubicacion.lat,
-          longitud: ubicacion.lng,
-        },
-        especies: form.especies.map((especie) => especie.nombreComun),
-        creadoPor: user?.email ?? null,
+    const datos = {
+      nombre: form.nombre.trim(),
+      descripcion: form.descripcion.trim(),
+      contactoCorreo: form.contactoCorreo.trim(),
+      contactoTelefono: form.contactoTelefono,
+      ubicacion: {
+        latitud: ubicacion.lat,
+        longitud: ubicacion.lng,
       },
-      form.foto,
-      setProgreso
-    );
+      especies: form.especies.map((especie) => especie.nombreComun),
+    };
+
+    const resultado = esEdicion
+      ? await actualizarVivero(
+          vivero.id,
+          { ...datos, actualizadoPor: user?.email ?? null },
+          form.foto,
+          setProgreso,
+          { quitarFoto: !form.foto && !fotoActual }
+        )
+      : await guardarVivero(
+          { ...datos, creadoPor: user?.email ?? null },
+          form.foto,
+          setProgreso
+        );
 
     setGuardando(false);
 
@@ -154,19 +201,60 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
   };
 
   return (
-    <Dialog open={abierto} onClose={onCerrar} fullWidth maxWidth="md">
-      <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 600, color: "#268576" }}>
-        Registrar vivero
-        <Typography variant="caption" sx={{ display: "block", fontFamily: "Poppins", color: "#6b7a7a" }}>
-          Completa los datos y marca la ubicación exacta en el mapa.
+    <Dialog
+      open={abierto}
+      onClose={onCerrar}
+      fullWidth
+      maxWidth="md"
+      PaperProps={{
+        sx: {
+          backgroundColor: "var(--color-surface)",
+          backgroundImage: "none",
+          color: "var(--color-text)",
+        },
+      }}
+    >
+      <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 600, color: colorMarca }}>
+        {esEdicion ? "Editar vivero" : "Registrar vivero"}
+        <Typography
+          variant="caption"
+          sx={{ display: "block", fontFamily: "Poppins", color: "var(--color-text-muted)" }}
+        >
+          {esEdicion
+            ? "Actualiza los datos y la ubicación del vivero."
+            : "Completa los datos y marca la ubicación exacta en el mapa."}
         </Typography>
       </DialogTitle>
 
       <DialogContent
         dividers
         sx={{
+          borderColor: "var(--color-border)",
           "& .MuiInputBase-input, & .MuiInputLabel-root, & .MuiFormHelperText-root, & .MuiChip-label": {
             fontFamily: "Poppins",
+          },
+          "& .MuiInputBase-input": {
+            color: "var(--color-text)",
+          },
+          "& .MuiInputLabel-root": {
+            color: "var(--color-text-secondary)",
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "var(--color-border-strong)",
+          },
+          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "var(--color-text-muted)",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "var(--color-text-muted)",
+            opacity: 1,
+          },
+          "& .MuiFormHelperText-root": {
+            color: "var(--color-text-muted)",
+          },
+          "& .MuiChip-root": {
+            backgroundColor: "var(--color-bg-muted)",
+            color: "var(--color-text)",
           },
         }}
       >
@@ -270,6 +358,20 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
                   isOptionEqualToValue={(opcion, valor) =>
                     opcion.nombreComun === valor.nombreComun
                   }
+                  componentsProps={{
+                    paper: {
+                      sx: {
+                        backgroundColor: "var(--color-surface-elevated)",
+                        color: "var(--color-text)",
+                        "& .MuiAutocomplete-option": {
+                          color: "var(--color-text)",
+                        },
+                        "& .MuiAutocomplete-option[aria-selected='true']": {
+                          backgroundColor: "var(--color-bg-muted)",
+                        },
+                      },
+                    },
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -285,7 +387,20 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
                 <Typography variant="subtitle2" sx={{ fontFamily: "Poppins", fontWeight: 600, mb: 1 }}>
                   Foto o imagen
                 </Typography>
-                <Button variant="outlined" component="label" sx={{ fontFamily: "Poppins", textTransform: "none" }}>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  sx={{
+                    fontFamily: "Poppins",
+                    textTransform: "none",
+                    color: colorMarca,
+                    borderColor: colorMarca,
+                    "&:hover": {
+                      borderColor: colorMarca,
+                      backgroundColor: "var(--color-bg-muted)",
+                    },
+                  }}
+                >
                   Seleccionar imagen
                   <input
                     hidden
@@ -304,7 +419,7 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
                     <Button
                       size="small"
                       color="error"
-                      onClick={() => actualizar("foto", null)}
+                      onClick={quitarImagen}
                       sx={{ mt: 1, fontFamily: "Poppins", textTransform: "none" }}
                     >
                       Quitar imagen
@@ -319,7 +434,10 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
             <Typography variant="subtitle2" sx={{ fontFamily: "Poppins", fontWeight: 600, mb: 1 }}>
               Ubicación
             </Typography>
-            <Typography variant="caption" sx={{ display: "block", fontFamily: "Poppins", color: "#6b7a7a", mb: 1 }}>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", fontFamily: "Poppins", color: "var(--color-text-muted)", mb: 1 }}
+            >
               Haz clic en el mapa para marcar el punto.
             </Typography>
 
@@ -329,7 +447,8 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
                 borderRadius: 2,
                 overflow: "hidden",
                 border: "1px solid",
-                borderColor: errores.ubicacion && intentado ? "error.main" : "divider",
+                borderColor:
+                  errores.ubicacion && intentado ? "error.main" : "var(--color-border)",
               }}
             >
               <MapContainer
@@ -368,7 +487,8 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
                 sx={{
                   mt: 1,
                   fontFamily: "Poppins",
-                  color: errores.ubicacion && intentado ? "error.main" : "#6b7a7a",
+                  color:
+                    errores.ubicacion && intentado ? "error.main" : "var(--color-text-muted)",
                 }}
               >
                 {errores.ubicacion && intentado
@@ -384,7 +504,11 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
         <Button
           onClick={onCerrar}
           disabled={guardando}
-          sx={{ fontFamily: "Poppins", textTransform: "none" }}
+          sx={{
+            fontFamily: "Poppins",
+            textTransform: "none",
+            color: "var(--color-text-secondary)",
+          }}
         >
           Cancelar
         </Button>
@@ -392,9 +516,18 @@ const RegistrarViveroDialog = ({ abierto, onCerrar, onGuardado }) => {
           variant="contained"
           onClick={guardar}
           disabled={guardando}
-          sx={{ fontFamily: "Poppins", textTransform: "none", backgroundColor: "#268576" }}
+          sx={{
+            fontFamily: "Poppins",
+            textTransform: "none",
+            backgroundColor: "var(--green2)",
+            "&:hover": { backgroundColor: "var(--green)" },
+          }}
         >
-          {guardando ? "Guardando…" : "Guardar vivero"}
+          {guardando
+            ? "Guardando…"
+            : esEdicion
+              ? "Guardar nuevos cambios"
+              : "Guardar vivero"}
         </Button>
       </DialogActions>
     </Dialog>
