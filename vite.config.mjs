@@ -4,6 +4,13 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
+    server: {
+      // Sin esto el popup de Google Auth a veces se abre y se cierra al instante:
+      // el opener pierde la referencia a la ventana (COOP).
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      },
+    },
     build: {
       outDir: 'build',
     },

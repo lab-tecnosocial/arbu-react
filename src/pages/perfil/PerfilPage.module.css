@@ -1,0 +1,294 @@
+.page {
+  min-height: calc(100dvh - 100px);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.detalleAprende {
+  min-height: 0;
+  padding: 0;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.detalle {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  pointer-events: none;
+}
+
+.detalle > * {
+  pointer-events: auto;
+}
+
+.contenido {
+  min-width: 0;
+}
+
+.estado {
+  margin: 48px auto;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.hero {
+  background: var(--green);
+  color: var(--color-on-brand);
+  padding-bottom: 32px;
+}
+
+.portada {
+  height: 220px;
+  overflow: hidden;
+  background: #123f38;
+}
+
+.portadaFoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cuerpo {
+  width: min(720px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.identidad {
+  display: grid;
+  grid-template-columns: 88px 1fr 88px;
+  align-items: end;
+  margin-top: -72px;
+  min-height: 144px;
+}
+
+.identidadLado {
+  display: block;
+  width: 88px;
+  height: 88px;
+}
+
+.escudo {
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
+  object-fit: cover;
+  background: #f4c84a;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  justify-self: start;
+}
+
+.avatar,
+.avatarVacio {
+  width: 144px;
+  height: 144px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid var(--green);
+  background: var(--color-surface);
+  justify-self: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.avatarVacio {
+  display: grid;
+  place-items: center;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.nombre {
+  margin: 14px 0 4px;
+  text-align: center;
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+  font-weight: 700;
+}
+
+.institucion {
+  margin: 0 0 28px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.95rem;
+}
+
+.clasificacion h2,
+.estadisticas h2,
+.listaBloque h2 {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.rangoFila {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.puntos,
+.rangoNombre {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+}
+
+.puntos {
+  text-align: right;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.stat strong {
+  font-size: 1.2rem;
+}
+
+.stat span:last-child {
+  font-size: 0.75rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.statIcon {
+  color: #9ee7c2;
+}
+
+.listas {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+.listaBloque {
+  padding: 28px 0 8px;
+  color: var(--color-text);
+}
+
+.vacio {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin: 8px 0 20px;
+}
+
+.carrusel {
+  list-style: none;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 4px 2px 18px;
+  scroll-snap-type: x mandatory;
+}
+
+.tarjeta {
+  flex: 0 0 210px;
+  scroll-snap-align: start;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 16px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  box-shadow: var(--shadow-medium);
+}
+
+.tarjetaFoto,
+.tarjetaFotoVacia {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-bg-muted);
+}
+
+.tarjeta strong {
+  font-size: 1.05rem;
+}
+
+.tarjeta em {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.tarjeta button {
+  margin-top: 6px;
+  width: 100%;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--green2);
+  color: var(--color-on-brand);
+  font-weight: 700;
+}
+
+.tarjeta button:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 640px) {
+  .portada {
+    height: 168px;
+  }
+
+  .identidad {
+    grid-template-columns: 64px 1fr 64px;
+    margin-top: -56px;
+  }
+
+  .identidadLado,
+  .escudo {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+  }
+
+  .avatar,
+  .avatarVacio {
+    width: 112px;
+    height: 112px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+[data-theme="dark"] .hero {
+  background: var(--geyser-900);
+}
+
+[data-theme="dark"] .portada {
+  background: var(--geyser-950);
+}
+
+[data-theme="dark"] .avatar,
+[data-theme="dark"] .avatarVacio {
+  border-color: var(--geyser-900);
+}
+
+[data-theme="dark"] .stat {
+  background: rgba(255, 255, 255, 0.06);
+}
