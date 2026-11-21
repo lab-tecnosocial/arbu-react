@@ -57,6 +57,10 @@ export const types = {
   leaderboardLoadScoresMes: '[LEADERBOARD] Load scores del Mes',
   leaderboardLoadScoresGlobal: '[LEADERBOARD] Load scores Global',
 
+  VIVEROS_FETCH_REQUEST: '[VIVEROS] fetch request',
+  VIVEROS_FETCH_SUCCESS: '[VIVEROS] fetch success',
+  VIVEROS_FETCH_FAILURE: '[VIVEROS] fetch failure',
+
   // Arbu Pro: dashboard de inscripciones y tabla editable
   dashboardLoadInscripciones: '[DASHBOARD] Load inscripciones',
   dashboardUpdateInscripcion: '[DASHBOARD] Update inscripcion',
