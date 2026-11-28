@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { authLogin } from "../../actions/auth.actions"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { auth } from "../../firebase/firebase-config"
+import { useTheme } from "../../context/ThemeContext"
 import googleIcon from "./google-icon.png"
 
 const provider = new GoogleAuthProvider()
@@ -34,10 +35,12 @@ const IniciarSesion = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const { resolvedTheme } = useTheme()
   const user = useSelector((state) => state.auth.user)
   const from = location.state?.from?.pathname || "/perfil"
   const [error, setError] = useState(null)
   const [cargando, setCargando] = useState(false)
+  const logo = resolvedTheme === "dark" ? "/logodark.png" : "/Logo.png"
 
   const handleLogin = async () => {
     if (cargando) return
@@ -56,23 +59,53 @@ const IniciarSesion = () => {
   }
 
   return (
-    <div className="login-container">
-      {user ? (
-        <div className="user-info">Cargando...</div>
-      ) : (
-        <>
-          <button onClick={handleLogin} className="login-btn" disabled={cargando}>
-            <img src={googleIcon} alt="" className="google-icon" />
-            &nbsp;{cargando ? "Conectando…" : "Iniciar sesión con Google"}
-          </button>
-          {error ? (
-            <p className="login-error" role="alert">
-              {error}
-            </p>
-          ) : null}
-        </>
-      )}
-    </div>
+    <main className="login-page">
+      <div className="login-shell">
+        <section className="login-panel">
+          {user ? (
+            <p className="user-info">Cargando…</p>
+          ) : (
+            <>
+              <img className="login-logo" src={logo} alt="Arbu" />
+              <h1>Inicia sesión en Arbu</h1>
+              <p className="login-lead">
+                Arbu nace para cuidar lo que nos da vida: los árboles de nuestra ciudad.
+                Entrá para ver tu perfil, tus árboles y tu clasificación.
+              </p>
+              <button type="button" onClick={handleLogin} className="login-btn" disabled={cargando}>
+                <img src={googleIcon} alt="" className="google-icon" />
+                {cargando ? "Conectando…" : "Continuar con Google"}
+              </button>
+              {error ? (
+                <p className="login-error" role="alert">
+                  {error}
+                </p>
+              ) : null}
+              <ul className="login-features">
+                <li>
+                  <img src="/adoptalogo.png" alt="" />
+                  Adopta
+                </li>
+                <li>
+                  <img src="/cuidalogo.png" alt="" />
+                  Cuida
+                </li>
+                <li>
+                  <img src="/aprendelogo.png" alt="" />
+                  Aprende
+                </li>
+              </ul>
+            </>
+          )}
+        </section>
+
+        <aside className="login-visual" aria-hidden>
+          <img className="login-blur" src="/blur.png" alt="" />
+          <img className="login-phones" src="/hero2.png" alt="" />
+          <p>Cuidar los árboles nunca fue tan fácil</p>
+        </aside>
+      </div>
+    </main>
   )
 }
 
