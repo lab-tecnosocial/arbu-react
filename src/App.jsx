@@ -90,7 +90,8 @@ const App = () => {
           <Route path="acerca" element={<Acerca />} />
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:slug" element={<EntradaBlog />} />
-          <Route path="perfil" element={<ProtectedRoute element={<PerfilPage />} />} />
+          <Route path="perfil" element={<PerfilPage />} />
+          <Route path="perfil/:uid" element={<PerfilPage />} />
 
           {/* Arbu Pro */}
           <Route path="login" element={<PublicRoute element={<IniciarSesion />} />} />

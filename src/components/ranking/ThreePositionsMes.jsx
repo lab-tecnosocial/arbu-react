@@ -2,6 +2,7 @@ import React from "react";
 import SvgComponentUserDefaultFirst from "./SvgComponentUserDefaultFirst";
 import SvgComponentUserDefaultSecond from "./SvgComponentUserDefaultSecond";
 import SvgComponentUserDefaultThird from "./SvgComponentUserDefaultThird";
+import { EnlacePerfil } from "./EnlacePerfil";
 import "./ThreePositions.css";
 const ThreePositionsMes = ({ list3Best }) => {
   return (
@@ -10,7 +11,7 @@ const ThreePositionsMes = ({ list3Best }) => {
         {list3Best.length > 0 && (
           <>
           
-             <div className="second-place">
+             <EnlacePerfil id={list3Best[1]?.id} className="second-place">
              {
             list3Best.length > 1 && (
               <>
@@ -47,10 +48,8 @@ const ThreePositionsMes = ({ list3Best }) => {
             
               )
           }
-            </div> 
-           
-            
-            <div className="first-place">
+            </EnlacePerfil>
+            <EnlacePerfil id={list3Best[0]?.id} className="first-place">
               <div className="label-position-first">
                 <strong>1</strong>
               </div>
@@ -77,9 +76,8 @@ const ThreePositionsMes = ({ list3Best }) => {
                 <span className="name-user">{list3Best[0]?.nombre}</span>
                 {/* <div>{list3Best[2].institucion}</div> */}
               </div>
-            </div>
-            
-                <div className="third-place">
+            </EnlacePerfil>
+                <EnlacePerfil id={list3Best[2]?.id} className="third-place">
                 {
               list3Best.length > 2 && (
 
@@ -114,9 +112,7 @@ const ThreePositionsMes = ({ list3Best }) => {
               
               )
             }
-            </div>
-            
-            
+            </EnlacePerfil>
           </>
         )}
       </div>

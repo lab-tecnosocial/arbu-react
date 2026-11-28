@@ -70,6 +70,19 @@
   font-family: 'Poppins', sans-serif;
 }
 
+a.first-place,
+a.second-place,
+a.third-place {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.first-place:hover,
+a.second-place:hover,
+a.third-place:hover {
+  border-color: var(--green2);
+}
+
 .name-user{
   font-size: 1.05rem;
   font-weight: 700;

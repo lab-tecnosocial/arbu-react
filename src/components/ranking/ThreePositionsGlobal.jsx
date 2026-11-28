@@ -2,6 +2,7 @@ import React from "react";
 import SvgComponentUserDefaultFirst from "./SvgComponentUserDefaultFirst";
 import SvgComponentUserDefaultSecond from "./SvgComponentUserDefaultSecond";
 import SvgComponentUserDefaultThird from "./SvgComponentUserDefaultThird";
+import { EnlacePerfil } from "./EnlacePerfil";
 import "./ThreePositions.css";
 const ThreePositionsGlobal = ({ list3Best }) => {
   return (
@@ -9,7 +10,7 @@ const ThreePositionsGlobal = ({ list3Best }) => {
       <div className="top-position-container">
       {list3Best.length > 0 && (
       <>
-       <div className="second-place">
+       <EnlacePerfil id={list3Best[1]?.id} className="second-place">
        {
             list3Best.length > 1 && (
               <>
@@ -40,8 +41,8 @@ const ThreePositionsGlobal = ({ list3Best }) => {
             
             )
         }
-        </div>
-        <div className="first-place">
+        </EnlacePerfil>
+        <EnlacePerfil id={list3Best[0]?.id} className="first-place">
         <div className="label-position-first"><strong>1</strong></div>
         {
               list3Best[0]?.foto !== 'default'?
@@ -66,8 +67,8 @@ const ThreePositionsGlobal = ({ list3Best }) => {
             <span className="name-user">{list3Best[0]?.nombre}</span>
             {/* <div>{list3Best[2].institucion}</div> */}
           </div>
-        </div>
-        <div className="third-place">
+        </EnlacePerfil>
+        <EnlacePerfil id={list3Best[2]?.id} className="third-place">
         {
               list3Best.length > 2 && (
 
@@ -100,7 +101,7 @@ const ThreePositionsGlobal = ({ list3Best }) => {
               
               )
             }
-        </div>
+        </EnlacePerfil>
       </>
       )
       }

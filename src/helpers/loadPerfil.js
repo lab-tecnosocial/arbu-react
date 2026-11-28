@@ -19,6 +19,33 @@ const esUrl = (valor) => typeof valor === "string" && /^https?:\/\//i.test(valor
 const textoDe = (...valores) =>
   valores.find((valor) => typeof valor === "string" && valor.trim())?.trim() || ""
 
+async function leerRankingPublico(uid) {
+  try {
+    const ranking = await getDoc(doc(db, "ranking", "top100"))
+    if (ranking.exists()) {
+      anotarLecturas("servidor", "ranking/top100 (perfil)", 1)
+      const lista = ranking.data()?.top100 ?? []
+      const index = lista.findIndex((item) => item?.id === uid)
+      if (index >= 0) {
+        const encontrado = lista[index]
+        return {
+          puntos: encontrado?.puntos != null ? Number(encontrado.puntos) || 0 : null,
+          posicion: index + 1,
+        }
+      }
+    }
+  } catch (error) {
+    console.error("[perfil] no se pudo leer ranking/top100:", error)
+  }
+
+  const ahora = new Date()
+  const mensual = await leerDocumento(`${ahora.getMonth() + 1}_${ahora.getFullYear()}`, uid)
+  return {
+    puntos: mensual?.puntos != null ? Number(mensual.puntos) || 0 : 0,
+    posicion: null,
+  }
+}
+
 async function leerDocumento(coleccion, id) {
   try {
     const snapshot = await getDoc(doc(db, coleccion, id))
@@ -152,10 +179,11 @@ export async function loadArbolesDeLista(ids, coleccionPreferida, coleccionRespa
 }
 
 export async function loadPerfilUsuario(uid) {
-  const [privado, publico, score] = await Promise.all([
+  const [privado, publico, score, rankingPublico] = await Promise.all([
     leerDocumento("usuarios", uid),
     leerDocumento("usuarios_public", uid),
     leerDocumento("scores", uid),
+    leerRankingPublico(uid),
   ])
 
   const usuario = {
@@ -192,11 +220,14 @@ export async function loadPerfilUsuario(uid) {
   const adoptados = unirArboles([adoptadosPorId, plantadosPorAutor, adoptadosPorCampo])
   const mapeados = unirArboles([mapeadosPorId, mapeadosPorAutor.map(conFoto)])
   const todos = unirArboles([adoptados, mapeados])
-  const puntos = Number(score?.puntos ?? usuario.puntos ?? 0) || 0
+  const puntos = Number(score?.puntos ?? usuario.puntos ?? rankingPublico.puntos ?? 0) || 0
+  const encontrado = Boolean(privado || publico)
 
   return {
     usuario,
+    encontrado,
     puntos,
+    posicion: rankingPublico.posicion,
     adoptados,
     mapeados,
     stats: {

@@ -1,6 +1,13 @@
 .child-container{
   width: min(1120px, calc(100% - 2rem));
   margin: 0 auto 1rem;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+a.child-container:hover .flex {
+  border-color: var(--green2);
 }
 .flex{
   display: flex;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Navigate, useLocation, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { Droplets, Heart, MapPinned, Stethoscope } from "lucide-react"
 import Footer from "../../components/footer/Footer"
@@ -23,15 +24,21 @@ import { useTheme } from "../../context/ThemeContext"
 import { APRENDE_NIGHT_MODE_CLASS } from "../../components/catalogo/aprendeTheme.config"
 import "../../components/catalogo/aprende-theme.css"
 import { MedallaRango } from "./MedallaRango"
+import { InfoMedallas } from "./InfoMedallas"
 import styles from "./PerfilPage.module.css"
 
 const PerfilPage = () => {
   const dispatch = useDispatch()
+  const location = useLocation()
+  const { uid: uidParam } = useParams()
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
-  const authUser = useSelector((state) => state.auth.user)
+  const { user: authUser, checking } = useSelector((state) => state.auth)
   const { especies } = useSelector((state) => state.catalogo)
+  const uid = uidParam || authUser?.uid
+  const esPropio = Boolean(authUser?.uid && uid === authUser.uid)
   const [estado, setEstado] = useState({ cargando: true, error: null, datos: null })
+  const [infoMedallas, setInfoMedallas] = useState(false)
 
   useEffect(() => {
     dispatch(startLoadEspeciesCatalogo())
@@ -39,12 +46,24 @@ const PerfilPage = () => {
 
   useEffect(() => {
     let vivo = true
-    if (!authUser?.uid) return undefined
+    if (!uid) {
+      setEstado({ cargando: false, error: null, datos: null })
+      return undefined
+    }
 
     setEstado({ cargando: true, error: null, datos: null })
-    loadPerfilUsuario(authUser.uid)
+    loadPerfilUsuario(uid)
       .then((datos) => {
-        if (vivo) setEstado({ cargando: false, error: null, datos })
+        if (!vivo) return
+        if (!datos.encontrado) {
+          setEstado({
+            cargando: false,
+            error: "No se encontró este perfil.",
+            datos: null,
+          })
+          return
+        }
+        setEstado({ cargando: false, error: null, datos })
       })
       .catch((error) => {
         console.error(error)
@@ -63,7 +82,7 @@ const PerfilPage = () => {
       dispatch(setPanelState("CLOSE"))
       dispatch(setSelectedTree(null, {}))
     }
-  }, [authUser?.uid, dispatch])
+  }, [uid, dispatch])
 
   const abrirDetalle = (arbol, index) => {
     const especie = especieDesdeArbol(arbol, especies)
@@ -77,11 +96,19 @@ const PerfilPage = () => {
     dispatch(setPanelState("OPEN"))
   }
 
+  if (!uidParam && checking) {
+    return <p className={styles.estado} role="status">Cargando perfil…</p>
+  }
+
+  if (!uidParam && !authUser) {
+    return <Navigate to="/iniciar-sesion" state={{ from: location }} replace />
+  }
+
   const { cargando, error, datos } = estado
   const usuario = datos?.usuario ?? {}
-  const nombre = usuario.nombre || authUser?.displayName || "Sin nombre"
+  const nombre = usuario.nombre || (esPropio ? authUser?.displayName : "") || "Sin nombre"
   const institucion = institucionDe(usuario)
-  const foto = fotoPerfilDe(usuario, authUser)
+  const foto = fotoPerfilDe(usuario, esPropio ? authUser : null)
   const portada = portadaDe(usuario)
   const escudo = escudoDeInstitucion(institucion)
   const puntos = datos?.puntos ?? 0
@@ -143,8 +170,12 @@ const PerfilPage = () => {
                   <h2>Clasificación</h2>
                   <div className={styles.rangoFila}>
                     <span className={styles.puntos}>{puntos} pts</span>
-                    <MedallaRango rango={rango} />
-                    <span className={styles.rangoNombre}>{rango}</span>
+                    <MedallaRango
+                      rango={rango}
+                      posicion={datos.posicion}
+                      onClick={() => setInfoMedallas(true)}
+                    />
+                    <span className={styles.rangoNombre}>{rango.nombre}</span>
                   </div>
                 </div>
 
@@ -163,13 +194,13 @@ const PerfilPage = () => {
             <div className={styles.listas}>
               <ListaArboles
                 titulo="Árboles Adoptados"
-                vacio="No tienes árboles adoptados aún…"
+                vacio={esPropio ? "No tienes árboles adoptados aún…" : "No tiene árboles adoptados aún…"}
                 arboles={datos.adoptados}
                 onDetalle={abrirDetalle}
               />
               <ListaArboles
                 titulo="Árboles Mapeados"
-                vacio="No tienes árboles mapeados aún…"
+                vacio={esPropio ? "No tienes árboles mapeados aún…" : "No tiene árboles mapeados aún…"}
                 arboles={datos.mapeados}
                 onDetalle={abrirDetalle}
               />
@@ -178,6 +209,7 @@ const PerfilPage = () => {
         )}
       </div>
       <Footer />
+      {infoMedallas ? <InfoMedallas onCerrar={() => setInfoMedallas(false)} /> : null}
     </div>
   )
 }
