@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideDetailEspecie } from "../../actions/catalogoActions";
 import "./DetailEspecie.css";
@@ -8,15 +8,19 @@ import CloseIcon from '@mui/icons-material/Close';
 const DetailEspecie = () => {
   const { activeEspecie } = useSelector((state) => state.catalogo);
   const dispatch = useDispatch();
+  const mostradaRef = useRef(null);
+  if (activeEspecie) mostradaRef.current = activeEspecie;
+  const especie = activeEspecie ?? mostradaRef.current;
+  const abierto = Boolean(activeEspecie);
 
   const handleClose = () => {
     dispatch(setHideDetailEspecie());
   };
 
-  if (!activeEspecie) return null;
+  if (!especie) return null;
 
   return (
-    <div className={`detail-especie ${activeEspecie !== null && "active"}`}>
+    <div className={`detail-especie${abierto ? " active" : ""}`}>
       <div className="detail-container-especie">
         <div className="detail-container-especie-secundary">
           <button
@@ -28,25 +32,19 @@ const DetailEspecie = () => {
             <CloseIcon sx={{ color: 'inherit' }} />
           </button>
           <div style={{ margin: "auto" }} >
-            {/* <ImageDetail src={activeEspecie.imagenesUri[0]}/> */}
-            {/* Aqui solo esta una imagen pero debe ser cambiada por un componente de slide de imagenes */}
-            {/* <img src={activeEspecie.imagenesUri[0]} alt="" className='img-detail-especie' /> */}
             <EmblaCarouselComponent autoplay delayLength={4000}>
-              {activeEspecie.imagenesUri.map((item) => (
-            
-                <img id="image"
+              {(especie.imagenesUri ?? []).map((item) => (
+                <img
+                  id="image"
                   key={item}
-                  
                   src={item}
                   alt=""
-                    style={{
+                  style={{
                     borderRadius: "0.5rem",
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    
                   }}
-                  
                 />
               ))}
             </EmblaCarouselComponent>
@@ -57,26 +55,26 @@ const DetailEspecie = () => {
       <div className="container-info">
               <h2 className="titleEspecie">
                 &nbsp;
-                {activeEspecie?.nombreComun}
+                {especie?.nombreComun}
               </h2>
             <div>
                 <div className="nombreCientifico "  >
-                  {activeEspecie?.nombreCientifico}
+                  {especie?.nombreCientifico}
                 </div>
                 <div className='text-container'>
                 <div className="text-normal " style={{fontStyle:'italic'}}>
-                 Familia: {activeEspecie?.familia}
+                 Familia: {especie?.familia}
                 </div>
                 <div className="text-origen">
 
-                  {activeEspecie?.origen === 'Nativa' ? 
+                  {especie?.origen === 'Nativa' ?
             
                <span style={{backgroundColor:'#03b25e'}}>
-                 {activeEspecie?.origen}
+                 {especie?.origen}
                 </span>
                : 
                 <span >
-                  {activeEspecie?.origen}
+                  {especie?.origen}
                   </span>
                }
                 </div>
@@ -88,20 +86,19 @@ const DetailEspecie = () => {
         <div>  
             <div className="text-descripcion">
               {
-                activeEspecie?.descripcion
+                especie?.descripcion
               }
             </div>
             <div className="text-descripcion">
               {
-                activeEspecie?.descripcion2
+                especie?.descripcion2
               }
             </div>
             <div className="text-recomendable">
               {
-                activeEspecie?.recomendablePara
+                especie?.recomendablePara
               }
             </div>
-            {/* <div className="text-normal">{activeEspecie?.origen}</div> */}
           </div>
       </div>
 

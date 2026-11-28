@@ -61,7 +61,8 @@
   padding-top: 65px;
   padding-bottom: 24px;
   right: -100%;
-  transition: right 0.2s ease-in-out;
+  pointer-events: none;
+  transition: right 0.32s ease-in-out;
   box-sizing: border-box;
 }
 
@@ -102,6 +103,7 @@
 
 .active {
   right: 0;
+  pointer-events: auto;
 }
 
 .preview__description__container {

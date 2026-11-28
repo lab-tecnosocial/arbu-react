@@ -2,11 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import EmblaCarouselReact from "embla-carousel-react";
 import useInterval from "./useInterval";
 import { DotButton, PrevButton, NextButton } from "./EmblaCarouselButtons";
-import { useDispatch, useSelector } from "react-redux";
-import CloseIcon from '@mui/icons-material/Close';
-import { setHideDetailEspecie } from "../../../actions/catalogoActions";
-import { IconButton } from "@mui/material";
-
 
 import "./embla.css";
 
@@ -47,27 +42,8 @@ const EmblaCarouselComponent = ({ autoplay, delayLength, children }) => {
     }
   }, [embla]);
 
-  function handleIsRunningChange(e) {
-    setIsRunning(e.target.checked);
-  }
-
-  function handleDelayChange(e) {
-    setDelay(Number(e.target.value));
-  }
-  const dispatch = useDispatch();
-  const handleBack = () => {
-    dispatch(setHideDetailEspecie());
-  };
-  const { activeEspecie } = useSelector((state) => state.catalogo);
-
-
   return (
     <div>
-        <div className="button-exit">
-          <IconButton aria-label="back" onClick={handleBack}>
-          <CloseIcon  sx={{color:'#EBF5EE', background:"#268576", borderRadius:"50%", border:"1px solid #EBF5EE"}}/>
-          </IconButton>
-        </div>
       <div className="embla" >
         <EmblaCarouselReact
           className="embla__viewport"

@@ -7,11 +7,9 @@ import DetailEspecie from "../../components/catalogo/DetailEspecie"
 import { CardTree } from "../mapav/components/CardTree/CardTree"
 import { setPanelState, setSelectedTree } from "../../actions/mapaActions"
 import {
-  setActiveEspecie,
   setHideDetailEspecie,
   startLoadEspeciesCatalogo,
 } from "../../actions/catalogoActions"
-import { especieDesdeArbol } from "../../helpers/especieDesdeArbol"
 import {
   escudoDeInstitucion,
   fotoPerfilDe,
@@ -34,7 +32,6 @@ const PerfilPage = () => {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
   const { user: authUser, checking } = useSelector((state) => state.auth)
-  const { especies } = useSelector((state) => state.catalogo)
   const uid = uidParam || authUser?.uid
   const esPropio = Boolean(authUser?.uid && uid === authUser.uid)
   const [estado, setEstado] = useState({ cargando: true, error: null, datos: null })
@@ -85,12 +82,6 @@ const PerfilPage = () => {
   }, [uid, dispatch])
 
   const abrirDetalle = (arbol, index) => {
-    const especie = especieDesdeArbol(arbol, especies)
-    if (especie) {
-      dispatch(setPanelState("CLOSE"))
-      dispatch(setActiveEspecie(especie))
-      return
-    }
     dispatch(setHideDetailEspecie())
     dispatch(setSelectedTree(index, arbol, "perfil"))
     dispatch(setPanelState("OPEN"))
@@ -125,7 +116,7 @@ const PerfilPage = () => {
         <DetailEspecie />
       </div>
       <aside className={styles.detalle}>
-        <CardTree />
+        <CardTree overlay />
       </aside>
       <div className={styles.contenido}>
         {cargando ? (
