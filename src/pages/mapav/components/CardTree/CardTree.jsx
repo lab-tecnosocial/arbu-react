@@ -1,11 +1,12 @@
 import styles from "./CardTree.module.css"
 import galleryStyles from "./TreePhotoGallery.module.css"
-import { animate } from "animejs";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Calendar, ChevronLeft, ChevronRight, Droplets, Heart, MapPinCheckInside, MapPinned, MoveVertical, ShieldPlus, ShieldUser, User, X } from "lucide-react";
 import { Chip } from "../../../../components/Chip/Chip";
 import { asegurarUsuarios, setPanelState, setSelectedTree } from "../../../../actions/mapaActions";
+import { setActiveEspecie, setHideDetailEspecie } from "../../../../actions/catalogoActions";
+import { especieDesdeArbol } from "../../../../helpers/especieDesdeArbol";
 import { TreePhotoGallery, TreePhotoTrigger } from "./TreePhotoGallery";
 import {
   formatMonitoreoDateLong,
@@ -16,11 +17,16 @@ import { getScoutInfoByMapeadoPor } from "../../utils/scoutEscudos";
 import { selectCampaniaSeleccionada } from "../../../../selectors/campanias";
 import { esVivero } from "../../../../helpers/viveros";
 
-export const CardTree = () => {
+export const CardTree = ({ overlay = false }) => {
   const dispatch = useDispatch()
-  const contentRef = useRef(null)
-  const { usuariosMap, panelState, selectedTree, index } = useSelector((state) => state.mapa)
+  const { usuariosMap, panelState, selectedTree: seleccionado, index } = useSelector((state) => state.mapa)
   const { arbolesPlantados, arbolesMapeados, inscripcionesMapeo } = useSelector((state) => state.arboles)
+  const { especies } = useSelector((state) => state.catalogo)
+  const vivo = Boolean(seleccionado && Object.keys(seleccionado).length > 0 && !esVivero(seleccionado))
+  const abierto = panelState === "OPEN" && vivo
+  const mostradoRef = useRef(null)
+  if (vivo) mostradoRef.current = seleccionado
+  const selectedTree = vivo ? seleccionado : mostradoRef.current
   const campaniaSeleccionada = useSelector(selectCampaniaSeleccionada)
   const [monitoreos, setMonitoreos] = useState([])
   const [riegos, setRiegos] = useState([])
@@ -85,34 +91,10 @@ export const CardTree = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!contentRef.current || esVivero(selectedTree)) return;
-
-    if (panelState === "OPEN") {
-      animate(contentRef.current, {
-        minWidth: isLargeScreen ? "500px" : "100%",
-        width: isLargeScreen ? "500px" : "100%",
-        opacity: 1,
-        duration: 300,
-        ease: 'outQuad',
-        display: "block",
-      })
-    } else if (panelState === "CLOSE") {
-      animate(contentRef.current, {
-        minWidth: "0px",
-        width: "0px",
-        opacity: isLargeScreen ? 1 : 0,
-        duration: 300,
-        ease: 'linear',
-        onComplete: () => {
-          animate(contentRef.current, {
-            display: "none",
-            duration: 300,
-          })
-        }
-      })
-    }
-  }, [panelState, selectedTree, isLargeScreen])
+  const especie = useMemo(
+    () => especieDesdeArbol(selectedTree, especies),
+    [selectedTree, especies]
+  )
 
   const isMapped = selectedTree && Object.hasOwn(selectedTree, "mapeadoPor");
   // El escudo scout se muestra cuando hay una campaña seleccionada que tiene
@@ -149,12 +131,17 @@ export const CardTree = () => {
     selectedTree?.id ??
     `${selectedTree?.latitud ?? ""}-${selectedTree?.longitud ?? ""}-${index}`;
 
+  if (!selectedTree) return null
   if (esVivero(selectedTree)) return null;
 
   return (
     <div
-      ref={contentRef}
-      className={isLargeScreen ? styles.cardTree : styles.cardTreeMobile}
+      className={[
+        overlay ? styles.overlay : isLargeScreen ? styles.cardTree : styles.cardTreeMobile,
+        abierto ? styles.abierto : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div className={styles.cardInner}>
         <div className={styles.topBar}>
@@ -185,10 +172,13 @@ export const CardTree = () => {
               ><ChevronRight size={20} strokeWidth={1.75} /></button>
             </div> */}
             <button
+              type="button"
               className={styles.closeButton}
               onClick={() => {
+                dispatch(setHideDetailEspecie())
                 dispatch(setPanelState("CLOSE"))
               }}
+              aria-label="Cerrar"
             >
               <X strokeWidth={1.75} />
             </button>
@@ -218,6 +208,15 @@ export const CardTree = () => {
                 }
               </div>
             </div>
+            {especie ? (
+              <button
+                type="button"
+                className={styles.verEspecie}
+                onClick={() => dispatch(setActiveEspecie(especie))}
+              >
+                Ver información de especie
+              </button>
+            ) : null}
             <div className={styles.info}>
               <div className={styles.picture}>
                 {mainPhoto && (

@@ -1,22 +1,33 @@
 .cardTree {
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   border-radius: 16px;
   overflow: hidden;
-  display: none;
-  width: 0px;
-  max-width: 0px;
+  display: block;
+  width: 0;
+  min-width: 0;
+  max-width: 0;
   height: 100%;
   min-height: 0;
   align-self: stretch;
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.2s ease-in-out, min-width 0.2s ease-in-out, max-width 0.2s ease-in-out, opacity 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.cardTree.abierto {
+  width: 500px;
+  min-width: 500px;
+  max-width: 500px;
+  opacity: 1;
+  pointer-events: auto;
+  border-color: var(--color-border);
 }
 
 .cardTreeMobile {
   border: 1px solid var(--color-border);
   border-radius: 16px;
   overflow: hidden;
-  display: none;
-  width: 0px;
-  max-width: 0px;
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
@@ -25,6 +36,40 @@
   z-index: 9999;
   height: 100%;
   min-height: 0;
+  transform: translateX(-110%);
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.cardTreeMobile.abierto {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.overlay {
+  position: fixed;
+  top: 100px;
+  bottom: 16px;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  width: min(500px, calc(100% - 24px));
+  max-width: min(500px, calc(100% - 24px));
+  min-width: 0;
+  height: auto;
+  margin-left: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  transform: translateX(calc(-100% - 24px));
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.overlay.abierto {
+  transform: translateX(0);
+  pointer-events: auto;
 }
 
 .cardInner {
@@ -36,6 +81,26 @@
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
+}
+
+.overlay .cardInner,
+.cardTreeMobile .cardInner {
+  min-width: 0;
+  max-width: none;
+}
+
+.verEspecie {
+  align-self: flex-start;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: var(--green2);
+  color: var(--color-on-brand);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.verEspecie:hover {
+  filter: brightness(1.08);
 }
 
 .topBar {
@@ -55,6 +120,11 @@
     gap: 24px;
 
     .closeButton {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       color: var(--color-text-muted);
     }
   }
@@ -361,11 +431,26 @@
     max-width: 100%;
   }
 
+  .overlay {
+    top: 100px;
+    bottom: 0;
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
+
   .cardInner {
     min-width: 100%;
     max-width: 100%;
     min-height: 100vh;
     height: 100vh;
+  }
+
+  .overlay .cardInner {
+    min-height: 0;
+    height: 100%;
   }
 
   .cardBody {

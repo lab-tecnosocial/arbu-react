@@ -21,7 +21,6 @@ export const Navbar = ({
   const { user } = useSelector((state) => state.auth)
   const { autorizado: esAdmin } = useAutorizacion()
   const { resolvedTheme } = useTheme();
-  const [profileOpen, setProfileOpen] = useState(false);
   const brandLogo = resolvedTheme === "dark" ? "logodark.png" : logo;
 
   const links = [
@@ -61,27 +60,43 @@ export const Navbar = ({
       : []),
   ];
 
-  const getProfileOrDownload = (className = '') => user ? (
-    <div className={styles.profileContainer}>
-      <button className={`${styles.profileButton} ${className}`} onClick={() => setProfileOpen(!profileOpen)}>
-        <User size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
-        <span>Mi Perfil</span>
-      </button>
-      {profileOpen && (
+  const sessionHref = user ? "/perfil" : "/iniciar-sesion"
+  const sessionLabel = user ? "Ver perfil" : "Iniciar sesión"
+  const sessionActivo = user
+    ? location.pathname.startsWith("/perfil")
+    : location.pathname.startsWith("/iniciar-sesion")
+
+  const sessionItem = (
+    <li className={styles.profileContainer}>
+      <Link
+        to={sessionHref}
+        state={user ? undefined : { from: { pathname: "/perfil" } }}
+        className={`${styles.navLink} ${sessionActivo ? styles.active : ""}`}
+        onClick={() => setIsMenuOpen(false)}
+      >
+        <span className={styles.icon}>
+          <User size={iconProps.size} strokeWidth={iconProps.strokeWidth} />
+        </span>
+        {sessionLabel}
+      </Link>
+      {user ? (
         <div className={styles.profileDropdown}>
-          <Link to="/perfil" onClick={() => { setProfileOpen(false); setIsMenuOpen(false); }}>Ver perfil</Link>
-          <button onClick={() => { signOut(auth); setProfileOpen(false); setIsMenuOpen(false); }}>Cerrar sesión</button>
+          <button onClick={() => { signOut(auth); setIsMenuOpen(false); }}>
+            Cerrar sesión
+          </button>
         </div>
-      )}
-    </div>
-  ) : (
+      ) : null}
+    </li>
+  )
+
+  const downloadButton = (className = "") => (
     <Button className={className} icon={<img src="icons/googleplay.png" alt="" />}>
       <a
         target="_blank"
         rel="noopener noreferrer"
-        style={{ color: 'white' }}
+        style={{ color: "white" }}
         href={ARBU_GOOGLE_PLAY_URL}
-        onClick={() => trackDescargaAndroid('navbar')}
+        onClick={() => trackDescargaAndroid("navbar")}
       >
         Descargar Arbu
       </a>
@@ -103,10 +118,11 @@ export const Navbar = ({
               </Link>
             </li>
           ))}
+          {sessionItem}
         </ul>
         <div className={styles.actions}>
           <ThemeToggle iconProps={iconProps} />
-          {getProfileOrDownload(styles.ctoButton)}
+          {downloadButton(styles.ctoButton)}
         </div>
       </div>
     </nav>
@@ -133,7 +149,8 @@ export const Navbar = ({
               </Link>
             </li>
           ))}
-          {getProfileOrDownload(styles.ctoButtonMobile)}
+          {sessionItem}
+          {downloadButton(styles.ctoButtonMobile)}
         </ul>
       </div>
     </nav>

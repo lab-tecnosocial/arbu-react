@@ -32,6 +32,7 @@ const ContactoSoporte = lazy(() => import('./components/api/docs').then(m => ({ 
 const Licencias = lazy(() => import('./components/api/docs').then(m => ({ default: m.Licencias })));
 
 const IniciarSesion = lazy(() => import('./components/autenticacion/IniciarSesion.jsx'));
+const PerfilPage = lazy(() => import('./pages/perfil/PerfilPage.jsx'));
 const NoAutorizado = lazy(() => import('./components/autenticacion/NoAutorizado.jsx'));
 const Dashboard = lazy(() => import('./components/dashboard/Dashboard.jsx'));
 const Tabla = lazy(() => import('./components/tabla/Tabla.jsx'));
@@ -89,6 +90,8 @@ const App = () => {
           <Route path="acerca" element={<Acerca />} />
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:slug" element={<EntradaBlog />} />
+          <Route path="perfil" element={<PerfilPage />} />
+          <Route path="perfil/:uid" element={<PerfilPage />} />
 
           {/* Arbu Pro */}
           <Route path="login" element={<PublicRoute element={<IniciarSesion />} />} />

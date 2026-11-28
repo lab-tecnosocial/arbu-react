@@ -2,9 +2,10 @@ import React from "react";
 
 import "./ChildComponent.css";
 import SvgComponentUserDefault from "./SvgComponentUserDefault";
-const ChildComponent = ({ nombre, puntos, foto, institucion,index }) => {
+import { EnlacePerfil } from "./EnlacePerfil";
+const ChildComponent = ({ id, nombre, puntos, foto, institucion,index }) => {
   return (
-    <div className="child-container">
+    <EnlacePerfil id={id} className="child-container">
       <div className="flex">
         <div className="index-and-img">
           <strong className="index-number">{index}</strong>
@@ -29,7 +30,7 @@ const ChildComponent = ({ nombre, puntos, foto, institucion,index }) => {
           </div>
         </div>
       </div>
-    </div>
+    </EnlacePerfil>
   );
 };
 

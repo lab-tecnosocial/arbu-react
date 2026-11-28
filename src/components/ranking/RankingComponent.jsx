@@ -50,6 +50,7 @@ const RankingComponent = () => {
     }
 
     return scoresList.map((element, index) => ({
+      id: element.id,
       nombre: getFullNameUser(element.id) || `Usuario ${String(index + 1).padStart(2, '0')}`,
       foto: getUserPhoto(element.id),
       institucion: getUserInstitucion(element.id),
@@ -76,7 +77,8 @@ const RankingComponent = () => {
   const renderRows = (list, limit, offset, suffix) =>
     list.slice(3, limit).map((item, index) => (
       <ChildComponent
-        key={`${item.nombre}-${suffix}-${index}`}
+        key={`${item.id || item.nombre}-${suffix}-${index}`}
+        id={item.id}
         nombre={item.nombre}
         puntos={item.puntos}
         foto={item.foto}
