@@ -1,8 +1,8 @@
 export const RANGOS = [
-  { nombre: "Aprendíz", min: 0, insignia: "/insignias/1.svg" },
-  { nombre: "Protector", min: 100, insignia: "/insignias/2.svg" },
-  { nombre: "Leyenda", min: 500, insignia: "/insignias/3.svg" },
-  { nombre: "Ancestro", min: 1500, insignia: "/insignias/4.svg" },
+  { nombre: "Aprendíz", min: 0, max: 2400, insignia: "/insignias/1.svg" },
+  { nombre: "Protector", min: 2401, max: 5000, insignia: "/insignias/2.svg" },
+  { nombre: "Leyenda", min: 5001, max: 7400, insignia: "/insignias/3.svg" },
+  { nombre: "Ancestro", min: 7401, max: null, insignia: "/insignias/4.svg" },
 ]
 
 export const EJEMPLOS_POSICION = [
