@@ -214,7 +214,7 @@ export const CardTree = ({ overlay = false }) => {
                 className={styles.verEspecie}
                 onClick={() => dispatch(setActiveEspecie(especie))}
               >
-                Ver información del árbol
+                Ver información de especie
               </button>
             ) : null}
             <div className={styles.info}>
